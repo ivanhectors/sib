@@ -2600,6 +2600,21 @@ select.form-control:focus::-ms-value
     border-radius: .4375rem;
 }
 
+select.form-control-md
+{
+    font-size: .875rem;
+    line-height: 1.5;
+
+    height: calc(1.5em + 1.25rem + 2px);
+    padding: .625rem .75rem;
+
+    border-radius: .25rem;
+}
+
+.select2-container {
+    width: 100% !important;
+}
+
 select.form-control[size],
 select.form-control[multiple]
 {

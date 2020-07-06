@@ -36,6 +36,7 @@
   <!-- Optional JS -->
   <script src="../assets/vendor/chart.js/dist/Chart.min.js"></script>
   <script src="../assets/vendor/chart.js/dist/Chart.extension.js"></script>
+  <script src="../assets/vendor/dropzone/dist/min/dropzone.min.js"></script>
   <!-- Optional JS -->
   <script src="../assets/vendor/datatables.net/js/jquery.dataTables.min.js"></script>
   <script src="../assets/vendor/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
@@ -45,7 +46,13 @@
   <script src="../assets/vendor/datatables.net-buttons/js/buttons.flash.min.js"></script>
   <script src="../assets/vendor/datatables.net-buttons/js/buttons.print.min.js"></script>
   <script src="../assets/vendor/datatables.net-select/js/dataTables.select.min.js"></script>
+  <script src="../assets/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+  <script src="../assets/select/js/select2.min.js"></script>   
+  <script src="../assets/select/js/i18n/id.js"></script> 
+
   <!-- Argon JS -->
   <script src="../assets/js/argon.js?v=1.1.0"></script>
   <!-- Demo JS - remove this in your project -->
   <script src="../assets/js/demo.min.js"></script>
+  <script> 
+  

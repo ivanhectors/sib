@@ -138,13 +138,29 @@
               <div class="collapse" id="navbar-dataakun">
                 <ul class="nav nav-sm flex-column">
                   <li class="nav-item">
-                    <a href="../pages/tables/tables.html" class="nav-link">Data Admin</a>
+                    <a href="data_admin" class="nav-link">Admin</a>
                   </li>
                   <li class="nav-item">
-                    <a href="../pages/tables/sortable.html" class="nav-link">Data Penyeleksi</a>
+                    <a href="data_penyeleksi" class="nav-link">Penyeleksi</a>
                   </li>
                   <li class="nav-item">
-                    <a href="../pages/tables/datatables.html" class="nav-link">Data Mahasiswa</a>
+                    <a href="../pages/tables/datatables.html" class="nav-link">Mahasiswa</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="#navbar-admin" class="nav-link" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-multilevel">Admin</a>
+                    <div class="collapse show" id="navbar-admin" >
+                      <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                          <a href="#!" class="nav-link ">Data Admin</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#!" class="nav-link ">Just another link</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#!" class="nav-link ">One last link</a>
+                        </li>
+                      </ul>
+                    </div>
                   </li>
                 </ul>
               </div>

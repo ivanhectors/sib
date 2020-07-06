@@ -219,7 +219,7 @@ $currentTime = date( 'd-m-Y h:i:s A', time () );
                         ?>
                         <img src="img/profile.png" alt="Image placeholder" >
                         <?php else:?>
-                        <img alt="Image placeholder" src="img/<?php echo htmlentities($userphoto);?>"> <img src="userimages/<?php echo htmlentities($userphoto);?>" class="img-circle" width="70" height="70">
+                        <img alt="Image placeholder" src="img/<?php echo htmlentities($userphoto);?>"> 
                         <?php endif;?>
                     
                   </span>
@@ -230,7 +230,7 @@ $currentTime = date( 'd-m-Y h:i:s A', time () );
               </a>
               <div class="dropdown-menu dropdown-menu-right">
                 <div class="dropdown-header noti-title">
-                  <h6 class="text-overflow m-0">@<?php echo htmlentities($_SESSION['admlogin']);?></h6>
+                  <h6 class="text-overflow m-0" data-toggle="tooltip" data-placement="left" title="Username Anda">@<?php echo htmlentities($_SESSION['admlogin']);?></h6>
                 </div>
                 <?php } ?>
                 <a href="profile" class="dropdown-item">

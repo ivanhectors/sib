@@ -16,21 +16,213 @@ include("include/sidebar.php");
 
 if(isset($_POST['submit']))
 {
-
+    //update info pribadi
+    $password_valid =  $_POST["password_valid"];
+    $username_valid = $_SESSION['admlogin'];
     $username=$_POST['username'];
-    $nama_admin=$_POST['nama_admin'];
     $email=$_POST['email'];
+    $nama_admin=$_POST['nama_admin'];
+    $no_telp=$_POST['no_telp'];
     $gender=$_POST['gender'];
     $tgl_lahir=$_POST['tgl_lahir'];
-    $photo_admin=$_POST['photo_admin'];
-    $no_telp=$_POST['no_telp'];
+    
 
+    //$photo_admin=$_POST['photo_admin'];
 
-$sql=mysqli_query($con,"update user_admin set username='$username',nama_dmin='$nama_admin',email='$email',no_telp='$no_telp' where username='".$_SESSION['admlogin']."'");
-$_SESSION['msg']="Profil anda berhasil di Ubah.";
+    //update kontak
+    $alamat=$_POST['alamat'];
+    $provinsi=$_POST['provinsi'];
+    $kab_kota=$_POST['kab_kota'];
+    $kecamatan=$_POST['kecamatan'];
+    $kode_pos=$_POST['kode_pos'];
 
+    //validasi password user
+    $pass_valid = "SELECT * FROM user_admin WHERE username = '$username_valid'";
+    $admin = mysqli_query($con, $pass_valid);
+
+    if(mysqli_num_rows($admin) > 0) {
+      while($row = mysqli_fetch_array($admin))  
+                    {  
+                         if(password_verify($password_valid, $row["password"]))  
+                         {  
+                              //return true;   
+                              $sql=mysqli_query($con,"update user_admin set username='$username',nama_admin='$nama_admin',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where username='".$_SESSION['admlogin']."'");
+                              $_SESSION['msg']="1";
+                              //$successmsg="Data profil anda berhasil diubah.";
+                              
+                         }else{
+                          //echo "<script>alert('Gagal! Password tidak cocok.');</script>";
+                          $_SESSION['msg']="0";
+                          //$errormsg="Password lama tidak cocok! Gagal mengubah data.";
+                         }
+    }
+    //echo "<script>alert('Fetch Array Gagal');</script>";
+    }
+    //echo "<script>alert('Number of Rows 0');</script>";
 }
 
+
+if(isset($_POST['gambar']) && isset($_FILES['fileToUpload']))
+{
+
+define('KB', 1024);
+define('MB', 1048576);
+define('GB', 1073741824);
+define('TB', 1099511627776);
+$imgfile=$_FILES["fileToUpload"]["name"];
+
+$target_dir = "img/";
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+// // get the image extension
+$extension = substr($imgfile,strlen($imgfile)-4,strlen($imgfile));
+// // allowed extensions
+// $allowed_extensions = array(".jpg","jpeg",".png",".gif");
+
+// Validation for allowed extensions .in_array() function searches an array for a specific value.
+if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg") 
+{
+echo " 
+<div data-notify='container' class='alert alert-dismissible alert-danger alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
+<span class='alert-icon ni ni-bell-55' data-notify='icon'></span> 
+<div class='alert-text' div=''> <span class='alert-title' data-notify='title'> Gagal!</span> 
+<span data-notify='message'>Format yang diizinkan hanya JPG, PNG dan JPEG.</span>
+</div><button type='button' class='close' data-dismiss='alert' aria-label='Close' style='position: absolute; right: 10px; top: 5px; z-index: 1082;'>
+<span aria-hidden='true'>×</span></button></div>
+";
+}
+else
+{
+  if($_FILES["fileToUpload"]["size"] > 2*MB) 
+{
+  echo " 
+         <div data-notify='container' class='alert alert-dismissible alert-danger alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
+         <span class='alert-icon ni ni-bell-55' data-notify='icon'></span> 
+         <div class='alert-text' div=''> <span class='alert-title' data-notify='title'> Gagal!</span> 
+         <span data-notify='message'>Ukuran file gambar lebih dari 2 MB</span>
+       </div><button type='button' class='close' data-dismiss='alert' aria-label='Close' style='position: absolute; right: 10px; top: 5px; z-index: 1082;'>
+       <span aria-hidden='true'>×</span></button></div>
+       ";
+} else{
+//rename the image file
+$imgnewfile=md5($imgfile).$extension;
+// Code for move image into directory
+move_uploaded_file($_FILES["fileToUpload"]["tmp_name"],"img/".$imgnewfile);
+// Query for insertion data into database
+$query=mysqli_query($con,"update user_admin set photo_admin='$imgnewfile' where username='".$_SESSION['admlogin']."'");
+if($query)
+{
+  echo " 
+         <div data-notify='container' class='alert alert-dismissible alert-success alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
+         <span class='alert-icon ni ni-bell-55' data-notify='icon'></span> 
+         <div class='alert-text' div=''> <span class='alert-title' data-notify='title'> Berhasil!</span> 
+         <span data-notify='message'>Foto profil berhasil diubah.</span>
+       </div><button type='button' class='close' data-dismiss='alert' aria-label='Close' style='position: absolute; right: 10px; top: 5px; z-index: 1082;'>
+       <span aria-hidden='true'>×</span></button></div>
+       ";
+}
+else
+{
+  echo " 
+         <div data-notify='container' class='alert alert-dismissible alert-danger alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
+         <span class='alert-icon ni ni-bell-55' data-notify='icon'></span> 
+         <div class='alert-text' div=''> <span class='alert-title' data-notify='title'> Gagal!</span> 
+         <span data-notify='message'>Maaf, foto gagal diubah. coba lagi.</span>
+       </div><button type='button' class='close' data-dismiss='alert' aria-label='Close' style='position: absolute; right: 10px; top: 5px; z-index: 1082;'>
+       <span aria-hidden='true'>×</span></button></div>
+       ";
+}
+}
+}
+}
+
+// password admin : $2y$10$biOI1T7.vdq0kgCOmv6vC.ndpob2oi26QqCmWg4wcxrJV9K8FR8Qu
+    
+if(isset($_POST['changepsw']))
+{
+  $password =  $_POST["password"]; 
+  $usernames = $_SESSION['admlogin'];
+  $newpassword = $_POST["newpassword"];
+  $passwordhash = password_hash($password, PASSWORD_DEFAULT);
+  $newpasswordhash = password_hash($newpassword, PASSWORD_DEFAULT);
+  $passchange = "SELECT * FROM user_admin WHERE username = '$usernames'";
+  $admin = mysqli_query($con, $passchange); 
+
+if(mysqli_num_rows($admin) > 0) {
+  while($row20 = mysqli_fetch_array($admin))  
+                {  
+                     if(password_verify($password, $row20["password"]))  
+                     {  
+                          //return true;   
+                          $log=mysqli_query($con,"update user_admin set password='$newpasswordhash' where username='".$_SESSION['admlogin']."'");
+                          echo("<script>location.href = 'logout';</script>");
+                          exit();
+                     }else{
+                      echo "<script>alert('Password lama tidak cocok');</script>";
+                     }
+}
+//echo "<script>alert('Fetch Array Gagal');</script>";
+}
+//echo "<script>alert('Number of Rows 0');</script>";
+}
+
+ ?>
+<?php
+include("include/header.php");
+ ?>
+ <script>
+function userAvailability() {
+$("#loaderIcon").show();
+jQuery.ajax({
+url: "check_username.php",
+data:'username='+$("#username").val(),
+type: "POST",
+success:function(data){
+$("#user-availability-status1").html(data);
+$("#loaderIcon").hide();
+},
+error:function (){}
+});
+}
+</script>
+<script type="text/javascript">
+function valid()
+{
+if(document.chngpwd.password.value=="")
+{
+alert("Password lama tidak boleh kosong.");
+document.chngpwd.password.focus();
+return false;
+}
+else if(document.chngpwd.newpassword.value=="")
+{
+alert("Password Baru tidak boleh kosong.");
+document.chngpwd.newpassword.focus();
+return false;
+}
+else if(document.chngpwd.confirmpassword.value=="")
+{
+alert("Ulangi password baru anda.");
+document.chngpwd.confirmpassword.focus();
+return false;
+}
+else if(document.chngpwd.newpassword.value!= document.chngpwd.confirmpassword.value)
+{
+alert("Password baru tidak cocok.");
+document.chngpwd.confirmpassword.focus();
+return false;
+}
+return true;
+}
+</script>
+<script>
+    if ( window.history.replaceState ) {
+        window.history.replaceState( null, null, window.location.href );
+    }
+</script>
+</head>
+<?php
+include("include/sidebar.php");
  ?>
 
   <!-- Main content -->
@@ -41,6 +233,24 @@ $_SESSION['msg']="Profil anda berhasil di Ubah.";
     ?>
     <!-- Header -->
     <!-- Header -->
+    <?php if(isset($_POST['submit']))
+{ if ($_SESSION['msg'] > 0){
+  
+  ?>
+                  <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                  <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                  <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span> 
+                  <span data-notify="message">Data Profil berhasil diubah.</span>
+                </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                <span aria-hidden="true">×</span></button></div>
+<?php } else {?> 
+                <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                  <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                  <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
+                  <span data-notify="message">Password tidak cocok. Data Gagal diubah.</span>
+                </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                <span aria-hidden="true">×</span></button></div>
+<?php } }?> 
     <?php $query=mysqli_query($con,"select * from user_admin where username = '".$_SESSION['admlogin']."'");
                       $cnt=1;
                       while($row=mysqli_fetch_array($query))
@@ -52,68 +262,75 @@ $_SESSION['msg']="Profil anda berhasil di Ubah.";
       <!-- Header container -->
       <div class="container-fluid d-flex align-items-center">
         <div class="row">
+          <div class="col-lg-12 col-md-10">
+          <h1 class="display-2 text-white">Hello, 
+            <?php $nama_admin=$row['nama_admin'];
+                        if($userphoto=="" || $userphoto=="NULL" ){
+                          echo htmlentities($row['username']);
+                        }else{
+                          echo htmlentities($row['nama_admin']);
+                        }
+                
+                        
+                        ?>  
+            </h1>
+          </div>
           <div class="col-lg-7 col-md-10">
-            <h1 class="display-2 text-white">Hello, <?php echo htmlentities($row['nama_admin']);?></h1>
+            
             <p class="text-white mt-0 mb-5">Ini merupakan halaman detail profil kamu. Kamu dapat mengubah data pribadi kamu disini. Demi keamanan data pribadi, kamu diharapkan untuk memasukkan password kembali saat mengubah data tersebut.</p>
-            <a href="#!" class="btn btn-neutral">Edit profile</a>
+            <a href="../adm" type="button" class="btn btn-neutral btn-icon">
+                <span class="btn-inner--icon"><i class="fas fa-home"></i></span>
+                <span class="btn-inner--text">Dashboard</span>
+                      </a>
           </div>
         </div>
       </div>
     </div>
+
     <!-- Page content -->
     <div class="container-fluid mt--6">
       <div class="row">
         <div class="col-xl-4 order-xl-2">
-          <div class="card card-profile">
-            <img src="../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
+          <div class="card card-header">
+
             <div class="row justify-content-center">
               <div class="col-lg-3 order-lg-2">
                 <div class="card-profile-image">
-                  <a href="#">
-                    <img src="../assets/img/theme/team-4.jpg" class="rounded-circle">
-                  </a>
+                <?php $userphoto=$row['photo_admin'];
+                        if($userphoto=="" || $userphoto=="NULL" ):
+                        ?>
+                    <img src="img/profile.png" class="rounded-circle">
+                    <?php else:?>
+                    <img src="img/<?php echo htmlentities($userphoto);?>" class="rounded-circle">
+                    <?php endif;?>
                 </div>
               </div>
             </div>
+            <?php } ?>
             <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
-              <div class="d-flex justify-content-between">
-                <a href="#" class="btn btn-sm btn-info mr-4">Connect</a>
-                <a href="#" class="btn btn-sm btn-default float-right">Message</a>
-              </div>
+
             </div>
             <div class="card-body pt-0">
               <div class="row">
                 <div class="col">
                   <div class="card-profile-stats d-flex justify-content-center">
-                    <div>
-                      <span class="heading">22</span>
-                      <span class="description">Friends</span>
-                    </div>
-                    <div>
-                      <span class="heading">10</span>
-                      <span class="description">Photos</span>
-                    </div>
-                    <div>
-                      <span class="heading">89</span>
-                      <span class="description">Comments</span>
-                    </div>
+                    
                   </div>
                 </div>
+              </div> 
+
+              <form method="post" enctype="multipart/form-data">
+                <!-- Multiple -->
+                <div class="custom-file">
+                  <input type="file" name="fileToUpload" class="custom-file-input" id="fileToUpload" lang="id">
+                  <label class="custom-file-label" for="fileToUpload">Pilih File</label>
+                </div>
+              <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
+              <div>
+                <button type="submit" name="gambar" class="btn btn-sm btn-default float-right">Ubah Foto</button>
               </div>
-              <div class="text-center">
-                <h5 class="h3">
-                  Jessica Jones<span class="font-weight-light">, 27</span>
-                </h5>
-                <div class="h5 font-weight-300">
-                  <i class="ni location_pin mr-2"></i>Bucharest, Romania
-                </div>
-                <div class="h5 mt-4">
-                  <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
-                </div>
-                <div>
-                  <i class="ni education_hat mr-2"></i>University of Computer Science
-                </div>
-              </div>
+              </form>
+            </div>
             </div>
           </div>
           <!-- Progress track -->
@@ -121,216 +338,371 @@ $_SESSION['msg']="Profil anda berhasil di Ubah.";
             <!-- Card header -->
             <div class="card-header">
               <!-- Title -->
-              <h5 class="h3 mb-0">Progress track</h5>
+              <h5 class="h3 mb-0">Ubah Password</h5>
             </div>
             <!-- Card body -->
-            <div class="card-body">
+
+            
+            <div class="card-body ">
+            <form method="post" name="chngpwd" onSubmit="return valid();">
               <!-- List group -->
               <ul class="list-group list-group-flush list my--3">
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <a href="#" class="avatar rounded-circle">
-                        <img alt="Image placeholder" src="../assets/img/theme/bootstrap.jpg">
-                      </a>
-                    </div>
-                    <div class="col">
-                      <h5>Argon Design System</h5>
-                      <div class="progress progress-xs mb-0">
-                        <div class="progress-bar bg-orange" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
+              <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Password Saat Ini</label>
+                        <input type="password" name="password" class="form-control" placeholder="Masukkan Password saat ini" title="Masukkan Password"  oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <a href="#" class="avatar rounded-circle">
-                        <img alt="Image placeholder" src="../assets/img/theme/angular.jpg">
-                      </a>
-                    </div>
-                    <div class="col">
-                      <h5>Angular Now UI Kit PRO</h5>
-                      <div class="progress progress-xs mb-0">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Password Baru</label>
+                        <input type="password" name="newpassword" class="form-control" placeholder="Masukkan Password Baru" title="Masukkan Password Baru"  oninvalid="this.setCustomValidity('Selahkan masukkan Password baru anda.')" oninput="setCustomValidity('')" required>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <a href="#" class="avatar rounded-circle">
-                        <img alt="Image placeholder" src="../assets/img/theme/sketch.jpg">
-                      </a>
-                    </div>
-                    <div class="col">
-                      <h5>Black Dashboard</h5>
-                      <div class="progress progress-xs mb-0">
-                        <div class="progress-bar bg-red" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" style="width: 72%;"></div>
+                    <div class="col-lg-12">
+                      <div class="form-group">
+                        <label class="form-control-label">Ulangi Password Baru</label>
+                        <input type="password" name="confirmpassword" class="form-control" placeholder="Ulangi Password Baru" title="Ulangi Masukkan Password Baru"  oninvalid="this.setCustomValidity('Selahkan ulangi masukkan Password baru anda.')" oninput="setCustomValidity('')" required>
                       </div>
                     </div>
-                  </div>
-                </li>
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <a href="#" class="avatar rounded-circle">
-                        <img alt="Image placeholder" src="../assets/img/theme/react.jpg">
-                      </a>
-                    </div>
-                    <div class="col">
-                      <h5>React Material Dashboard</h5>
-                      <div class="progress progress-xs mb-0">
-                        <div class="progress-bar bg-teal" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <a href="#" class="avatar rounded-circle">
-                        <img alt="Image placeholder" src="../assets/img/theme/vue.jpg">
-                      </a>
-                    </div>
-                    <div class="col">
-                      <h5>Vue Paper UI Kit PRO</h5>
-                      <div class="progress progress-xs mb-0">
-                        <div class="progress-bar bg-green" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
+
               </ul>
+              <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
+
+                <!-- <a href="#" class="btn btn-sm btn-warning float-right">Ubah Password</a> -->
+
+
+                  <button type="button" class="btn btn-sm btn-warning float-right" data-toggle="modal" data-target="#modal-notification">Ubah Password</button>
+                  <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                      <div class="modal-content bg-gradient-danger">
+                        <div class="modal-header">
+                          <h6 class="modal-title" id="modal-title-notification">Yakin ingin mengubah password?</h6>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="py-3 text-center">
+                            <i class="ni ni-bell-55 ni-3x"></i>
+                            <h4 class="heading mt-4">Ketentuan mengubah password</h4>
+                            <p>Mengubah password kamu saat ini akan mengganti password akun kamu pada sistem termasuk pada proses login. 
+                              Setelah berhasil mengubah, kamu akan otomatis logout sistem dan dapat masuk kembali menggunakan password baru kamu.</p>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="submit" name="changepsw" class="btn btn-white">Mengerti & Ganti Password</button>
+                          <button class="btn btn-link text-white ml-auto" data-dismiss="modal">Batal</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
             </div>
+            </div>
+            </form>
+          
           </div>
         </div>
         <div class="col-xl-8 order-xl-1">
           <div class="row">
-            <div class="col-lg-6">
-              <div class="card bg-gradient-info border-0">
+          <?php $query10=mysqli_query($con,"SELECT 
+                                          ((CASE WHEN `nama_admin` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `gender` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `tgl_lahir` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `photo_admin` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `email` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `alamat` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `provinsi` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `kab_kota` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `kecamatan` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `kode_pos` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `no_telp` IS NULL OR '' THEN 0 ELSE 1 END)) AS sum_of_nulls
+
+                                          FROM user_admin WHERE username='".$_SESSION['admlogin']."'");
+                      $cnt=1;
+                      while($row2=mysqli_fetch_array($query10))
+                      {
+          ?>
+            <div class="col-lg-12">
+              <div class="card bg-gradient-white border-0">
                 <!-- Card body -->
                 <div class="card-body">
                   <div class="row">
                     <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 text-white">Total traffic</h5>
-                      <span class="h2 font-weight-bold mb-0 text-white">350,897</span>
+                      <h5 class="card-title text-uppercase text-muted mb-0 text-warning">Kelengkapan Profil</h5>
+                      <span class="h3 font-weight-bold mb-0 text-white"> &nbsp </span>
                     </div>
                     <div class="col-auto">
-                      <div class="icon icon-shape bg-white text-dark rounded-circle shadow">
-                        <i class="ni ni-active-40"></i>
-                      </div>
+                      <span class="h1 font-weight-bold mb-0 
+                      <?php 
+                       $null = $row2['sum_of_nulls'];
+                       $jumlah = $null/11*100;
+                      $presentase= round($jumlah); 
+                       if ($presentase >='80')
+                       {
+                         echo "text-success";
+                       } else {
+                         echo "text-warning";
+                       };
+                       ?>
+                      
+                      "><?php
+                       $null = $row2['sum_of_nulls'];
+                       $jumlah = $null/11*100;
+                       echo round($jumlah);
+                       ?>%</span>
                     </div>
                   </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-white mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap text-light">Since last month</span>
-                  </p>
+                  <div class="progress">
+                       <div class="progress-bar  
+                       <?php $presentase= round($jumlah); 
+                       if ($presentase >='80')
+                       {
+                         echo "bg-success";
+                       } else {
+                         echo "bg-warning";
+                       };
+                       ?>
+                       " role="progressbar" 
+                       aria-valuenow="<?php echo round($jumlah); ?>" aria-valuemin="0" aria-valuemax="100" 
+                       style="width: <?php $s = round($jumlah); echo  "$jumlah%"; ?>"></div>
+                      </div>
                 </div>
               </div>
             </div>
-            <div class="col-lg-6">
-              <div class="card bg-gradient-danger border-0">
-                <!-- Card body -->
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0 text-white">Performance</h5>
-                      <span class="h2 font-weight-bold mb-0 text-white">49,65%</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-white text-dark rounded-circle shadow">
-                        <i class="ni ni-spaceship"></i>
-                      </div>
-                    </div>
-                  </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-white mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap text-light">Since last month</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+
+           <?php } ?>
+
+           
           </div>
           <div class="card">
             <div class="card-header">
               <div class="row align-items-center">
                 <div class="col-8">
-                  <h3 class="mb-0">Edit profile </h3>
+                  <h3 class="mb-0">Edit profil </h3>
                 </div>
                 <div class="col-4 text-right">
-                  <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+
                 </div>
               </div>
             </div>
             <div class="card-body">
-              <form>
-                <h6 class="heading-small text-muted mb-4">User information</h6>
+              <form name="dosen" method="post">
+              <?php $query2=mysqli_query($con,"select * from user_admin where username = '".$_SESSION['admlogin']."'");
+                      $cnt=1;
+                      while($row=mysqli_fetch_array($query2))
+                      { 
+              ?>
+                <h6 class="heading-small text-muted mb-4">Informasi Pengguna</h6>
                 <div class="pl-lg-4">
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
                         <label class="form-control-label" for="input-username">Username</label>
-                        <input type="text" id="input-username" class="form-control" placeholder="Username" value="lucky.jesse">
+                        <div class="input-group input-group-merge">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><small class="font-weight-bold">@</small></span>
+                          </div>
+                        <input type="text" onBlur="userAvailability()" id="username" name="username" class="form-control" placeholder="Username" value="<?php echo htmlentities($row['username']);?>">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="user-availability-status1"></span>
+                          </div>
+                      </div>
+                      <span id="user-availability-status1"></span>
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-email">Email address</label>
-                        <input type="email" id="input-email" class="form-control" placeholder="jesse@example.com">
+                        <label class="form-control-label" for="input-email">Email</label>
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                          </div>
+                          <input type="email" name="email" class="form-control" placeholder="Email" value="<?php echo htmlentities($row['email']);?>">
+                        </div>
+                        
                       </div>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-first-name">First name</label>
-                        <input type="text" id="input-first-name" class="form-control" placeholder="First name" value="Lucky">
+                        <label class="form-control-label" for="input-first-name">Nama Lengkap</label>
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                          </div>
+                          <input type="text" id="input-first-name" name="nama_admin" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlentities($row['nama_admin']);?>">
+                        </div>
+                        
                       </div>
                     </div>
                     <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-last-name">Last name</label>
-                        <input type="text" id="input-last-name" class="form-control" placeholder="Last name" value="Jesse">
+                        <label class="form-control-label" for="input-last-name">No. Telpon</label>
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                          </div>
+                          <input type="tel" id="input-last-name" name="no_telp" maxlength="13" class="form-control" placeholder="No. Telpon" value="<?php echo htmlentities($row['no_telp']);?>">
+                        </div>
+                                                                    
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-first-name">Tanggal Lahir</label>
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                          </div>
+                          <input class="form-control datepicker" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php echo htmlentities($row['tgl_lahir']);?>">
+                        </div>
+                        
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group"> 
+                        <label class="form-control-label" for="pilihGender" for="input-gender">Gender</label>
+                        <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                          </div>
+                          <select class="form-control" name="gender" placeholder="Pilih Gender" value="<?php 
+                          
+                          $gender=$row['gender'];
+                          if ($gender == "1"){
+                            echo "Pria";
+                          } else {
+                            echo "Wanita";
+                          }
+                          ?>" id="exampleFormControlSelect1">
+                          <option value="<?php echo htmlentities($row['gender']);?>"><?php 
+                          
+                          $gender=$row['gender'];
+                          if ($gender == "1"){
+                            echo "Pria";
+                          } else {
+                            echo "Wanita";
+                          }
+                          ?></option>
+                          <option value="1">Pria</option>
+                          <option value="2">Wanita</option>
+                        </select>
+                        </div>
+                        
+
                       </div>
                     </div>
                   </div>
                 </div>
                 <hr class="my-4" />
                 <!-- Address -->
-                <h6 class="heading-small text-muted mb-4">Contact information</h6>
+                <h6 class="heading-small text-muted mb-4">Informasi Kontak</h6>
                 <div class="pl-lg-4">
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-address">Address</label>
-                        <input id="input-address" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text">
+                        <label class="form-control-label" for="input-address">Alamat Saat Ini</label>
+                        <input id="input-address" name="alamat" class="form-control" placeholder="Alamat Saat Ini" value="<?php echo htmlentities($row['alamat']);?>" type="text">
                       </div>
                     </div>
                   </div>
+                  <?php }?>
                   <div class="row">
-                    <div class="col-lg-4">
+                  <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-city">City</label>
-                        <input type="text" id="input-city" class="form-control" placeholder="City" value="New York">
+                        <label class="form-control-label" for="input-city">Provinsi</label>
+
+                        <select class="form-control" name="provinsi" title="provinsi" id="provinsi" >
+                        <?php                    
+                        $sql_provinsi = mysqli_query($con,"select * from user_admin join provinces, regencies, districts where user_admin.provinsi=provinces.id AND user_admin.kab_kota=regencies.id and user_admin.kecamatan=districts.id and user_admin.username = '".$_SESSION['admlogin']."'"); 
+                        ?>
+                          
+                          <?php 
+                          if(mysqli_num_rows($sql_provinsi) > 0){
+                            while($rs_provinsi = mysqli_fetch_assoc($sql_provinsi)){ 
+                              echo '<option value="'.$rs_provinsi['provinsi'].'">'.$rs_provinsi['name_province'].'</option>';
+                            }
+                          }else{
+                            echo '<option></option>';
+                          }                  
+                        
+                        ?>
+                          <?php                    
+                        $sql_provinsi = mysqli_query($con,"SELECT * FROM provinces ORDER BY name_province ASC");
+                        ?>
+                          <?php                       
+                        while($rs_provinsi = mysqli_fetch_assoc($sql_provinsi)){ 
+                           echo '<option value="'.$rs_provinsi['id'].'">'.$rs_provinsi['name_province'].'</option>';
+                        }                        
+                      ?>
+                        </select>
+                        <img src="../assets/img/loading.gif" width="35" id="load1" style="display:none;" />
                       </div>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-country">Country</label>
-                        <input type="text" id="input-country" class="form-control" placeholder="Country" value="United States">
+                        <label class="form-control-label" for="input-city">Kab/Kota</label>
+                        <select class="form-control" name="kab_kota" title="Pilih Kab/Kota" id="kota">
+                        <?php                    
+                        $sql_kota = mysqli_query($con,"select * from user_admin join provinces, regencies, districts where user_admin.provinsi=provinces.id AND user_admin.kab_kota=regencies.id and user_admin.kecamatan=districts.id and user_admin.username = '".$_SESSION['admlogin']."'"); 
+                        ?>
+                          
+                          <?php 
+                          if(mysqli_num_rows($sql_kota) > 0){
+                            while($rs_kota = mysqli_fetch_assoc($sql_kota)){ 
+                              echo '<option value="'.$rs_kota['kab_kota'].'">'.$rs_kota['name_regency'].'</option>';
+                            }
+                          }else{
+                            echo '<option></option>';
+                          }                  
+                        
+                        ?>
+                        
+                      </select>
+                      <img src="../assets/img/loading.gif" width="35" id="load1" style="display:none;" />
                       </div>
                     </div>
-                    <div class="col-lg-4">
+                      </div>
+                    <div class="row">
+                    <div class="col-lg-6">
                       <div class="form-group">
-                        <label class="form-control-label" for="input-country">Postal code</label>
-                        <input type="number" id="input-postal-code" class="form-control" placeholder="Postal code">
+                        <label class="form-control-label" for="input-country">Kecamatan</label>
+                        <select class="form-control" name="kecamatan" title="Pilih Kecamatan" id="kecamatan">
+                        <?php                    
+                        $sql_kecamatan = mysqli_query($con,"select * from user_admin join provinces, regencies, districts where user_admin.provinsi=provinces.id AND user_admin.kab_kota=regencies.id and user_admin.kecamatan=districts.id and user_admin.username = '".$_SESSION['admlogin']."'"); 
+                        ?>
+                          
+                          <?php 
+                          if(mysqli_num_rows($sql_kecamatan) > 0){
+                            while($rs_kecamatan = mysqli_fetch_assoc($sql_kecamatan)){ 
+                              echo '<option value="'.$rs_kecamatan['kecamatan'].'">'.$rs_kecamatan['name_district'].'</option>';
+                            }
+                          }else{
+                            echo '<option></option>';
+                          }                  
+                        
+                        ?>
+                    
+                        </select>
+                        <img src="../assets/img/loading.gif" width="35" id="load1" style="display:none;" />
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div class="form-group">
+                        <label class="form-control-label" for="input-country">Kode Pos</label>
+                        <?php                    
+                        $sql_kodepos = mysqli_query($con,"select * from user_admin where user_admin.username = '".$_SESSION['admlogin']."'"); 
+                        while($row=mysqli_fetch_array($sql_kodepos))
+                        {
+                        ?>
+                          
+                          
+                        <input type="tel" maxlength="5" name="kode_pos" class="form-control" placeholder="Kode Pos" value="<?php echo htmlentities($row['kode_pos']);?>">
+                        <?php } ?>
                       </div>
                     </div>
                   </div>
@@ -344,22 +716,75 @@ $_SESSION['msg']="Profil anda berhasil di Ubah.";
                     <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful premium dashboard for Bootstrap 4.</textarea>
                   </div>
                 </div>
+                
                 <div class="card-footer">
               <div class="row align-items-center">
                 <div class="col-8 ">
-                  <a href="#!" class="btn btn-sm btn-primary">Ubah Data</a>
+                  <button type="button" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-primary">Ubah Data</button>
                 </div>
               </div>
             </div>
+             
+            <!-- batas modal form validasi edit profil -->
+            <div class="col-md-4">
+                  <div class="modal fade" id="modal-form" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                      <div class="modal-content">
+                        <div class="modal-body p-0">
+                          <div class="card bg-secondary border-0 mb-0">
+
+                            <div class="card-body px-lg-5 py-lg-5">
+                              <div class="text-center text-muted mb-4">
+                                <small>Masukkan password untuk mengubah data</small>
+                              </div>
+                              
+                                <div class="form-group">
+                                  <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                    </div>
+                                    <input class="form-control" name="password_valid" placeholder="Password" type="password" title="Masukkan Password"  oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
+                                  </div>
+                                </div>
+                                <div class="text-center">
+                                  <button type="submit" id="submit" name="submit" class="btn btn-primary my-4">Ubah Data</button>
+                                </div>
+                             
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+
+
               </form>
             </div>
           </div>
         </div>
       </div>
-      <?php $cnt=$cnt+1; } ?>
+
 <?php
     include("include/footer.php"); //Edit topnav on this page
     ?>
+    <script>
+    $('.select2').select2();
+    
+</script>
+<script src="js/app.js"></script>
+<script>
+$.fn.datepicker.defaults.format = "dd/mm/yyyy";
+$('.datepicker').datepicker({
+    format: "dd-mm-yyyy",
+    language: "id",
+    todayHighlight: true
+});
+</script>
+
+
+
         </div>
       </div>
 
