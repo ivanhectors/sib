@@ -863,7 +863,7 @@ function initMap() {
         title: 'Hello World!'
     });
 
-    var contentString = '<div class="info-window-content"><h2>Argon Dashboard PRO</h2>' +
+    var contentString = '<div class="info-window-content"><h2>Argon Dashboard sasaPRO</h2>' +
         '<p>A beautiful premium dashboard for Bootstrap 4.</p></div>';
 
     var infowindow = new google.maps.InfoWindow({

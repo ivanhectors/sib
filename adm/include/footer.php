@@ -49,10 +49,16 @@
   <script src="../assets/vendor/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js"></script>
   <script src="../assets/select/js/select2.min.js"></script>   
   <script src="../assets/select/js/i18n/id.js"></script> 
+  <!-- Calender JS -->
+  <script src="../assets/vendor/moment/min/moment.min.js"></script>
+  <script src="../assets/vendor/fullcalendar/dist/fullcalendar.min.js"></script>
+  <script src="../assets/vendor/sweetalert2/dist/sweetalert2.min.js"></script>
+ <!-- quill -->
+ <script src="../assets/vendor/ckeditor/ckeditor.js"></script>
 
   <!-- Argon JS -->
   <script src="../assets/js/argon.js?v=1.1.0"></script>
   <!-- Demo JS - remove this in your project -->
   <script src="../assets/js/demo.min.js"></script>
-  <script> 
+ 
   

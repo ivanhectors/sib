@@ -1,9 +1,92 @@
  <?php
-include("include/header.php");
 include("include/config.php");
+
+date_default_timezone_set('Asia/Jakarta');// change according timezone
+$currentTime = date( 'd-m-Y h:i:s A', time () );
+$today = date("Y-m-d");
+require_once('include/bdd.php');
+$sql = "SELECT id, title, start, end, color FROM events";
+$req = $bdd->prepare($sql);
+$req->execute();
+$events = $req->fetchAll();
+
+$sql2 = "SELECT * FROM beasiswa where tampilkan='1'";
+$req2 = $bdd->prepare($sql2);
+$req2->execute();
+$events2 = $req2->fetchAll();
+
+
+ ?>
+ <?php
+include("include/header.php");
  ?>
 
+<style>
+   element.style {
+    background-image: url(//i3.wp.com/myrepublic.co.id/wp-content/uploads/2019/02/karir-webbanner-1-min.jpg);
+}
+.content.cover {
+}
+@media (max-width: 579px) and (min-width: 320px)
+.jumbotron__distract .jumbotron__content>.content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.jumbotron__distract .jumbotron__content>.content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.content.cover {
+    border-radius: 20px;
+}
+@media (max-width: 991.98px)
+.cover {
+    background-size: cover;
+}
+.cover {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% auto;
+}
+*, ::after, ::before {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+.jumbotron__content, .jumbotron__header {
+    position: relative;
+    text-align: center;
+}
+@media (max-width: 579px) and (min-width: 320px)
+body {
+    font-size: 13px;
+}
+body {
+    margin: 0;
+    font-family: "Montserrat",sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #707172;
+    text-align: left;
+    background-color: #fff;
+}
+   
+   </style>
+
+
+</head>
  
+
    <!-- Main content -->
    <div class="main-content"> 
 
@@ -78,6 +161,7 @@ include("include/config.php");
      </div> -->
 
      <section class="pb-9 bg-default">
+     <div class="content cover" style="background-image: url('//i3.wp.com/myrepublic.co.id/wp-content/uploads/2019/02/karir-webbanner-1-min.jpg')"></div>
      <!-- <div id="demo" class="carousel slide" data-ride="carousel"> -->
 
 <!-- Indicators -->
@@ -119,24 +203,272 @@ include("include/config.php");
        </div>
      </section>
      <section class="section section-lg pt-lg-0 mt--7">
+       
        <div class="container">
+                   <!-- Fullcalendar -->
+
+                   
+
          <div class="row justify-content-center">
 
-              <!-- batas pengumuman -->
+
+         <div class="col-lg-6">
+                 <div class="card card-lift--hover shadow border-0">
+                   <div class="card-body py-5">
+
+                   <div class="col-lg-12 mt-3 mt-lg-0 text-lg-right">
+                   <div class="text-lg-left">
+                     <h6 class="h2 text-primary d-inline-block mb-0 text-lg-left">Agenda : &nbsp </h6><h6 class="fullcalendar-title h2 text-primary d-inline-block mb-0 text-lg-left">Kalender</h6>
+                     </div>
+                     <div class="text-lg-right">
+                     <a href="#" class="fullcalendar-btn-prev btn btn-sm btn-primary">
+                <i class="fas fa-angle-left"></i>
+              </a>
+              <a href="#" class="fullcalendar-btn-next btn btn-sm btn-primary">
+                <i class="fas fa-angle-right"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-primary" data-calendar-view="month">Bulan</a>
+              <a href="#" class="btn btn-sm btn-primary" data-calendar-view="basicWeek">Minggu</a>
+              <a href="#" class="btn btn-sm btn-primary" data-calendar-view="basicDay">Hari</a>
+                     </div>
+
+
+              
+              
+            </div>
+            <br>
+
+            <!-- Card header -->        
+            <!-- Card body -->
+              <div id="calendar" class="fc fc-unthemed fc-ltr"></div>
+
+
+
+                   </div>
+                 </div>
+                   </div>
+                   
+               <!-- informasi beasiswa dan pinjaman -->
+
+               <div class="col-lg-6">
+               <?php
+               $id_bsw = '1';
+                $sql = "SELECT * FROM beasiswa WHERE id_bsw=?";
+                $stmt = $con->prepare($sql); 
+                $stmt->bind_param("i", $id_bsw);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+
+
+                ?>
+
+                 <div class="card card-lift--hover shadow border-0">
+                   <div class="card-body py-5">
+                     <div class="icon icon-shape bg-gradient-primary text-white rounded-circle mb-4">
+                     <i class="fas fa-graduation-cap"></i>
+                     </div>
+                     <h4 class="h3 text-primary text-uppercase"> <?php echo $row['nama_bsw']; ?></h4>
+                     <p class="description mt-3"> <?php echo $row['dtl_bsw']; ?></p>
+                     <div>
+                     <p class="description mt-3"><i class="fas fa-clock"></i> </i> Deadline Registrasi : <?php 
+                      $tanggal=$row['tgl_tutup'];
+                     function tgl_indo($tanggal){
+                      $bulan = array (
+                        1 =>   'Januari',
+                        'Februari',
+                        'Maret',
+                        'April',
+                        'Mei',
+                        'Juni',
+                        'Juli',
+                        'Agustus',
+                        'September',
+                        'Oktober',
+                        'November',
+                        'Desember'
+                      );
+                      $pecahkan = explode('-', $tanggal);
+                      
+                      // variabel pecahkan 0 = tanggal
+                      // variabel pecahkan 1 = bulan
+                      // variabel pecahkan 2 = tahun
+                     
+                      return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+                    }
+ 
+                     //$newDate = date("d F Y", strtotime($tanggal)); 
+                     //echo $newDate; 
+                     echo tgl_indo(date('Y-m-d', strtotime($tanggal)));
+                     
+                     
+                     ?> 
+                      <?php 
+                        // $status=$row['tgl_tutup'];
+                        // $today = strtotime(date("Y-m-d H:i:s"));
+                        // $tommorrow = date("Y-m-d", mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")));
+                        //echo $tommorrow;
+
+                        ?>
+                     <?php 
+                        $status=$row['tgl_tutup'];
+                        $tommorrow = date("Y-m-d");
+                        
+                        if($status > $tommorrow ):
+                        ?>
+                    <span class="badge badge-pill badge-success">DIBUKA</span></p> 
+                  <?php else:?>
+                    <span class="badge badge-pill badge-danger">DITUTUP</span></p>
+                    <?php endif;?>
+                     
+                     </div>
+                   </div>
+                 </div>
+                 <?php } ?>
+
+                 <?php
+               $id_bsw = '2';
+                $sql = "SELECT * FROM beasiswa WHERE id_bsw=?";
+                $stmt = $con->prepare($sql); 
+                $stmt->bind_param("i", $id_bsw);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+
+
+                ?>
+                 <div class="card card-lift--hover shadow border-0">
+                   <div class="card-body py-5">
+                     <div class="icon icon-shape bg-gradient-primary text-white rounded-circle mb-4">
+                     <i class="fas fa-hand-holding-usd"></i>
+                     </div>
+                     <h4 class="h3 text-primary text-uppercase"><?php echo $row['nama_bsw']; ?></h4>
+                     <p class="description mt-3"><?php echo $row['dtl_bsw']; ?></p>
+                     <div>
+                     <p class="description mt-3"><i class="fas fa-clock"></i> </i> Deadline Registrasi : <?php 
+                      $tanggal=$row['tgl_tutup'];
+                     function tgl_indo2($tanggal){
+                      $bulan = array (
+                        1 =>   'Januari',
+                        'Februari',
+                        'Maret',
+                        'April',
+                        'Mei',
+                        'Juni',
+                        'Juli',
+                        'Agustus',
+                        'September',
+                        'Oktober',
+                        'November',
+                        'Desember'
+                      );
+                      $pecahkan = explode('-', $tanggal);
+                      
+                      // variabel pecahkan 0 = tanggal
+                      // variabel pecahkan 1 = bulan
+                      // variabel pecahkan 2 = tahun
+                     
+                      return $pecahkan[2] . ' ' . $bulan[ (int)$pecahkan[1] ] . ' ' . $pecahkan[0];
+                    }
+ 
+                     //$newDate = date("d F Y", strtotime($tanggal)); 
+                     //echo $newDate; 
+                     echo tgl_indo2(date('Y-m-d', strtotime($tanggal)));
+                     
+                     
+                     ?> 
+                      <?php 
+                        // $status=$row['tgl_tutup'];
+                        // $today = strtotime(date("Y-m-d H:i:s"));
+                        // $tommorrow = date("Y-m-d", mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")));
+                        //echo $tommorrow;
+
+                        ?>
+                     <?php 
+                        $status=$row['tgl_tutup'];
+                        $tommorrow = date("Y-m-d");
+                        
+                        if($status > $tommorrow ):
+                        ?>
+                    <span class="badge badge-pill badge-success">DIBUKA</span></p> 
+                  <?php else:?>
+                    <span class="badge badge-pill badge-danger">DITUTUP</span></p>
+                    <?php endif;?>
+                     </div>
+                   </div>
+                 </div>
+                 <?php } ?>
+               </div>
+
+
+
+               <!-- batas beasiswa -->
+
+
+               <?php
+               $id_bsw = '1';
+               $id_bsw2 = '2';
+               $tampilkan = '1';
+                $sql = "SELECT * FROM beasiswa WHERE id_bsw !=? and id_bsw!=? and tampilkan=?";
+                $stmt = $con->prepare($sql); 
+                $stmt->bind_param("iii", $id_bsw, $id_bsw2, $tampilkan);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+                ?>
+               <div class="col-lg-6">
+                 <div class="card card-lift--hover shadow border-0">
+                   <div class="card-body py-5">
+                     <div class="icon icon-shape bg-gradient-default text-white rounded-circle mb-4">
+                     <i class="fas fa-graduation-cap"></i>
+                     </div>
+                     <h4 class="h3 text-default text-uppercase"> <?php echo $row['nama_bsw']; ?></h4>
+                     <p class="description mt-3"> <?php echo $row['dtl_bsw']; ?></p>
+                     <div>
+                     <p class="description mt-3"><i class="fas fa-clock"></i> </i> Deadline Registrasi : <?php 
+                      $tanggal=$row['tgl_tutup'];
+                     
+                     echo date('d M Y', strtotime($tanggal));
+                     
+                     
+                     ?> 
+                      <?php 
+                        // $status=$row['tgl_tutup'];
+                        // $today = strtotime(date("Y-m-d H:i:s"));
+                        // $tommorrow = date("Y-m-d", mktime(0, 0, 0, date("m")  , date("d")+1, date("Y")));
+                        //echo $tommorrow;
+
+                        ?>
+                     <?php 
+                        $status=$row['tgl_tutup'];
+                        $tommorrow = date("Y-m-d");
+                        
+                        if($status > $tommorrow ):
+                        ?>
+                    <span class="badge badge-pill badge-success">DIBUKA</span></p> 
+                  <?php else:?>
+                    <span class="badge badge-pill badge-danger">DITUTUP</span></p>
+                    <?php endif;?>
+                     
+                     </div>
+                   </div>
+                 </div>
+               </div>
+                 <?php } ?>
+
+
+              <!-- pengumuman -->
+
               <?php
-
-                $status='1';                   
-                $rt = mysqli_query($con,"SELECT * FROM informasi where status='$status'");
-                $cnt=1;
-                $many_rows = mysqli_num_rows($rt);
-                $val = mysqli_fetch_array($rt);
-                {?><?php 
-                  $rows=htmlentities($many_rows);
-                  $jdl_info=htmlentities ($val['jdl_info']);
-                  $detail_info=htmlentities ($val['detail_info']);
-                  if($rows > "0"){
-
-                  echo  "
+                $status = '1';
+                $id_info = '1';
+                $sql = "SELECT * FROM informasi WHERE id_info =? and status=?"; 
+                $stmt = $con->prepare($sql); 
+                $stmt->bind_param("ii", $id_info, $status);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                while ($row = $result->fetch_assoc()) {
+                ?>
                   <div class='col-lg-12'>
                   <div class='row'>
                         <div class='col-lg-12' id='pengumuman'>
@@ -146,54 +478,23 @@ include("include/config.php");
                               <i class='fas fa-newspaper'></i> 
                               </div> 
 
-                              <h4 class='h3 text-primary text-uppercase' >".$jdl_info."</h4>
-                              <p class='description mt-3'>".$detail_info."</p>
+                              <h4 class='h3 text-primary text-uppercase' ><?php echo $row['jdl_info']; ?></h4>
+                              <?php echo $row['detail_info']; ?>
 
                             </div>
 
                           </div>
-                        </div>";
-                  }
-                    else { }
-            
-                }?>
-
-
-               <!-- informasi beasiswa dan pinjaman -->
-               <div class="col-lg-6">
-                 <div class="card card-lift--hover shadow border-0">
-                   <div class="card-body py-5">
-                     <div class="icon icon-shape bg-gradient-success text-white rounded-circle mb-4">
-                     <i class="fas fa-graduation-cap"></i>
-                     </div>
-                     <h4 class="h3 text-success text-uppercase">Beasiswa Kebutuhan UKDW</h4>
-                     <p class="description mt-3">Ditawarkan kepada mahasiswa minimal telah duduk di semester II yang mengalami kesulitan finansial.</p>
-                     <div>
-                     <p class="description mt-3"><i class="fas fa-clock"></i> </i> Deadline Registrasi : 20 Agustus 2020 <span class="badge badge-pill badge-success">DIBUKA</span></p>
+                        </div>
                      </div>
                    </div>
                  </div>
                </div>
-               <div class="col-lg-6">
-                 <div class="card card-lift--hover shadow border-0">
-                   <div class="card-body py-5">
-                     <div class="icon icon-shape bg-gradient-danger text-white rounded-circle mb-4">
-                     <i class="fas fa-hand-holding-usd"></i>
-                     </div>
-                     <h4 class="h3 text-danger text-uppercase">Pinjaman Registrasi UKDW</h4>
-                     <p class="description mt-3">Ditawarkan kepada mahasiswa minimal telah duduk di semester II yang mengalami kesulitan finansial.</p>
-                     <div>
-                     <p class="description mt-3"><i class="fas fa-clock"></i> </i> Deadline Registrasi : 20 Agustus 2020 <span class="badge badge-pill badge-danger">DITUTUP</span></p>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
+                 <?php } ?>
            </div>
          </div>
        </div>
      </section>
-     <!-- <section class="py-6">
+     <section class="py-6">
        <div class="container">
          <div class="row row-grid align-items-center">
            <div class="col-md-6 order-md-2">
@@ -245,8 +546,8 @@ include("include/config.php");
            </div>
          </div>
        </div>
-     </section> -->
-     <!-- <section class="py-6">
+     </section> 
+     <section class="py-6">
        <div class="container">
          <div class="row row-grid align-items-center">
            <div class="col-md-6">
@@ -261,10 +562,10 @@ include("include/config.php");
            </div>
          </div>
        </div>
-     </section> -->
-      <!-- <section class="py-6">
+     </section>
+      <section class="py-6">
        <div class="container">
-         <div class="row row-grid align-items-center">
+         <!-- <div class="row row-grid align-items-center">
            <div class="col-md-6 order-md-2">
              <img src="./assets/img/theme/landing-3.png" class="img-fluid">
            </div>
@@ -275,9 +576,18 @@ include("include/config.php");
                <a href="./pages/widgets.html" class="font-weight-bold text-info mt-5">Explore widgets</a>
              </div>
            </div>
-         </div>
+         </div> -->
+
+         <div class="row">
+        <div class="col">
+          <div class="card border-0">
+            <div id="map-customs" class="map-canvas" data-zoom="18" data-lat="-7.7861071" data-lng="110.3783969" style="height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+
        </div>
-     </section> -->
+     </section>
      <!-- <section class="py-7 section-nucleo-icons bg-white overflow-hidden">
        <div class="container">
          <div class="row justify-content-center">
@@ -363,8 +673,212 @@ include("include/config.php");
            </div>
          </div>
        </div>
-     </section> -->
-   </div>
+     </section>
+   </div> -->
    <?php
 include("include/footer.php");
- ?>
+ ?>  
+ <!-- Core JS -->
+ <script src="assets/vendor/jquery/dist/jquery.min.js"></script>
+ <script src="assets/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+ <script src="assets/vendor/js-cookie/js.cookie.js"></script>
+ <script src="assets/vendor/jquery.scrollbar/jquery.scrollbar.min.js"></script>
+ <script src="assets/vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js"></script>
+
+  <!-- Optional JS -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAq_ljbjvx9Z6BGjTAwwxdaa-_n4Mr48-E&ver=3.19.17"></script>
+  
+  <!-- Calender JS -->
+  <script src="assets/vendor/moment/min/moment.min.js"></script>
+  <script src="assets/vendor/fullcalendar/dist/fullcalendar.min.js"></script>
+<script src="assets/vendor/fullcalendar/dist/locale/id.js"></script>
+  <script>
+
+	$(document).ready(function() {
+		
+		$('#calendar').fullCalendar({
+      lang: 'id',
+			header: {
+				left: '',
+				center: '',
+				right: '' 
+			},
+
+      buttonIcons: {
+      prev: 'calendar--prev',
+      next: 'calendar--next'
+    },
+    theme: false,
+			
+
+			eventLimit: true, // allow "more" link when too many events
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end) {
+				
+				$('#ModalAdd #start').val(moment(start).format('YYYY-MM-DD '));
+				$('#ModalAdd #end').val(moment(end).format('YYYY-MM-DD '));
+				$('#ModalAdd').modal('show');
+			},
+			eventRender: function(event, element) {
+        element.prop('title', event.title);
+				element.bind('click', function() {
+					$('#ModalEdit #id').val(event.id);
+					$('#ModalEdit #title').val(event.title);
+					$('#ModalEdit #color').val(event.color);
+					$('#ModalEdit').modal('show');
+				});
+			},
+
+      viewRender: function(view) {
+      var calendarDate = $('#calendar').fullCalendar('getDate');
+      var calendarMonth = calendarDate.month();
+
+      //Set data attribute for header. This is used to switch header images using css
+      // $this.find('.fc-toolbar').attr('data-calendar-month', calendarMonth);
+
+      //Set title in page header
+      $('.fullcalendar-title').html(view.title);
+    },
+
+			eventDrop: function(event, delta, revertFunc) { // si changement de position
+
+				edit(event);
+
+			},
+			eventResize: function(event,dayDelta,minuteDelta,revertFunc) { // si changement de longueur
+
+				edit(event);
+
+			},
+			events: [
+			<?php foreach($events as $event): 
+			
+				$start = $event['start'];
+				$end = $event['end'];
+
+			?>
+				{
+					id: '<?php echo $event['id']; ?>',
+					title: '<?php echo $event['title']; ?>',
+					start: '<?php echo $start; ?>',
+					end: '<?php echo $end; ?>',
+					color: '<?php echo $event['color']; ?>',
+				},
+      <?php endforeach; ?>
+      
+      <?php foreach($events2 as $event): 
+			
+      $start = $event['tgl_buka'];
+      $end = $event['tgl_tutup'];
+
+    ?>
+      {
+        id: '<?php echo $event['id_bsw']; ?>',
+        title: '<?php echo $event['nama_bsw']; ?>',
+        start: '<?php echo $start; ?>',
+        end: '<?php echo $end; ?>',
+        color: '#f5365c',
+      },
+    <?php endforeach; ?>
+			]
+		});
+		
+		
+    
+  //Calendar views switch
+  $('body').on('click', '[data-calendar-view]', function(e) {
+    e.preventDefault();
+
+    $('[data-calendar-view]').removeClass('active');
+    $(this).addClass('active');
+
+    var calendarView = $(this).attr('data-calendar-view');
+    $('#calendar').fullCalendar('changeView', calendarView);
+  });
+
+
+  //Calendar Next
+  $('body').on('click', '.fullcalendar-btn-next', function(e) {
+    e.preventDefault();
+    $('#calendar').fullCalendar('next');
+  });
+
+
+  //Calendar Prev
+  $('body').on('click', '.fullcalendar-btn-prev', function(e) {
+    e.preventDefault();
+    $('#calendar').fullCalendar('prev');
+  });
+
+//Display Current Date as Calendar widget header
+var mYear = moment().format('YYYY');
+    var mDay = moment().format('dddd, MMM D');
+    $('.widget-calendar-year').html(mYear);
+    $('.widget-calendar-day').html(mDay);
+	});
+
+</script>
+
+<script>
+
+//
+// Google maps
+//
+
+var $map = $('#map-customs'),
+    map,
+    lat,
+    lng,
+    color = "#5e72e4";
+
+function initMap() {
+
+    map = document.getElementById('map-customs');
+    lat = map.getAttribute('data-lat');
+    lng = map.getAttribute('data-lng');
+
+    var myLatlng = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+        zoom: 16,
+        scrollwheel: false,
+        center: myLatlng,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        styles: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":color},{"visibility":"on"}]}]
+    }
+
+    map = new google.maps.Map(map, mapOptions);
+
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        title: 'Universitas Kristen Duta Wacana'
+    });
+
+    var contentString = '<div class="info-window-content"><div class="text-lg-left"><h2 class="h3 text-primary text-uppercase">Universitas Kristen Duta Wacana</h2>' +
+                        '<p>Jl. dr. Wahidin Sudirohusodo no. 5-25 Yogyakarta, Indonesia – 55224</p></div>' + 
+        '<p>Telp. +62274563929, Fax: +62274513235</p></div>';
+
+    var infowindow = new google.maps.InfoWindow({
+        content: contentString
+    });
+
+    google.maps.event.addListener(marker, 'click', function() {
+        infowindow.open(map, marker);
+    });
+}
+
+if($map.length) {
+    google.maps.event.addDomListener(window, 'load', initMap);
+}
+
+
+</script>
+<script src="assets/js/argon.js?v=1.1.0"></script>
+</div>
+      </div>
+
+</body>
+
+</html>

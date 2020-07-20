@@ -558,7 +558,7 @@ include("include/sidebar.php");
                           <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                           </div>
-                          <input class="form-control datepicker" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php echo htmlentities($row['tgl_lahir']);?>">
+                          <input class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php echo htmlentities($row['tgl_lahir']);?>">
                         </div>
                         
                       </div>
@@ -775,9 +775,10 @@ include("include/sidebar.php");
 </script>
 <script src="js/app.js"></script>
 <script>
+
 $.fn.datepicker.defaults.format = "dd/mm/yyyy";
-$('.datepicker').datepicker({
-    format: "dd-mm-yyyy",
+$('.tgl_lahir').datepicker({
+    format: "yyyy-mm-dd",
     language: "id",
     todayHighlight: true
 });

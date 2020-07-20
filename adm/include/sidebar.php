@@ -173,10 +173,29 @@
               <div class="collapse" id="navbar-masterdata">
                 <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                    <a href="../pages/maps/google.html" class="nav-link">Data Fakultas</a>
+                    <a href="data_fakultas" class="nav-link">Data Fakultas</a>
                   </li>
                   <li class="nav-item">
-                    <a href="../pages/maps/vector.html" class="nav-link">Data Program Studi</a>
+                    <a href="data_prodi" class="nav-link">Data Program Studi</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="role" class="nav-link">Data Hak Akses</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#navbar-masterdata2" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-masterdata">
+                <i class="ni ni-hat-3 text-warning"></i>
+                <span class="nav-link-text">Beasiswa</span>
+              </a>
+              <div class="collapse" id="navbar-masterdata2">
+                <ul class="nav nav-sm flex-column">
+                <li class="nav-item">
+                    <a href="list_beasiswa" class="nav-link">List Beasiswa</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="persyaratan_beasiswa" class="nav-link">List Persyaratan Beasiswa</a>
                   </li>
                   <li class="nav-item">
                     <a href="../pages/maps/google.html" class="nav-link">Data Hak Akses</a>

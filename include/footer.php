@@ -4,7 +4,7 @@
       <div class="row align-items-center justify-content-xl-between">
         <div class="col-xl-6">
           <div class="copyright text-center text-xl-left text-muted">
-            &copy; 2020 <a href="https://www.ukdw.ac.id" class="font-weight-bold ml-1" target="_blank">UKDW</a> | Developed by <a href="https://www.ivanhectors.me" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>. All rights reserved.
+            &copy; 2020 <a href="https://www.ukdw.ac.id" class="font-weight-bold ml-1" target="_blank">UKDW</a> | Developed by <a href="https://www.ivanhectors.me" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>. All rights reserved. 
           </div>
         </div>
         <div class="col-xl-6">

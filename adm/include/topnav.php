@@ -163,19 +163,19 @@ $currentTime = date( 'd-m-Y h:i:s A', time () );
               <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="ni ni-ungroup"></i>
               </a>
-              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-default dropdown-menu-right">
+              <div class="dropdown-menu dropdown-menu-lg dropdown-menu-dark bg-default dropdown-menu-right pilihan-menu">
                 <div class="row shortcuts px-4">
-                  <a href="#!" class="col-4 shortcut-item">
+                  <a href="kalender" class="col-4 shortcut-item">
                     <span class="shortcut-media avatar rounded-circle bg-gradient-red">
                       <i class="ni ni-calendar-grid-58"></i>
                     </span>
-                    <small>Calendar</small>
+                    <small>Kalender</small>
                   </a>
-                  <a href="#!" class="col-4 shortcut-item">
+                  <a href="pengumuman" class="col-4 shortcut-item">
                     <span class="shortcut-media avatar rounded-circle bg-gradient-orange">
-                      <i class="ni ni-email-83"></i>
+                    <i class="fas fa-bullhorn"></i>
                     </span>
-                    <small>Email</small>
+                    <small>Pengumuman</small>
                   </a>
                   <a href="#!" class="col-4 shortcut-item">
                     <span class="shortcut-media avatar rounded-circle bg-gradient-info">
