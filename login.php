@@ -3,112 +3,91 @@ include("include/config.php");
 session_start();
 error_reporting(0);
 
-if(isset($_POST["login"]))  
- {  
-  $username = mysqli_real_escape_string($con, $_POST["username"]);  
-  $password = mysqli_real_escape_string($con, $_POST["password"]);  
-  $query = "SELECT * FROM user_admin WHERE username = '$username' and status = '1'"; 
+if (isset($_POST["login"])) {
+  $username = mysqli_real_escape_string($con, $_POST["username"]);
+  $password = mysqli_real_escape_string($con, $_POST["password"]);
+  $query = "SELECT * FROM user_admin WHERE username = '$username' and status = '1'";
   $query2 = "SELECT * FROM user_mhs WHERE username = '$username'";
   $query3 = "SELECT * FROM user_acc WHERE username = '$username'";
-  $admin = mysqli_query($con, $query);  
+  $admin = mysqli_query($con, $query);
   $mhs = mysqli_query($con, $query2);
   $acc = mysqli_query($con, $query3);
-  $_SESSION['errmsg']="Username / Password yang anda masukkan salah";
-  $num=mysqli_fetch_array($con, $query);
-  $num1=mysqli_fetch_array($con, $query2);
-  $num2=mysqli_fetch_array($con, $query3);
-  if(mysqli_num_rows($admin) > 0)  
-           {  
-                while($row = mysqli_fetch_array($admin))  
-                {  
-                     if(password_verify($password, $row["password"]))  
-                     {  
-                          //return true;  
-                          $extra="adm/";//
-                          $_SESSION["admlogin"] = $username; 
-                          $_SESSION['id']=$num['id']; 
-                          $host=$_SERVER['HTTP_HOST']; 
-                          $uip=$_SERVER['REMOTE_ADDR'];
-                          $status=1;
-                          $log=mysqli_query($con,"insert into userlog(iduserlog,username,userip,status) values('".$_SESSION['id']."','".$_SESSION['admlogin']."','$uip','$status')");
-                          $uri=rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
-                          header("location:http://$host$uri/$extra");
-                          exit();
-                     } 
-                     else  
-                     {   
+  $_SESSION['errmsg'] = "Username / Password yang anda masukkan salah";
+  $num = mysqli_fetch_array($con, $query);
+  $num1 = mysqli_fetch_array($con, $query2);
+  $num2 = mysqli_fetch_array($con, $query3);
+  if (mysqli_num_rows($admin) > 0) {
+    while ($row = mysqli_fetch_array($admin)) {
+      if (password_verify($password, $row["password"])) {
+        //return true;  
+        $extra = "adm/"; //
+        $_SESSION["admlogin"] = $username;
+        $_SESSION['id'] = $num['id'];
+        $host = $_SERVER['HTTP_HOST'];
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 1;
+        $log = mysqli_query($con, "insert into userlog(iduserlog,username,userip,status) values('" . $_SESSION['id'] . "','" . $_SESSION['admlogin'] . "','$uip','$status')");
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        header("location:http://$host$uri/$extra");
+        exit();
+      } else {
 
-                          $extra="login";
-                          $host  = $_SERVER['HTTP_HOST'];
-                          $uri  = rtrim(dirname($_SERVER['PHP_SELF']),'/\\');
-                          $_SESSION['admlogin']= $username;	
-                          $uip=$_SERVER['REMOTE_ADDR'];
-                          $status=0;
-                          mysqli_query($con,"insert into userlog(username,userip,status) values('".$_SESSION['admlogin']."','$uip','$status')");
-                          $_SESSION['errmsg']="Username / Password salah";
-                          header("location:http://$host$uri/$extra?failed=1");
-                          echo '';
-                          exit(); 
-                          
-                     } 
-                }
-            }
+        $extra = "login";
+        $host  = $_SERVER['HTTP_HOST'];
+        $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $_SESSION['admlogin'] = $username;
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 0;
+        mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['admlogin'] . "','$uip','$status')");
+        $_SESSION['errmsg'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra?failed=1");
+        echo '';
+        exit();
+      }
+    }
+  } elseif (mysqli_num_rows($mhs) > 0) {
+    while ($row = mysqli_fetch_array($mhs)) {
+      if (password_verify($password, $row["password"])) {
+        //return true;  
+        $_SESSION["username"] = $username;
+        header("location:mhs/");
+      } else {
+        echo '';
+      }
+    }
+  } elseif (mysqli_num_rows($acc) > 0) {
+    while ($row = mysqli_fetch_array($acc)) {
+      if (password_verify($password, $row["password"])) {
+        //return true;  
+        $_SESSION["username"] = $username;
+        header("location:acc/");
+      } else {
+        echo '<script>alert("Wrong User Details")</script>';
+      }
+    }
+  } else {
 
-            elseif (mysqli_num_rows($mhs) > 0){
-              while($row = mysqli_fetch_array($mhs))  
-              {  
-                   if(password_verify($password, $row["password"]))  
-                   {  
-                        //return true;  
-                        $_SESSION["username"] = $username;  
-                        header("location:mhs/");  
-                   }
-                   else  
-                   {  
-                        echo '';  
-                   }  
-              }
-            }
-
-            elseif (mysqli_num_rows($acc) > 0){
-              while($row = mysqli_fetch_array($acc))  
-              {  
-                   if(password_verify($password, $row["password"]))  
-                   {  
-                        //return true;  
-                        $_SESSION["username"] = $username;  
-                        header("location:acc/");  
-                   }
-                   else  
-                   {  
-                        echo '<script>alert("Wrong User Details")</script>';  
-                   }  
-              }
-            }
-            else{
-
-              echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+    echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
                   <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
                   <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
                   <span data-notify="message">Terjadi kesalahan dengan akun anda. Pastikan akun anda aktif untuk dapat login.</span>
                 </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
                 <span aria-hidden="true">×</span></button></div>';
-            }
-            
-      } 
+  }
+}
 
-      
-    
- ?>
- <!DOCTYPE html>
+
+
+?>
+<!DOCTYPE html>
 <html>
 
 <head>
-<meta charset="utf-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <meta name="description" content="SIB UKDW LOGIN">
-   <meta name="author" content="Ivan Hector Sinambela">
-   <title>SIB - LOGIN</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="SIB UKDW LOGIN">
+  <meta name="author" content="Ivan Hector Sinambela">
+  <title>SIB - LOGIN</title>
   <!-- Favicon -->
   <link rel="icon" href="./assets/img/brand/favicon.png" type="image/png">
   <!-- Fonts -->
@@ -148,49 +127,49 @@ if(isset($_POST["login"]))
         </div>
 
         <hr class="d-lg-none" />
-         <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
-               <i class="fab fa-facebook-square"></i>
-               <span class="nav-link-inner--text d-lg-none">Facebook</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.instagram.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Instagram">
-               <i class="fab fa-instagram"></i>
-               <span class="nav-link-inner--text d-lg-none">Instagram</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://twitter.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Twitter">
-               <i class="fab fa-twitter-square"></i>
-               <span class="nav-link-inner--text d-lg-none">Twitter</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.youtube.com/channel/UC5cKNXrmMhLC8jdbap_ZBbg/feed?reload=9" target="_blank" data-toggle="tooltip" title="" data-original-title="Subscibe UKDW di Youtube">
-               <i class="fab fa-youtube"></i>
-               <span class="nav-link-inner--text d-lg-none">Youtube</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://ukdw.ac.id" target="_blank" data-toggle="tooltip" title="" data-original-title="Kunjungi UKDW Website">
-               <i class="ni ni-world"></i>
-               <span class="nav-link-inner--text d-lg-none">Website</span>
-             </a>
-           </li>
-           <li class="nav-item d-none d-lg-block ml-lg-4">
-             <a href="../sib/index#pengumuman" class="btn btn-neutral btn-icon">
-               <span class="btn-inner--icon">
-                 <i class="fas fa-newspaper mr-2"></i> 
-               </span>
-               <span class="nav-link-inner--text">Pengumuman</span>
-             </a>
-           </li>
-         </ul>
-       </div>
-     </div>
-   </nav>
+        <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
+              <i class="fab fa-facebook-square"></i>
+              <span class="nav-link-inner--text d-lg-none">Facebook</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.instagram.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Instagram">
+              <i class="fab fa-instagram"></i>
+              <span class="nav-link-inner--text d-lg-none">Instagram</span>
+            </a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://twitter.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Twitter">
+              <i class="fab fa-twitter-square"></i>
+              <span class="nav-link-inner--text d-lg-none">Twitter</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.youtube.com/channel/UC5cKNXrmMhLC8jdbap_ZBbg/feed?reload=9" target="_blank" data-toggle="tooltip" title="" data-original-title="Subscibe UKDW di Youtube">
+              <i class="fab fa-youtube"></i>
+              <span class="nav-link-inner--text d-lg-none">Youtube</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://ukdw.ac.id" target="_blank" data-toggle="tooltip" title="" data-original-title="Kunjungi UKDW Website">
+              <i class="ni ni-world"></i>
+              <span class="nav-link-inner--text d-lg-none">Website</span>
+            </a>
+          </li>
+          <li class="nav-item d-none d-lg-block ml-lg-4">
+            <a href="../sib/index" class="btn btn-neutral btn-icon">
+              <span class="btn-inner--icon">
+                <i class="fas fa-home mr-2"></i>
+              </span>
+              <span class="nav-link-inner--text">Home</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
   <!-- Main content -->
   <div class="main-content">
     <!-- Header -->
@@ -217,7 +196,9 @@ if(isset($_POST["login"]))
         <div class="col-lg-5 col-md-7">
           <div class="card bg-secondary border-0 mb-0">
             <div class="card-header bg-transparent pb-1">
-              <div class="text-muted text-center"><h1>LOGIN</h1></div>
+              <div class="text-muted text-center">
+                <h1>LOGIN</h1>
+              </div>
               <!-- <div class="btn-wrapper text-center">
                 <a href="#" class="btn btn-neutral btn-icon">
                   <span class="btn-inner--icon"><img src="../../assets/img/icons/common/github.svg"></span>
@@ -232,32 +213,30 @@ if(isset($_POST["login"]))
             <div class="card-body px-lg-5 py-lg-5">
               <form role="form" method="post" class="needs-validation">
                 <div class="form-group mb-3">
-              <?php If(isset($_GET['failed']) && $_GET['failed'] == 1)
-              {?>
-									                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <span class="alert-text"><i class="fas fa-exclamation-circle">&nbsp</i><strong><?php echo htmlentities($_SESSION['errmsg']); ?><?php echo htmlentities($_SESSION['errmsg']="");?></strong></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <?php } ?>
+                  <?php if (isset($_GET['failed']) && $_GET['failed'] == 1) { ?>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                      <span class="alert-text"><i class="fas fa-exclamation-circle">&nbsp</i><strong><?php echo htmlentities($_SESSION['errmsg']); ?><?php echo htmlentities($_SESSION['errmsg'] = ""); ?></strong></span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  <?php } ?>
 
-              <!-- logout -->
-              <?php If(isset($_GET['logout']) && $_GET['logout'] == 1)
-              {?>
-									                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <span class="alert-text"><i class="fas fa-check-circle"></i>&nbsp</i><strong><?php echo htmlentities($_SESSION['errmsg']); ?><?php echo htmlentities($_SESSION['errmsg']="");?></strong></span>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <?php } ?>
+                  <!-- logout -->
+                  <?php if (isset($_GET['logout']) && $_GET['logout'] == 1) { ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <span class="alert-text"><i class="fas fa-check-circle"></i>&nbsp</i><strong><?php echo htmlentities($_SESSION['errmsg']); ?><?php echo htmlentities($_SESSION['errmsg'] = ""); ?></strong></span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                  <?php } ?>
 
                   <div class="input-group input-group-merge input-group-alternative">
                     <div class="input-group-prepend">
                       <span class="input-group-text">@</span>
                     </div>
-                    <input class="form-control" placeholder="Username" name="username" id="validationDefaultUsername" aria-describedby="inputGroupPrepend1" type="text" title="Masukkan NIM/Username"  oninvalid="this.setCustomValidity('Selahkan masukkan NIM/Username anda.')" oninput="setCustomValidity('')" required>
+                    <input class="form-control" placeholder="Username" name="username" id="validationDefaultUsername" aria-describedby="inputGroupPrepend1" type="text" title="Masukkan NIM/Username" oninvalid="this.setCustomValidity('Selahkan masukkan NIM/Username anda.')" oninput="setCustomValidity('')" required>
                   </div>
                 </div>
                 <div class="form-group">
@@ -265,7 +244,10 @@ if(isset($_POST["login"]))
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
                     </div>
-                    <input class="form-control" placeholder="Password" name="password" type="password" title="Masukkan Password"  oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
+                    <input class="form-control" id="password" placeholder="Password" name="password" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i toggle="#password" class="fas fa-eye toggle-password"></i></span>
+                    </div>
                   </div>
                 </div>
                 <div class="custom-control custom-control-alternative custom-checkbox">
@@ -275,7 +257,7 @@ if(isset($_POST["login"]))
                   </label>
                 </div>
                 <div class="text-center">
-                <button type="submit" id="login" name="login" value="Login" class="btn btn-primary my-4">Sign in</button>
+                  <button type="submit" id="login" name="login" value="Login" class="btn btn-primary my-4">Sign in</button>
                 </div>
               </form>
             </div>
@@ -352,10 +334,31 @@ if(isset($_POST["login"]))
     })();
   </script>
   <script type="text/javascript">
-    document.getElementById("close_direct").onclick = function () {
-        location.href = "login";
+    document.getElementById("close_direct").onclick = function() {
+      location.href = "login";
     };
-</script>
+  </script>
+  <script>
+    function showPass() {
+      var x = document.getElementById("password");
+      if (x.type === "password") {
+        x.type = "text";
+      } else {
+        x.type = "password";
+      }
+    }
+
+    $(".toggle-password").click(function() {
+
+      $(this).toggleClass("fa-eye fa-eye-slash");
+      var input = $($(this).attr("toggle"));
+      if (input.attr("type") == "password") {
+        input.attr("type", "text");
+      } else {
+        input.attr("type", "password");
+      }
+    });
+  </script>
 </body>
 
 </html>

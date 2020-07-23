@@ -84,37 +84,37 @@
          </ul> -->
          <hr class="d-lg-none" />
          <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.facebook.com/DutaWacana/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
-               <i class="fab fa-facebook-square"></i>
-               <span class="nav-link-inner--text d-lg-none">Facebook</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.instagram.com/duta_wacana" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Instagram">
-               <i class="fab fa-instagram"></i>
-               <span class="nav-link-inner--text d-lg-none">Instagram</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://twitter.com/ukdw" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Twitter">
-               <i class="fab fa-twitter-square"></i>
-               <span class="nav-link-inner--text d-lg-none">Twitter</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://www.youtube.com/channel/UC5cKNXrmMhLC8jdbap_ZBbg/feed?reload=9" target="_blank" data-toggle="tooltip" title="" data-original-title="Subscibe UKDW di Youtube">
-               <i class="fab fa-youtube"></i>
-               <span class="nav-link-inner--text d-lg-none">Youtube</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a class="nav-link nav-link-icon" href="https://ukdw.ac.id" target="_blank" data-toggle="tooltip" title="" data-original-title="Kunjungi UKDW Website">
-               <i class="ni ni-world"></i>
-               <span class="nav-link-inner--text d-lg-none">Website</span>
-             </a>
-           </li>
-           <li class="nav-item d-none d-lg-block ml-lg-4">
+         <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
+              <i class="fab fa-facebook-square"></i>
+              <span class="nav-link-inner--text d-lg-none">Facebook</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.instagram.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Instagram">
+              <i class="fab fa-instagram"></i>
+              <span class="nav-link-inner--text d-lg-none">Instagram</span>
+            </a>
+          </li> 
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://twitter.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Twitter">
+              <i class="fab fa-twitter-square"></i>
+              <span class="nav-link-inner--text d-lg-none">Twitter</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://www.youtube.com/channel/UC5cKNXrmMhLC8jdbap_ZBbg/feed?reload=9" target="_blank" data-toggle="tooltip" title="" data-original-title="Subscibe UKDW di Youtube">
+              <i class="fab fa-youtube"></i>
+              <span class="nav-link-inner--text d-lg-none">Youtube</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link nav-link-icon" href="https://ukdw.ac.id" target="_blank" data-toggle="tooltip" title="" data-original-title="Kunjungi UKDW Website">
+              <i class="ni ni-world"></i>
+              <span class="nav-link-inner--text d-lg-none">Website</span>
+            </a>
+          </li>           
+          <li class="nav-item d-none d-lg-block ml-lg-4">
              <a href="../sib/login" class="btn btn-neutral btn-icon">
                <span class="btn-inner--icon">
                  <i class="ni ni-single-02 mr-2"></i>

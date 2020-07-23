@@ -90,7 +90,7 @@ echo "
 </div><button type='button' class='close' data-dismiss='alert' aria-label='Close' style='position: absolute; right: 10px; top: 5px; z-index: 1082;'>
 <span aria-hidden='true'>×</span></button></div>
 ";
-}
+} 
 else
 {
   if($_FILES["fileToUpload"]["size"] > 2*MB) 

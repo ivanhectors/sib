@@ -177,11 +177,11 @@ $currentTime = date( 'd-m-Y h:i:s A', time () );
                     </span>
                     <small>Pengumuman</small>
                   </a>
-                  <a href="#!" class="col-4 shortcut-item">
+                  <a href="slider" class="col-4 shortcut-item">
                     <span class="shortcut-media avatar rounded-circle bg-gradient-info">
-                      <i class="ni ni-credit-card"></i>
+                    <i class="fas fa-images"></i>
                     </span>
-                    <small>Payments</small>
+                    <small>Slider</small>
                   </a>
                   <a href="#!" class="col-4 shortcut-item">
                     <span class="shortcut-media avatar rounded-circle bg-gradient-green">
