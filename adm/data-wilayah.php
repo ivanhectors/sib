@@ -45,4 +45,39 @@
 		break;
 		
 	}
+ 
+
+	switch ($_GET['jenis']) {
+		//ambil data kota / kabupaten
+		case 'fakultas':
+		$kd_fakultas = $_POST['kd_fakultas'];
+		if($kd_fakultas == ''){
+		     exit;
+		}else{
+		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE kd_fakultas ='$kd_fakultas' ORDER BY kd_prodi ASC") or die ('Query Gagal');
+		     while($data = mysqli_fetch_array($getcity)){
+		          echo '<option value="'.$data['kd_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
+		     }
+		     exit;    
+		}
+		break; 
+		
+	}
+
+	switch ($_GET['jenis']) {
+		//ambil data kota / kabupaten
+		case 'fakultasedit':
+		$kd_fakultas = $_POST['kd_fakultas'];
+		if($kd_fakultas == ''){
+		     exit;
+		}else{
+		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE kd_fakultas ='$kd_fakultas' ORDER BY kd_prodi ASC") or die ('Query Gagal');
+		     while($data = mysqli_fetch_array($getcity)){
+		          echo '<option value="'.$data['kd_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
+		     }
+		     exit;    
+		}
+		break; 
+		
+	}
 ?>

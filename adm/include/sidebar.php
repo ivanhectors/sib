@@ -179,7 +179,7 @@
                     <a href="data_prodi" class="nav-link">Data Program Studi</a>
                   </li>
                   <li class="nav-item">
-                    <a href="role" class="nav-link">Data Hak Akses</a>
+                    <a href="data_role" class="nav-link">Data Hak Akses</a>
                   </li>
                 </ul>
               </div>

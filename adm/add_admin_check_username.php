@@ -1,6 +1,7 @@
 <?php 
 session_start();
 require_once("include/config.php");
+
 if(!empty($_POST["username"])) {
 	$username= $_POST["username"];
 	
@@ -12,7 +13,7 @@ echo "<span style='color:red' title='Username Tidak Tersedia'><i class='fas fa-t
  echo "<script>$('#submit').prop('disabled',true);</script>";
 } else{
 	
-	echo "<span style='color:green' title='Username Tersedia'><i class='fas fa-check-circle'></i></span>";
+	echo "<span style='color:green' data-toggle='tooltip' data-placement='top' title='Username Tersedia'><i class='fas fa-check-circle'></i></span>";
  echo "<script>$('#submit').prop('disabled',false);</script>";
 }
 }

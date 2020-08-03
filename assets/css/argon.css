@@ -26673,6 +26673,7 @@ table.dataTable tbody > tr.selected
 .dt-buttons
 {
     padding-left: 1.5rem;
+    padding-right: 1.5rem;
 }
 
 .dataTables_length .form-control
