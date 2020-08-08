@@ -99,6 +99,8 @@
    .content.cover {
      border-radius: 20px;
    }
+
+
  </style>
 
  </head>

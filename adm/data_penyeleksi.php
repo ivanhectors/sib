@@ -4,7 +4,7 @@ session_start();
 include("include/config.php");
 
 if (strlen($_SESSION['admlogin']) == 0) {
-  header('location:../login');
+  header('location:../403');
 } else {
   date_default_timezone_set('Asia/Jakarta'); // change according timezone
   $currentTime = date('d-m-Y h:i:s A', time());
@@ -502,115 +502,12 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             <?php else : ?>
                               <a class="dropdown-item" href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&on=1"><i class="fas fa-lock-open" style="color:#2dce89;"></i> Aktifkan Akun</span></a>
                             <?php endif; ?>
-                            <a class="dropdown-item" style="color: black;" type="button" data-toggle="modal" data-target="#modal-edit<?php echo $row['id_acc'] ?>"><i class="fas fa-pen" style="color:#172b4d;"></i> Edit Akun</a>
+                            <a class="dropdown-item" href="data_penyeleksi_edit?id=<?php echo $row['id_acc'] ?>&&user=<?php echo $row['username'] ?>" style="color: black;" type="button" ><i class="fas fa-pen" style="color:#172b4d;"></i> Edit Akun</a>
                             <a class="dropdown-item" style="color: black;" type="button" data-toggle="modal" data-target="#reset<?php echo $row['id_acc'] ?>" ><i class="fas fa-key" style="color:#5e72e4;"></i> Reset Password</a>
                             <a class="dropdown-item" href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&del=delete" onClick="return confirm('Yakin ingin menghapus penyeleksi, <?php echo htmlentities($row['username']); ?> ?')"><i class="fas fa-trash" style="color:#f5365c;"></i> Hapus Akun</a>
                           </div>
                         </div>
                       </td>
-                      <div class="col-md-4">
-      <div class="modal fade" id="modal-edit<?php echo $row['id_acc'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-          <div class="modal-content">
-            <div class="modal-body p-0">
-              <div class="card bg-secondary border-0 mb-0">
-                <div class="card-body px-lg-5 py-lg-5">
-                  <div class="text-center text-muted mb-4">
-                    <small>Form Tambah Penyeleksi Baru</small>
-                  </div>
-                  <form role="form" method="post">
-                    <div class="form-group mb-3">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><small class="font-weight-bold">@</small></span>
-                        </div>
-                        <input onBlur="userAvailability()" id="username" name="username" class="form-control" placeholder="Username Penyeleksi Baru" type="text" title="Masukkan Username" oninvalid="this.setCustomValidity('Selahkan masukkan Username Penyeleksi baru.')" oninput="setCustomValidity('')" required>
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="user-availability-status1"></span>
-                        </div>
-                      </div>
-                      <span id="user-availability-status1"></span>
-                    </div>
-                    <div class="form-group mb-3">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                        </div>
-                        <input class="form-control" id="email" name="email" placeholder="Email Penyeleksi Baru" type="email" title="Masukkan Email" oninvalid="this.setCustomValidity('Selahkan masukkan Email Penyeleksi baru.')" oninput="setCustomValidity('')" required>
-                      </div>
-                    </div>
-                    <div class="form-group mb-3">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-key"></i></span>
-                        </div>
-                        <select class="form-control" name="role" placeholder="Pilih Akses Penyeleksi" title="Masukkan Hak Akses User" oninvalid="this.setCustomValidity('Selahkan masukkan Hak Akses User baru.')" oninput="setCustomValidity('')" required>
-                          <option value="" selected>Pilih Hak Akses User</option>
-                          <option value="2">Wakil Rektor III</option>
-                          <option value="3">Wakil Dekan III Fakultas</option>
-                          <option value="4">Dosen Wali</option>
-                        </select>
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" data-toggle="tooltip" data-placement="top" title="Selahkan masukkan Hak Akses User baru."><i class="fas fa-question-circle"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group mb-3">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-building"></i></span>
-                        </div>
-                        <select class="form-control" name="fakultas" id="fakultasedit" placeholder="Pilih Fakultas" title="Masukkan Fakultas User" oninvalid="this.setCustomValidity('Selahkan masukkan Fakultas User. Jika tidak memiliki fakultas, silahkan pilih Fakultas Lainnya.')" oninput="setCustomValidity('')" required>
-                          <option value="" selected>Pilih Fakultas</option>
-                          <?php
-                          $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by kd_fakultas ASC");
-                          ?>
-                          <?php
-                          while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                            echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
-                          }
-                          ?>
-                          <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
-                        </select>
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" data-toggle="tooltip" data-placement="top" title="Selahkan masukkan Fakultas User. Jika tidak memiliki fakultas, silahkan pilih Fakultas Lainnya."><i class="fas fa-question-circle"></i></span>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="form-group mb-3">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="fas fa-city"></i></span>
-                        </div>
-                        <select class="form-control" name="prodi" id="prodiedit" placeholder="Pilih Program Studi" title="Masukkan Program Studi Penyeleksi" id="exampleFormControlSelect1" oninvalid="this.setCustomValidity('Selahkan masukkan Program Studi User. Jika tidak memiliki Program Studi, silahkan pilih Program Studi Lainnya.')" oninput="setCustomValidity('')" required>
-                          <option value="" selected>Pilih Program Studi</option>
-                        </select>
-                        <div class="input-group-prepend">
-                          <span class="input-group-text" data-toggle="tooltip" data-placement="top" title="Selahkan masukkan Program Studi User. Jika tidak memiliki Program Studi, silahkan pilih Program Studi Lainnya."><i class="fas fa-question-circle"></i></span>
-                        </div>
-                        <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <div class="input-group input-group-merge input-group-alternative">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                        </div>
-                        <input class="form-control" type="password" name="password_default" placeholder="Password" value="1234" readonly="readonly">
-                      </div>
-                      <small>Password default Penyeleksi baru :</small><small style="color:red;"> 1234</small>
-                    </div>
-                    <div class="text-center pb-0">
-                      <button type="submit" id="submit" name="submit" class="btn btn-primary my-4">Tambah Penyeleksi Baru</button>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
                       <!-- href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&reset=true" -->
                   <!-- batas modal form validasi edit profil -->
                   <div class="col-md-4">

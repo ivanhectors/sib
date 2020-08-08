@@ -8,18 +8,10 @@
           </div>
           <div class="col-lg-6"> 
             <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-              <li class="nav-item">
-                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
-              </li>
-              <li class="nav-item">
-                <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
-              </li>
-              <li class="nav-item">
-                <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="https://www.creative-tim.com/license" class="nav-link" target="_blank">License</a>
-              </li>
+            <div class="copyright text-center text-lg-left text-muted">
+            Made with <i  style="color: #e25555;" class="fas fa-heart"></i> by<a href="https://ivanhectors.me/" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>
+            </div>
+            
             </ul>
           </div>
         </div>
@@ -58,7 +50,35 @@
 
   <!-- Argon JS -->
   <script src="../assets/js/argon.js?v=1.1.0"></script>
-  <!-- Demo JS - remove this in your project -->
+  <!-- Demo JS - remove this in your project --> 
   <script src="../assets/js/demo.min.js"></script>
+
+  <script>
+function showResult(str) {
+  if (str.length==0) {
+    document.getElementById("livesearch").innerHTML="";
+    document.getElementById("livesearch").className = "dropdown-menu dropdown-menu-left dropdown-menu-arrow";
+    return;
+  }
+  var xmlhttp=new XMLHttpRequest();
+  xmlhttp.onreadystatechange=function() {
+    if (this.readyState==4 && this.status==200) {
+      document.getElementById("livesearch").innerHTML=this.responseText;
+      document.getElementById("livesearch").className = "dropdown-menu dropdown-menu-left dropdown-menu-arrow show";
+      document.getElementById("livesearch").style.position="absolute";
+    document.getElementById("livesearch").style.transform="translate3d(-160px, -123px, 0px)"; 
+    document.getElementById("livesearch").style.top="100%";
+    document.getElementById("livesearch").style.zIndex="1000";
+    document.getElementById("livesearch").style.left="3%";
+    document.getElementById("livesearch").style.willChange="transform";
+    document.getElementById("livesearch").style.boxSizing="border-box";
+    document.getElementById("livesearch").style.minWidth="23rem";
+
+    }
+  }
+  xmlhttp.open("GET","livesearch.php?q="+str,true);
+  xmlhttp.send();
+}
+</script>
  
   
