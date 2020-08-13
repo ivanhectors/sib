@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta charset="ISO-8859-1">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Sistem Informasi Beasiswa Kebutuhan dan Pinjaman Registrasi">
   <meta name="author" content="UKDW">

@@ -55,35 +55,14 @@
              </div>
            </div>
          </div>
-         <!-- <ul class="navbar-nav mr-auto">
-           <li class="nav-item">
-             <a href="./pages/dashboards/dashboard.html" class="nav-link">
-               <span class="nav-link-inner--text">Dashboard</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a href="./pages/examples/pricing.html" class="nav-link">
-               <span class="nav-link-inner--text">Pricing</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a href="./pages/examples/login.html" class="nav-link">
-               <span class="nav-link-inner--text">Login</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a href="./pages/examples/register.html" class="nav-link">
-               <span class="nav-link-inner--text">Register</span>
-             </a>
-           </li>
-           <li class="nav-item">
-             <a href="./pages/examples/lock.html" class="nav-link">
-               <span class="nav-link-inner--text">Lock</span>
-             </a>
-           </li>
-         </ul> -->
-         <hr class="d-lg-none" />
          <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+         <li class="nav-item">
+            <a class="nav-link nav-link-icon d-lg-none" href="../sib/login" data-toggle="tooltip" title="" data-original-title="Login Sistem">
+              <i class="ni ni-single-02 d-lg-none"></i>
+              <span class="nav-link-inner--text d-lg-none">Login</span>
+            </a>
+          </li>
+          <hr class="d-lg-none" />
          <li class="nav-item">
             <a class="nav-link nav-link-icon" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
               <i class="fab fa-facebook-square"></i>

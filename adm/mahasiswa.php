@@ -252,8 +252,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             </nav>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
-                            <a type="button" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-neutral"><i class="fas fa-user-plus" style="color:primary;"> </i> Tambah Penyeleksi</a>
-
                         </div>
                     </div>
 
@@ -265,7 +263,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <div class="row">
                                         <div class="col">
                                             <h4 class="card-title text-uppercase text-muted mb-0">Tambah</h4>
-                                            <span class="h5 font-weight-bold mb-0">Akun Mahasiswa <i class="fas fa-chevron-right"></i></span>
+                                            <span class="h5 font-weight-bold mb-0"><a href="#"> Akun Mahasiswa <i class="fas fa-chevron-right"></i></a></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-gradient-red text-white rounded-circle shadow">
@@ -284,7 +282,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <div class="row">
                                         <div class="col">
                                             <h4 class="card-title text-uppercase text-muted mb-0">Import</h4>
-                                            <span class="h5 font-weight-bold mb-0">Data Mahasiswa <i class="fas fa-chevron-right"></i></span>
+                                            <span class="h5 font-weight-bold mb-0"> <a href="import_mhs_csv"> Data Mahasiswa <i class="fas fa-chevron-right"></i></a></span>
                                         </div>
                                         <div class="col-auto">
                                             <div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
@@ -292,10 +290,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <p class="mt-3 mb-0 text-sm">
-                                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                        <span class="text-nowrap">Since last month</span>
-                                    </p> -->
                                 </div>
                             </div>
                         </div>
@@ -314,10 +308,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- <p class="mt-3 mb-0 text-sm">
-                                        <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                                        <span class="text-nowrap">Since last month</span>
-                                    </p> -->
                                 </div>
                             </div>
                         </div>
@@ -335,46 +325,43 @@ if (strlen($_SESSION['admlogin']) == 0) {
         <div class="container-fluid mt--6">
             <!-- Image overlay -->
             <div class="card bg-dark text-white border-0">
-                <img class="card-img" src="../assets/img/cari-mahasiswa.jpg" alt="Card image">
+                <img class="card-img" src="../assets/img/cari-mahasiswa.jpg" alt="Cari Mahasiswa">
                 <div class="card-img-overlay align-items-center">
                     <div>
                         <center>
-                            <h5 class="h1 card-title text-white mb-4 mt-5">Cari Mahasiswa</h5>
-                        <div class="form-group col-md-6">
-                            <div class="input-group input-group-merge input-group-alternative">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><small class="font-weight-bold"><i class="fas fa-search"></i></small></span>
-                                </div>
-                                <input id="carimhs" name="carimhs" class="form-control" placeholder="Cari Mahasiswa menggunakan NIM" type="text" title="Masukkan NIM untuk mencari mahasiswa" >
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text"><small class="font-weight-bold"><a href="#" class="font-weight-bold"><i class="fas fa-chevron-circle-right"></i></a></small></span>
-                                </div>
-                            </div>
+                            <!-- <h5 class="h2 card-title text-white mb-2">Cari Mahasiswa</h5> -->
+                            <div class="form-group col-md-6 mt-2">
+                                <form action="cari_mahasiswa">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text"><small class="font-weight-bold"><i class="fas fa-search"></i></small></span>
+                                        </div>
+                                        <input id="carimhs" name="carimhs" type="text" pattern=".{8,8}" class="form-control card-text" placeholder="Cari Mahasiswa menggunakan NIM" title="Harap memeriksa NIM yang anda masukkan. Pastikan NIM yang dimasukkan benar dan berjumlah 8 Digit Angka." oninvalid="this.setCustomValidity('Selahkan masukkan NIM untuk mencari mahasiswa')" oninput="setCustomValidity('')" required>
 
-                        </div>
+                                        <div class="input-group-prepend">
+                                            <input class="input-group-text" type="submit" value="Cari"></input>
+                    
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
                         </center>
-                        <!-- <div class="text-center">
-                                  <button type="submit" name="resetpsw" class="btn btn-primary">Reset Password</button>
-                                </div> -->
-                        <!-- <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                        <p class="card-text text-sm font-weight-bold">Last updated 3 mins ago</p> -->
                     </div>
                 </div>
             </div>
-            <!-- Table -->
-
-
-
-
-
-
-
-
 
             <?php
             include("include/footer.php"); //Edit topnav on this page
             ?>
-
+            <script>
+                var carimhs = document.querySelector('#carimhs');
+                carimhs.addEventListener('input', restrictNumber);
+                function restrictNumber(e) {
+                    var newValue = this.value.replace(new RegExp(/[^\d]/, 'ig'), "");
+                    this.value = newValue;
+                }
+            </script>
         </div>
     </div>
 

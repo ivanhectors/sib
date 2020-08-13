@@ -144,24 +144,9 @@
                     <a href="data_penyeleksi" class="nav-link">Penyeleksi</a>
                   </li>
                   <li class="nav-item">
-                    <a href="../pages/tables/datatables.html" class="nav-link">Mahasiswa</a>
+                    <a href="mahasiswa" class="nav-link">Mahasiswa</a>
                   </li>
-                  <li class="nav-item">
-                    <a href="#navbar-admin" class="nav-link" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-multilevel">Admin</a>
-                    <div class="collapse show" id="navbar-admin" >
-                      <ul class="nav nav-sm flex-column">
-                        <li class="nav-item">
-                          <a href="#!" class="nav-link ">Data Admin</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#!" class="nav-link ">Just another link</a>
-                        </li>
-                        <li class="nav-item">
-                          <a href="#!" class="nav-link ">One last link</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </li>
+
                 </ul>
               </div>
             </li>
@@ -197,16 +182,10 @@
                   <li class="nav-item">
                     <a href="persyaratan_beasiswa" class="nav-link">List Persyaratan Beasiswa</a>
                   </li>
-                  <li class="nav-item">
-                    <a href="../pages/maps/google.html" class="nav-link">Data Hak Akses</a>
-                  </li>
-                  <li class="nav-item">
-                    <a href="../pages/maps/vector.html" class="nav-link">Vector</a>
-                  </li>
                 </ul>
               </div>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="../pages/widgets.html">
                 <i class="ni ni-archive-2 text-green"></i>
                 <span class="nav-link-text">Widgets</span>
@@ -217,11 +196,11 @@
                 <i class="ni ni-chart-pie-35 text-info"></i>
                 <span class="nav-link-text">Charts</span>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
-              <a class="nav-link" href="../pages/calendar.html">
+              <a class="nav-link" href="kalender">
                 <i class="ni ni-calendar-grid-58 text-red"></i>
-                <span class="nav-link-text">Calendar</span>
+                <span class="nav-link-text">Kalender</span>
               </a>
             </li>
             <li class="nav-item">

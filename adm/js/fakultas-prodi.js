@@ -2,11 +2,11 @@
 
 $( document ).ready(function() {
 	//untuk memanggil plugin select2
-    $('#provinsi').select2({
-	  	placeholder: 'Pilih Provinsi',
+    $('#fakultasedit').select2({
+		  placeholder: 'Pilih Fakultas',
 	  	language: "id"
 	});
-	$('#kota').select2({
+	$('#dosen_wali').select2({
 	  	placeholder: 'Pilih Kota/Kabupaten',
 	  	language: "id"
 	});
@@ -51,5 +51,21 @@ $( document ).ready(function() {
 		   }
 		});                    
    });
+
+
+
+	var kd_fakultas = document.getElementById("fakultasedit").value; 
+	$.ajax({
+	   type: "POST",
+	   dataType: "html",
+	   url: "data-wilayah.php?jenis=fakultasedit2",
+	   data: "kd_fakultas="+kd_fakultas,
+	   success: function(msg){
+		  $("select#dosen_wali").html(msg);                                                       
+		  $("img#load2").hide();
+		  getAjaxKota();                                                        
+	   }
+	});                    
+
 
 });

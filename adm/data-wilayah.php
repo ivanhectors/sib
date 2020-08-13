@@ -80,4 +80,21 @@
 		break; 
 		
 	}
+
+	switch ($_GET['jenis']) {
+		//ambil data kota / kabupaten
+		case 'fakultasedit2':
+		$kd_fakultas = $_POST['kd_fakultas'];
+		if($kd_fakultas == ''){
+		     exit;
+		}else{
+		     $getcity = mysqli_query($con,"SELECT  * FROM user_acc WHERE kd_fakultas ='$kd_fakultas' ORDER BY nama_acc ASC") or die ('Query Gagal');
+		     while($data = mysqli_fetch_array($getcity)){
+		          echo '<option value="'.$data['id_acc'].'">'.$data['nama_acc'].'</option>';
+		     }
+		     exit;    
+		}
+		break; 
+		
+	}
 ?>

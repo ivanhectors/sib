@@ -2,7 +2,13 @@
 include("include/config.php");
 session_start();
 error_reporting(0);
-
+if (strlen($_SESSION['admlogin']) == true) {
+  header('location: adm/');
+} elseif (strlen($_SESSION['acclogin']) == true) {
+  header('location: acc/');
+} elseif (strlen($_SESSION['mhslogin']) == true) {
+  header('location: mhs/');
+} else {
 if (isset($_POST["login"])) {
   $username = mysqli_real_escape_string($con, $_POST["username"]);
   $password = mysqli_real_escape_string($con, $_POST["password"]);
@@ -49,7 +55,7 @@ if (isset($_POST["login"])) {
     while ($row = mysqli_fetch_array($mhs)) {
       if (password_verify($password, $row["password"])) {
         //return true;  
-        $_SESSION["username"] = $username;
+        $_SESSION["mhslogin"] = $username;
         header("location:mhs/");
       } else {
         echo '';
@@ -59,7 +65,7 @@ if (isset($_POST["login"])) {
     while ($row = mysqli_fetch_array($acc)) {
       if (password_verify($password, $row["password"])) {
         //return true;  
-        $_SESSION["username"] = $username;
+        $_SESSION["acclogin"] = $username;
         header("location:acc/");
       } else {
         echo '<script>alert("Wrong User Details")</script>';
@@ -126,8 +132,15 @@ if (isset($_POST["login"])) {
           </div>
         </div>
 
-        <hr class="d-lg-none" />
+
         <ul class="navbar-nav align-items-lg-center ml-lg-auto">
+        <li class="nav-item">
+            <a class="nav-link nav-link-icon d-lg-none" href="../sib/index" data-toggle="tooltip" title="" data-original-title="Home">
+              <i class="fas fa-home d-lg-none"></i>
+              <span class="nav-link-inner--text d-lg-none">Home</span>
+            </a>
+          </li>
+          <hr class="d-lg-none" />
           <li class="nav-item">
             <a class="nav-link nav-link-icon" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" data-toggle="tooltip" title="" data-original-title="Like UKDW di Facebook">
               <i class="fab fa-facebook-square"></i>
@@ -175,12 +188,12 @@ if (isset($_POST["login"])) {
     <!-- Header -->
     <div class="header bg-gradient-primary py-7 py-lg-8 pt-lg-9">
       <div class="container">
-        <div class="header-body text-center mb-3">
+        <div class="header-body text-center mb-7">
           <div class="row justify-content-center">
-            <!-- <div class="col-xl-5 col-lg-6 col-md-8 px-5">
-              <h1 class="text-white">Welcome!</h1>
-              <p class="text-lead text-white">Use these awesome forms to login or create new account in your project for free.</p>
-            </div> -->
+            <div class="col-xl-5 col-lg-6 col-md-8 px-5">
+              <h1 class="text-white">Selamat Datang!</h1>
+              <p class="text-lead text-white">Gunakan form ini untuk Login ke Dashboard anda. </p>
+            </div>
           </div>
         </div>
       </div>
@@ -257,10 +270,10 @@ if (isset($_POST["login"])) {
                   </label>
                 </div>
                 <div class="text-center">
-                  <button type="submit" id="login" name="login" value="Login" class="btn btn-primary my-4">Sign in</button>
+                  <button type="submit" id="login" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Sign In" name="login" value="Login" class="btn btn-primary my-4 btnlogin">Sign in</button>
                 </div>
               </form>
-            </div>
+            </div> 
           </div>
           <div class="row mt-3">
             <div class="col-6">
@@ -278,27 +291,19 @@ if (isset($_POST["login"])) {
   <footer class="py-5" id="footer-main">
     <div class="container">
       <div class="row align-items-center justify-content-xl-between">
-        <div class="col-xl-6">
-          <div class="copyright text-center text-xl-left text-muted">
-            &copy; 2019 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+          <div class="col-lg-6">
+            <div class="copyright text-center text-lg-left text-muted">
+              &copy; 2020 <a href="https://www.ukdw.ac.id" class="font-weight-bold ml-1" target="_blank">UKDW</a>
+            </div>
           </div>
-        </div>
-        <div class="col-xl-6">
-          <ul class="nav nav-footer justify-content-center justify-content-xl-end">
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
-            </li>
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
-            </li>
-            <li class="nav-item">
-              <a href="https://www.creative-tim.com/license" class="nav-link" target="_blank">License</a>
-            </li>
-          </ul>
-        </div>
+          <div class="col-lg-6"> 
+            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+            <div class="copyright text-center text-lg-left text-muted">
+            Made with <i  style="color: #e25555;" class="fas fa-heart"></i> by<a href="https://ivanhectors.me/" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>
+            </div>
+            
+            </ul>
+          </div>
       </div>
     </div>
   </footer>
@@ -359,6 +364,16 @@ if (isset($_POST["login"])) {
       }
     });
   </script>
+  <script>
+$('.btnlogin').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+    setTimeout(function() {
+       $this.button('reset');
+   }, 8000);
+});
+  </script>
 </body>
 
 </html>
+<?php } ?>

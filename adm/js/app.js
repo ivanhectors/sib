@@ -17,7 +17,11 @@ $( document ).ready(function() {
 	$('#kelurahan').select2({
 	  	placeholder: 'Pilih Kelurahan',
 	  	language: "id"
-	});
+   });
+   $('#carimhs').select2({
+      placeholder: 'Cari Mahasiswa',
+      language: "id"
+ });
 
 	//saat pilihan provinsi di pilih maka mengambil data di data-wilayah menggunakan ajax
 	$("#provinsi").change(function(){
