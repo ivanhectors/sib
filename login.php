@@ -2,13 +2,7 @@
 include("include/config.php");
 session_start();
 error_reporting(0);
-if (strlen($_SESSION['admlogin']) == true) {
-  header('location: adm/');
-} elseif (strlen($_SESSION['acclogin']) == true) {
-  header('location: acc/');
-} elseif (strlen($_SESSION['mhslogin']) == true) {
-  header('location: mhs/');
-} else {
+
 if (isset($_POST["login"])) {
   $username = mysqli_real_escape_string($con, $_POST["username"]);
   $password = mysqli_real_escape_string($con, $_POST["password"]);
@@ -376,4 +370,3 @@ $('.btnlogin').on('click', function() {
 </body>
 
 </html>
-<?php } ?>

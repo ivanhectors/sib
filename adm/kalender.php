@@ -11,6 +11,9 @@ else{
 date_default_timezone_set('Asia/Jakarta');// change according timezone
 $currentTime = date( 'd-m-Y h:i:s A', time () );
 $today = date("Y-m-d");
+
+$page = "kalender";
+
 require_once('proses_kalender/bdd.php');
 $sql = "SELECT id, title, start, end, color FROM events ";
 $req = $bdd->prepare($sql);

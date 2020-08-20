@@ -10,7 +10,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $currentTime = date('d-m-Y h:i:s A', time());
     // include("include/header.php");
     // include("include/sidebar.php");
-
+    $parentpage = "akun";
+    $childpage = "data_penyeleksi";
 
     if (isset($_POST['submit'])) {
         //update info pribadi

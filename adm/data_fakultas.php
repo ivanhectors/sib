@@ -12,7 +12,8 @@ date_default_timezone_set('Asia/Jakarta');// change according timezone
 $currentTime = date( 'd-m-Y h:i:s A', time () );
 // include("include/header.php");
 // include("include/sidebar.php");
-
+$parentpage = "master";
+$childpage = "data_fakultas";
 
 if(isset($_POST['tambah']))
 {

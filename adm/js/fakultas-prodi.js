@@ -2,12 +2,12 @@
 
 $( document ).ready(function() {
 	//untuk memanggil plugin select2
-    $('#fakultasedit').select2({
+    $('#fakultasedits').select2({
 		  placeholder: 'Pilih Fakultas',
 	  	language: "id"
 	});
 	$('#dosen_wali').select2({
-	  	placeholder: 'Pilih Kota/Kabupaten',
+	  	placeholder: 'Pilih Dosen Wali Mahasiswa',
 	  	language: "id"
 	});
 	$('#kecamatan').select2({
@@ -53,7 +53,23 @@ $( document ).ready(function() {
    });
 
 
-
+   $("#fakultasedit").change(function(){
+	$("img#load1").show();
+	var kd_fakultas = $(this).val(); 
+	$.ajax({
+	   type: "POST",
+	   dataType: "html",
+	   url: "data-wilayah.php?jenis=fakultasedit2",
+	   data: "kd_fakultas="+kd_fakultas,
+	   success: function(msg){
+		  $("select#dosen_wali").html(msg);                                                       
+		  $("img#load2").hide();
+		  getAjaxKota();                                                        
+	   }
+	});    
+}); 
+	
+	
 	var kd_fakultas = document.getElementById("fakultasedit").value; 
 	$.ajax({
 	   type: "POST",
@@ -65,7 +81,7 @@ $( document ).ready(function() {
 		  $("img#load2").hide();
 		  getAjaxKota();                                                        
 	   }
-	});                    
+	});
 
 
 });

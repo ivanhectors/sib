@@ -9,6 +9,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
     date_default_timezone_set('Asia/Jakarta'); // change according timezone
     $currentTime = date('d-m-Y h:i:s A', time());
 
+    $parentpage = "beasiswa";
+    $childpage = "list_beasiswa";
 
     if (isset($_POST['tambah'])) {
         $kd_bsw = $_POST["kd_bsw"];

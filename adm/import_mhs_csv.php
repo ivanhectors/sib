@@ -2,6 +2,7 @@
 session_start();
 
 include("include/config.php");
+
 use Phppot\DataSource;
 
 require_once 'include/DataSource.php';
@@ -16,16 +17,19 @@ if (strlen($_SESSION['admlogin']) == 0) {
     // include("include/header.php");
     // include("include/sidebar.php");
 
+    $parentpage = "akun";
+    $childpage = "mahasiswa";
+
     if (isset($_POST["import"])) {
-    
+
         $fileName = $_FILES["file"]["tmp_name"];
-        
+
         if ($_FILES["file"]["size"] > 0) {
-            
+
             $file = fopen($fileName, "r");
-            
+
             while (($column = fgetcsv($file, 10000, ";")) !== FALSE) {
-                
+
                 $username = "";
                 if (isset($column[0])) {
                     $username = mysqli_real_escape_string($conn, $column[0]);
@@ -54,7 +58,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 if (isset($column[6])) {
                     $kd_role = mysqli_real_escape_string($conn, $column[6]);
                 }
-                
+
                 $sqlInsert = "INSERT into user_mhs (username,nama_mhs,password,kd_fakultas,kd_prodi,id_dosen_wali,kd_role)
                        values (?,?,?,?,?,?,?)";
                 $paramType = "sssssis";
@@ -68,8 +72,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     $kd_role
                 );
                 $insertId = $db->insert($sqlInsert, $paramType, $paramArray);
-                
-                if (! empty($insertId)) {
+
+                if (!empty($insertId)) {
                     $type = "success";
                     $message = "Data Mahasiswa berhasil diimport. Pastikan data tidak ada yang duplikat di halaman Data Mahasiswa";
                 } else {
@@ -87,91 +91,90 @@ if (strlen($_SESSION['admlogin']) == 0) {
     <?php
     include("include/header.php");
     ?>
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#frmCSVImport").on("submit", function () {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#frmCSVImport").on("submit", function() {
 
-	    $("#response").attr("class", "");
-        $("#response").html("");
-        var fileType = ".csv";
-        var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + fileType + ")$");
-        if (!regex.test($("#file").val().toLowerCase())) {
-        	    $("#response").addClass("error");
-        	    $("#response").addClass("display-block");
-            $("#response").html("Invalid File. Upload : <b>" + fileType + "</b> Files.");
-            return false;
-        }
-        return true;
-    });
-});
-</script>
+                $("#response").attr("class", "");
+                $("#response").html("");
+                var fileType = ".csv";
+                var regex = new RegExp("([a-zA-Z0-9\s_\\.\-:])+(" + fileType + ")$");
+                if (!regex.test($("#file").val().toLowerCase())) {
+                    $("#response").addClass("error");
+                    $("#response").addClass("display-block");
+                    $("#response").html("Invalid File. Upload : <b>" + fileType + "</b> Files.");
+                    return false;
+                }
+                return true;
+            });
+        });
+    </script>
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
     </script>
     <style>
+        .outer-scontainer {
+            background: #F0F0F0;
+            border: #e0dfdf 1px solid;
+            padding: 20px;
+            border-radius: 2px;
+        }
 
-.outer-scontainer {
-    background: #F0F0F0;
-    border: #e0dfdf 1px solid;
-    padding: 20px;
-    border-radius: 2px;
-}
+        .input-row {
+            margin-top: 0px;
+            margin-bottom: 20px;
+        }
 
-.input-row {
-    margin-top: 0px;
-    margin-bottom: 20px;
-}
+        .btn-submit {
+            background: #333;
+            border: #1d1d1d 1px solid;
+            color: #f0f0f0;
+            font-size: 0.9em;
+            width: 100px;
+            border-radius: 2px;
+            cursor: pointer;
+        }
 
-.btn-submit {
-    background: #333;
-    border: #1d1d1d 1px solid;
-    color: #f0f0f0;
-    font-size: 0.9em;
-    width: 100px;
-    border-radius: 2px;
-    cursor: pointer;
-}
+        .outer-scontainer table {
+            border-collapse: collapse;
+            width: 100%;
+        }
 
-.outer-scontainer table {
-    border-collapse: collapse;
-    width: 100%;
-}
+        .outer-scontainer th {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-.outer-scontainer th {
-    border: 1px solid #dddddd;
-    padding: 8px;
-    text-align: left;
-}
+        .outer-scontainer td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
 
-.outer-scontainer td {
-    border: 1px solid #dddddd;
-    padding: 8px;
-    text-align: left;
-}
+        #response {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 2px;
+            display: none;
+        }
 
-#response {
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 2px;
-    display: none;
-}
+        .success {
+            background: #c7efd9;
+            border: #bbe2cd 1px solid;
+        }
 
-.success {
-    background: #c7efd9;
-    border: #bbe2cd 1px solid;
-}
+        .error {
+            background: #fbcfcf;
+            border: #f3c6c7 1px solid;
+        }
 
-.error {
-    background: #fbcfcf;
-    border: #f3c6c7 1px solid;
-}
-
-div#response.display-block {
-    display: block;
-}
-</style>
+        div#response.display-block {
+            display: block;
+        }
+    </style>
     </head>
     <?php
     include("include/sidebar.php");
@@ -182,7 +185,7 @@ div#response.display-block {
     <!-- Main content -->
     <div class="main-content" id="panel">
 
-    
+
 
         <?php
         include("include/topnav.php"); //Edit topnav on this page
@@ -202,7 +205,7 @@ values ('31170031','Kevin','$2y$10$45c9JSZ.tEiOmaQD8b3KQeIklOOYJiV/ckWEiO3HG4vQu
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                     <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
                                     <li class="breadcrumb-item"><a href="../adm">Dashboards</a></li>
-                                    <li class="breadcrumb-item"><a href="../adm/Mahasiswa">Mahasiswa</a></li>
+                                    <li class="breadcrumb-item"><a href="../adm/mahasiswa">Mahasiswa</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Info Mahasiswa</li>
                                 </ol>
                             </nav>
@@ -236,10 +239,13 @@ values ('31170031','Kevin','$2y$10$45c9JSZ.tEiOmaQD8b3KQeIklOOYJiV/ckWEiO3HG4vQu
 
                     <form class="form-horizontal" action="" method="post" name="frmCSVImport" id="frmCSVImport" enctype="multipart/form-data">
                         <!-- Address -->
-                        <div id="response"
-        class="<?php if(!empty($type)) { echo $type . " display-block"; } ?>">
-        <?php if(!empty($message)) { echo $message; } ?>
-        </div>
+                        <div id="response" class="<?php if (!empty($type)) {
+                                                        echo $type . " display-block";
+                                                    } ?>">
+                            <?php if (!empty($message)) {
+                                echo $message;
+                            } ?>
+                        </div>
                         <h6 class="heading-small text-muted mb-4">Pilih File</h6>
                         <div class="row">
                             <div class="col-md-12">
@@ -267,19 +273,19 @@ values ('31170031','Kevin','$2y$10$45c9JSZ.tEiOmaQD8b3KQeIklOOYJiV/ckWEiO3HG4vQu
                             </button>
 
                         </div>
-                        </form>
-                        <hr class="my-4" />
-                        <!-- Address -->
-                        <h6 class="heading-small text-muted mb-4">Panduan Import Akun</h6>
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <p class="h4">1. Sebelum melakukan <mark>Import</mark> data dengan file .CSV, Pastikan <mark>Format</mark> sesuai dengan yang ditetapkan.</p>
-                                <p class="h4">2. File .CSV yang di upload hanya menerima Delimeter bertipe Titik Comma <mark>(;)</mark>. </p>
-                                <p class="h4">3. Format Excel (<i class="fas fa-file-excel text-green"></i>) dapat di unduh <a href="">disini</a>.</p>
-                                <p class="h4">4. Jika tidak terjadi kesalahan dan berhasil (<i class="fas fa-check text-green"></i>) Import Data, Pastikan untuk memeriksa ulang akun apakah terjadi duplikat (Akun Ganda) pada halaman <a href="#">data mahasiswa</a>. </p>
+                    </form>
+                    <hr class="my-4" />
+                    <!-- Address -->
+                    <h6 class="heading-small text-muted mb-4">Panduan Import Akun</h6>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <p class="h4">1. Sebelum melakukan <mark>Import</mark> data dengan file .CSV, Pastikan <mark>Format</mark> sesuai dengan yang ditetapkan.</p>
+                            <p class="h4">2. File .CSV yang di upload hanya menerima Delimeter bertipe Titik Comma <mark>(;)</mark>. </p>
+                            <p class="h4">3. Format Excel (<i class="fas fa-file-excel text-green"></i>) dapat di unduh <a href="">disini</a>.</p>
+                            <p class="h4">4. Jika tidak terjadi kesalahan dan berhasil (<i class="fas fa-check text-green"></i>) Import Data, Pastikan untuk memeriksa ulang akun apakah terjadi duplikat (Akun Ganda) pada halaman <a href="data_mahasiswa#datatable-buttons">data mahasiswa</a>. </p>
 
-                            </div>
                         </div>
+                    </div>
 
 
 

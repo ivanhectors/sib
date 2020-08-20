@@ -10,22 +10,65 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $currentTime = date('d-m-Y h:i:s A', time());
     // include("include/header.php");
     // include("include/sidebar.php");
-
+    $parentpage = "akun";
+    $childpage = "mahasiswa";
+    $carimahasiswa = $_GET["carimhs"];
 
     if (isset($_POST['submit'])) {
+
+        $id_user = $_GET["carimhs"];
+        $username = $_POST["usernamemhs"];
+        $nama_mhs = $_POST["nama_mhs"];
+        $email = $_POST['email'];
+        $no_telp = $_POST['no_telp'];
+        $kd_fakultas = $_POST['kd_fakultas'];
+        $kd_prodi = $_POST['kd_prodi'];
+        $id_dosen_wali = $_POST['id_dosen_wali'];
+
+        //Prepare Update User Data
+        $SQL = $con->prepare("UPDATE user_mhs SET username=?, nama_mhs=?, email=?, no_telp=?, kd_fakultas=?, kd_prodi=?, id_dosen_wali=? WHERE username=?");
+        $SQL->bind_param('ssssssis', $username, $nama_mhs, $email, $no_telp, $kd_fakultas, $kd_prodi, $id_dosen_wali, $id_user);
+        /* Execute the prepared Statement */
+        $status = $SQL->execute();
+        /* BK: always check whether the execute() succeeded */
+        if ($status === false) {
+            // trigger_error($SQL->error, E_USER_ERROR);
+            $_SESSION['msg'] = "0";
+        }
+        $_SESSION['msg'] = "1";
+    }
+
+    if (isset($_GET['del'])) {
+        mysqli_query($con, "delete from user_mhs where id_mhs = '" . $_GET['id'] . "'");
+        $_SESSION['delmsg'] = "1";
+    } else {
+        $_SESSION['delmsg'] = "0";
+    }
+
+
+    if (isset($_GET['on'])) {
+        mysqli_query($con, "update user_mhs set status='1' where id_mhs = '" . $_GET['id'] . "'");
+        $_SESSION['stsmsg1'] = "1";
+    } else {
+        $_SESSION['stsmsg1'] = "0";
+    }
+
+    if (isset($_GET['off'])) {
+        mysqli_query($con, "update user_mhs set status='0' where id_mhs = '" . $_GET['id'] . "'");
+        $_SESSION['stsmsg'] = "1";
+    } else {
+        $_SESSION['stsmsg'] = "0";
+    }
+
+    if (isset($_POST['resetpsw'])) {
         //update info pribadi
         $password_valid =  $_POST["password_valid"];
         $username_valid = $_SESSION['admlogin'];
+        $id_user = $_POST['id_user'];
 
-        $id_user = $_GET["id"];
-        $username = $_POST["username"];
-        $nama = $_POST["nama"];
-        $email = $_POST['email'];
-        $notelp = $_POST['notelp'];
-        $role = $_POST['role'];
-        $fakultas = $_POST['fakultas'];
-        $prodi = $_POST['prodi'];
-
+        //update password
+        $password =  '1234';
+        $passwordhash = password_hash($password, PASSWORD_DEFAULT);
 
         //validasi password user
         $pass_valid = "SELECT * FROM user_admin WHERE username = '$username_valid'";
@@ -35,7 +78,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             while ($row = mysqli_fetch_array($admin)) {
                 if (password_verify($password_valid, $row["password"])) {
                     //return true;   
-                    $sql = mysqli_query($con, "update user_acc set username='$username', nama_acc='$nama', email='$email', no_telp='$notelp', kd_role='$role', kd_fakultas='$fakultas', kd_prodi='$prodi' where id_acc='$id_user'");
+                    $sql = mysqli_query($con, "update user_mhs set password='$passwordhash' where id_mhs='$id_user'");
                     $_SESSION['pswmsg'] = "1";
                     //$successmsg="Data profil anda berhasil diubah.";
 
@@ -50,7 +93,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
         //echo "<script>alert('Number of Rows 0');</script>";
     }
 
-
 ?>
     <?php
     include("include/header.php");
@@ -59,8 +101,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
         function userAvailability() {
             $("#loaderIcon").show();
             jQuery.ajax({
-                url: "edit_acc_check_username.php",
-                data: 'username=' + $("#username").val() + '&oldusername=' + $("#oldusername").val(),
+                url: "check_username.php",
+                data: 'usernamemhs=' + $("#usernamemhs").val() + '&oldusername=' + $("#usernamemhsnow").val(),
                 type: "POST",
                 success: function(data) {
                     $("#user-availability-status1").html(data);
@@ -70,11 +112,13 @@ if (strlen($_SESSION['admlogin']) == 0) {
             });
         }
     </script>
+
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
     </script>
+
     <style>
         .select2-selection__rendered {
             font-size: .875rem;
@@ -104,6 +148,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             left: auto !important;
         }
     </style>
+
     </head>
     <?php
     include("include/sidebar.php");
@@ -118,7 +163,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
         include("include/topnav.php"); //Edit topnav on this page
         ?>
         <?php if (isset($_POST['submit'])) {
-            if ($_SESSION['pswmsg'] > 0) {
+            if ($_SESSION['msg'] > 0) {
 
         ?>
                 <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
@@ -132,12 +177,102 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
                     <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
                     <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span>
-                        <span data-notify="message">Password tidak cocok atau terjadi kesalahan sistem. Tunggu beberapa saat lalu coba lagi.</span>
+                        <span data-notify="message">Terjadi kesalahan saat mengubah data. Tunggu beberapa saat lalu coba lagi.</span>
                     </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
                         <span aria-hidden="true">×</span></button>
                 </div>
         <?php }
         } ?>
+
+        <?php if (isset($_GET['del'])) {
+            if ($_SESSION['delmsg'] > 0) {
+
+        ?>
+                <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span>
+                        <span data-notify="message">Akun Mahasiswa berhasil dihapus.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+            <?php } else { ?>
+                <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span>
+                        <span data-notify="message">Terjadi kesalahan saat menghapus akun Mahasiswa. Coba sesaat lagi.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+        <?php }
+        } ?>
+
+        <?php if (isset($_GET['on'])) {
+            if ($_SESSION['stsmsg1'] > 0) {
+
+        ?>
+                <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span>
+                        <span data-notify="message">Akun Mahasiswa berhasil di aktifkan.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+            <?php } else { ?>
+                <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span>
+                        <span data-notify="message">Terjadi kesalahan saat mengaktifkan akun Mahasiswa. Coba sesaat lagi.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+        <?php }
+        } ?>
+
+
+        <?php if (isset($_GET['off'])) {
+            if ($_SESSION['stsmsg'] > 0) {
+
+        ?>
+                <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span>
+                        <span data-notify="message">Akun Mahasiswa berhasil di nonaktifkan.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+            <?php } else { ?>
+                <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span>
+                        <span data-notify="message">Terjadi kesalahan saat me-nonaktifkan akun Mahasiswa. Coba sesaat lagi.</span>
+                    </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+        <?php }
+        } ?>
+
+        <?php if (isset($_POST['resetpsw'])) {
+            if ($_SESSION['pswmsg'] > 0) {
+
+        ?>
+                <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span>
+                        <span data-notify="message">Password User berhasil di Reset ke Default : 1234.</span>
+                    </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+            <?php } else { ?>
+                <div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                    <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
+                    <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span>
+                        <span data-notify="message">Password tidak cocok. Reset Password User gagal dilakukan.</span>
+                    </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+                        <span aria-hidden="true">×</span></button>
+                </div>
+        <?php }
+        } ?>
+
         <!-- Header -->
 
 
@@ -177,28 +312,29 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 <div class="card-header">
 
                     <div class="row align-items-center">
-                    <?php
+                        <?php
                         $id_acc = $_GET['carimhs'];
                         $query = "select * from user_mhs where username=?";
                         $stmt = $con->prepare($query);
                         $stmt->bind_param("i", $id_acc);
                         $stmt->execute();
                         $result = $stmt->get_result();
+
                         if ($result->num_rows > 0) {
                             while ($row = $result->fetch_assoc()) {
                         ?>
-                        <div class="col-8">
-                            <!-- Title -->
-                            <h3 class="mb-0">Informasi Data Mahasiswa</h3>
-                        </div>
+                                <div class="col-8">
+                                    <!-- Title -->
+                                    <h3 class="mb-0">Informasi Data Mahasiswa</h3>
+                                </div>
 
                                 <div class="col-4 text-right">
 
-                                    <span class="badge badge-pill badge-default"><?php echo $row['username'] ?> - <?php echo $row['nama_mhs'] ?></span>
+                                <code class="text-default"><mark class="text-default"><?php echo $row['username'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
                                 </div>
                         <?php }
                         } else {
-                            echo '<div class="col-8"><h3 class="mb-0">Informasi Data Mahasiswa</h3></div><div class="col-4 text-right"><span class="badge badge-pill badge-danger">Akun Tidak Ditemukan</span></div>';
+                            echo '<div class="col-8"><h3 class="mb-0">Informasi Data Mahasiswa</h3></div><div class="col-4 text-right"><code class="text-red"><mark>Akun Tidak Ditemukan</code></mark></div>';
                         }
                         ?>
 
@@ -216,6 +352,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     $stmt->execute();
                     $result = $stmt->get_result();
                     if ($result->num_rows > 0) {
+
                         while ($row = $result->fetch_assoc()) {
                     ?>
                             <form role="form" method="post">
@@ -229,8 +366,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><small class="font-weight-bold">@</small></span>
                                                 </div>
-
-                                                <input onBlur="userAvailability()" id="username" name="username" value="<?php echo $row['username'] ?>" class="form-control" placeholder="Username Mahasiswa Baru" type="text" title="Masukkan Username" oninvalid="this.setCustomValidity('Selahkan masukkan Username Mahasiswa.')" oninput="setCustomValidity('')" required>
+                                                <input type="hidden" name="usernamemhsnow" id="usernamemhsnow" value="<?php echo $_GET['carimhs'] ?>" />
+                                                <input onBlur="userAvailability()" id="usernamemhs" name="usernamemhs" value="<?php echo $row['username'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan Username" oninvalid="this.setCustomValidity('Selahkan masukkan Username Mahasiswa.')" oninput="setCustomValidity('')" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="user-availability-status1"></span> <img src="../assets/img/loading.gif" width="35" id="loadericon" style="display:none;" />
                                                 </div>
@@ -246,7 +383,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-user"></i></span>
                                                 </div>
-                                                <input type="text" name="nama" class="form-control" value="<?php echo $row['nama_mhs'] ?>" id="nama" placeholder="Nama Mahasiswa">
+                                                <input type="text" name="nama_mhs" class="form-control" value="<?php echo $row['nama_mhs'] ?>" id="nama" placeholder="Nama Mahasiswa">
                                             </div>
                                         </div>
                                     </div>
@@ -268,7 +405,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                                 </div>
-                                                <input type="number" name="notelp" class="form-control" id="notelp" placeholder="Telpon Mahasiswa" value="<?php echo $row['no_telp'] ?>">
+                                                <input type="number" name="no_telp" class="form-control" id="notelp" placeholder="Telpon Mahasiswa" value="<?php echo $row['no_telp'] ?>">
                                             </div>
                                         </div>
                                     </div>
@@ -280,7 +417,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="fakultas">Fakultas</label>
-                                            <select class="form-control" name="fakultas" title="fakultas" id="fakultasedit">
+                                            <select class="form-control" name="kd_fakultas" title="fakultas" id="fakultasedit">
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
                                                 $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.kd_fakultas=ref_fakultas.kd_fakultas AND user_mhs.username = '" . $nim_mhs . "'");
@@ -312,7 +449,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <div class="form-group">
                                             <label class="form-control-label" for="prodi">Program Studi</label>
 
-                                            <select class="form-control" name="prodi" title="Pilih Program Studi" id="prodiedit">
+                                            <select class="form-control" name="kd_prodi" title="Pilih Program Studi" id="prodiedit">
                                                 <?php
                                                 $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.kd_prodi=ref_prodi.kd_prodi AND user_mhs.username = '" . $nim_mhs . "'");
                                                 ?>
@@ -323,7 +460,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                         echo '<option value="' . $rs_prodi['kd_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
                                                     }
                                                 } else {
-                                                    echo '<option></option>';
+                                                    echo '<option value="0"></option>';
                                                 }
 
                                                 ?>
@@ -331,11 +468,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="dosen_wali">Dosen Wali</label>
-                                            <select class="form-control" name="dosen_wali" title="Dosen Wali" id="dosen_wali">
+                                            <select class="form-control" name="id_dosen_wali" title="Dosen Wali" id="dosen_wali">
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
                                                 $sql_role = mysqli_query($con, "select * from user_mhs join user_acc where user_mhs.id_dosen_wali=user_acc.id_acc AND user_mhs.username = '" . $nim_mhs . "'");
@@ -347,7 +484,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                         echo '<option value="' . $rs_role['id_acc'] . '">' . $rs_role['nama_acc'] . '</option>';
                                                     }
                                                 } else {
-                                                    echo '<option></option>';
+                                                    echo '<option value="0"></option>';
                                                 }
 
                                                 ?>
@@ -357,139 +494,210 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     </div>
                                 </div>
 
-
                                 <div class="text-right pb-0">
-                                    <a href="cari_mahasiswa?id=<?php echo $row['id_acc'] ?>&off=1" class="btn btn-icon btn-primary text-white my-4" type="button">
+                                    <button type="submit" id="submit" name="submit" class="btn btn-icon btn-primary text-white my-4 <?php
+                                                                                                                                    if ($result->num_rows > 1) {
+                                                                                                                                        echo "disabled";
+                                                                                                                                    }
+                                                                                                                                    ?>" type="button">
                                         <span class="btn-inner--icon"><i class="fas fa-pen"></i></span>
                                         <span class="btn-inner--text">Edit Data</span>
-                                    </a>
-                                    <a href="cari_mahasiswa?id=<?php echo $row['id_acc'] ?>&off=1" class="btn btn-icon btn-info text-white my-4" type="button">
-                                        <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
-                                        <span class="btn-inner--text">Reset Password</span>
-                                    </a>
-                                    <?php $status = $row['status'];
-                                    if ($status > 0) :
-                                    ?>
-                                        <a href="cari_mahasiswa?id=<?php echo $row['id_acc'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4" type="button">
-                                            <span class="btn-inner--icon"><i class="fas fa-lock"></i></span>
-                                            <span class="btn-inner--text">Nonaktifkan Akun</span>
-                                        </a>
-                                    <?php else : ?>
-                                        <a href="cari_mahasiswa?id=<?php echo $row['id_acc'] ?>&off=1" class="btn btn-icon btn-success text-white my-4" type="button">
-                                            <span class="btn-inner--icon"><i class="fas fa-lock-open"></i></span>
-                                            <span class="btn-inner--text">Aktifkan Akun</span>
-                                        </a>
-                                    <?php endif; ?>
-                                    <a href="cari_mahasiswa?id=<?php echo $row['id_acc'] ?>&off=1" class="btn btn-icon btn-danger text-white my-4" type="button">
-                                        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
-                                        <span class="btn-inner--text">Hapus Akun</span>
-                                    </a>
+                                    </button>
+                            </form>
+                            <a data-toggle="modal" type="button" data-target="#reset<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-info text-white my-4 <?php
+                                                                                                                                                                if ($result->num_rows > 1) {
+                                                                                                                                                                    echo "disabled";
+                                                                                                                                                                }
+                                                                                                                                                                ?>" type="button">
+                                <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
+                                <span class="btn-inner--text">Reset Password</span>
+                            </a>
+                            <?php $status = $row['status'];
+                            if ($status > 0) :
+                            ?>
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4 <?php
+                                                                                                                                                                                        if ($result->num_rows > 1) {
+                                                                                                                                                                                            echo "disabled";
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?>" type="button">
+                                    <span class="btn-inner--icon"><i class="fas fa-lock"></i></span>
+                                    <span class="btn-inner--text">Nonaktifkan Akun</span>
+                                </a>
+                            <?php else : ?>
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&on=1" class="btn btn-icon btn-success text-white my-4 <?php
+                                                                                                                                                                                        if ($result->num_rows > 1) {
+                                                                                                                                                                                            echo "disabled";
+                                                                                                                                                                                        }
+                                                                                                                                                                                        ?>" type="button">
+                                    <span class="btn-inner--icon"><i class="fas fa-lock-open"></i></span>
+                                    <span class="btn-inner--text">Aktifkan Akun</span>
+                                </a>
+                            <?php endif; ?>
+                            <a data-toggle="modal" type="button" data-target="#hapusconfirm<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-danger text-white my-4" type="button">
+                                <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+                                <span class="btn-inner--text">Hapus Akun</span>
+                            </a>
+                </div>
+
+                <!-- Batas verifikasi hapus akun -->
+                <div class="modal fade" id="hapusconfirm<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                        <div class="modal-content bg-gradient-danger">
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="modal-title-notification">Konfirmasi Hapus Akun</h6>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="py-3 text-center">
+                                    <i class="ni ni-bell-55 ni-3x"></i>
+                                    <h4 class="heading mt-4">Perhatian</h4>
+                                    <p>Menghapus akun berarti setuju bahwa akun akan dihapus dari database. Akun yang telah di hapus tidak dapat dipulihkan kembali. Yakin ingin menghapus akun ini?</p>
                                 </div>
-                                <!-- batas modal form validasi edit profil -->
-                                <div class="col-md-4">
-                                    <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-                                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-body p-0">
-                                                    <div class="card bg-secondary border-0 mb-0">
+                            </div>
+                            <div class="modal-footer">
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
+                                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Tutup</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- batas modal form validasi edit profil -->
+                <div class="col-md-4">
+                    <div class="modal fade" id="reset<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                            <div class="modal-content">
+                                <div class="modal-body p-0">
+                                    <div class="card bg-secondary border-0 mb-0">
 
-                                                        <div class="card-body px-lg-5 py-lg-5">
-                                                            <div class="text-center text-muted mb-4">
-                                                                <small>Masukkan password anda untuk mengubah data user : <b>
-                                                                        <?php $nama_acc = $row['nama_acc'];
-                                                                        if ($nama_acc == "" || $nama_acc == "NULL") {
-                                                                            echo htmlentities($row['username']);
-                                                                        } else {
-                                                                            echo htmlentities($row['nama_acc']);
-                                                                        }
+                                        <div class="card-body px-lg-5 py-lg-5">
+                                            <div class="text-center text-muted mb-4">
+                                                <small>Masukkan password anda untuk mengubah data user : <b>
+                                                        <?php $nama_acc = $row['nama_mhs'];
+                                                        if ($nama_acc == "" || $nama_acc == "NULL") {
+                                                            echo htmlentities($row['username']);
+                                                        } else {
+                                                            echo htmlentities($row['nama_mhs']);
+                                                        }
 
 
-                                                                        ?>
-                                                                    </b></small>
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <div class="input-group input-group-merge input-group-alternative">
-                                                                    <div class="input-group-prepend">
-                                                                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                                                                    </div>
-                                                                    <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="input-group input-group-merge">
-                                                                <div class="input-group-prepend text-left text-muted">
-                                                                    <span><i class="fas fa-info-circle"></i> <small>Password anda di butuhkan sebagai verifikasi bahwa anda memiliki akses untuk mengubah data ini. </small></span>
-                                                                </div>
-
-                                                            </div>
-
-                                                            <div class="text-center">
-                                                                <button type="submit" name="submit" class="btn btn-primary my-4">Edit Data</button>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                        ?>
+                                                    </b></small>
                                             </div>
+
+                                            <div class="form-group">
+                                                <div class="input-group input-group-merge input-group-alternative">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                                    </div>
+                                                    <input type="hidden" name="id_user" value="<?php echo $row['id_mhs'] ?>">
+                                                    <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
+                                                </div>
+
+                                            </div>
+                                            <div class="input-group input-group-merge">
+                                                <div class="input-group-prepend text-left text-muted">
+                                                    <span><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi <code style="font-size: 1rem;">1234</code>. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user tersebut. </small></span>
+                                                </div>
+
+                                            </div>
+                                            <div class="input-group input-group-merge">
+                                                <div class="input-group-prepend text-left text-muted">
+                                                    <span><i class="fas fa-info-circle"></i> <small>Password anda di butuhkan sebagai verifikasi bahwa anda memiliki akses untuk mengubah data ini. </small></span>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="text-center">
+                                                <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
+                                            </div>
+
                                         </div>
                                     </div>
                                 </div>
-                        <?php }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        <?php }
+                    } elseif ($result->num_rows > 1) {
+                        $hasil = "duplikat";
                     } else {
                         echo '<div class="card bg-dark text-white border-0">
                             <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.jpg" alt="Mahasiswa Tidak Ditemukan">
                             <div class="card-img-overlay align-items-center">
+                            <div>
+                            <center>
+                                <!-- <h5 class="h2 card-title text-white mb-2">Cari Mahasiswa</h5> -->
+                                <div class="form-group col-md-6 mt-2">
+                                    <form action="cari_mahasiswa">
+                                        <div class="input-group input-group-merge input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><small class="font-weight-bold"><i class="fas fa-search"></i></small></span>
+                                            </div>
+                                            <input id="carimhs" name="carimhs" type="text" pattern=".{8,8}" class="form-control card-text" placeholder="Cari Mahasiswa menggunakan NIM" title="Harap memeriksa NIM yang anda masukkan. Pastikan NIM yang dimasukkan benar dan berjumlah 8 Digit Angka." oninvalid="this.setCustomValidity("Selahkan masukkan NIM untuk mencari mahasiswa")" oninput="setCustomValidity("")" required>
+    
+                                            <div class="input-group-prepend">
+                                                <input class="input-group-text" type="submit" value="Cari"></input>
+                        
+                                            </div>
+    
+                                        </div>
+                                    </form>
+                                </div>
+                            </center>
+                        </div>
                             </div>
                             </div>';
                     } ?>
-                </div>
-
             </div>
 
-
-
-
-            <?php
-            include("include/footer.php"); //Edit topnav on this page
-            ?>
-            <script>
-                function toggle_select(id) {
-                    var X = document.getElementById(id);
-                    if (X.checked == true) {
-                        X.value = "1";
-                    } else {
-                        X.value = "0";
-                    }
-                    //var sql="update clients set calendar='" + X.value + "' where cli_ID='" + X.id + "' limit 1";
-                    var who = X.id;
-                    var chk = X.value
-                    //alert("Joe is still debugging: (function incomplete/database record was not updated)\n"+ sql);
-                    $.ajax({
-                        //this was the confusing part...did not know how to pass the data to the script
-                        url: 'as_status_penyeleksi.php',
-                        type: 'post',
-                        data: 'who=' + who + '&chk=' + chk,
-                        success: function(output) {
-                            alert('success, server says ' + output);
-                        },
-                        error: function() {
-                            alert('something went wrong, save failed');
-                        }
-                    });
-                }
-            </script>
-            <script type="text/javascript">
-                document.getElementById("close_direct").onclick = function() {
-                    location.href = "data_penyeleksi";
-                };
-            </script>
-            <script>
-                $('.select2').select2();
-            </script>
-            <script src="js/fakultas-prodi.js"></script>
-
         </div>
+
+
+
+
+        <?php
+        include("include/footer.php"); //Edit topnav on this page
+        ?>
+        <script>
+            function toggle_select(id) {
+                var X = document.getElementById(id);
+                if (X.checked == true) {
+                    X.value = "1";
+                } else {
+                    X.value = "0";
+                }
+                //var sql="update clients set calendar='" + X.value + "' where cli_ID='" + X.id + "' limit 1";
+                var who = X.id;
+                var chk = X.value
+                //alert("Joe is still debugging: (function incomplete/database record was not updated)\n"+ sql);
+                $.ajax({
+                    //this was the confusing part...did not know how to pass the data to the script
+                    url: 'as_status_penyeleksi.php',
+                    type: 'post',
+                    data: 'who=' + who + '&chk=' + chk,
+                    success: function(output) {
+                        alert('success, server says ' + output);
+                    },
+                    error: function() {
+                        alert('something went wrong, save failed');
+                    }
+                });
+            }
+        </script>
+        <script type="text/javascript">
+            document.getElementById("close_direct").onclick = function() {
+                location.href = "cari_mahasiswa?carimhs=<?php echo $carimahasiswa ?>";
+            };
+        </script>
+        <script>
+            $('.select2').select2();
+        </script>
+        <script src="js/fakultas-prodi.js?v=1"></script>
+
+    </div>
     </div>
 
     </body>

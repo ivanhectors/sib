@@ -10,7 +10,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
   $currentTime = date('d-m-Y h:i:s A', time());
   // include("include/header.php");
   // include("include/sidebar.php");
-
+  $parentpage = "akun";
+  $childpage = "data_penyeleksi";
 
   if (isset($_POST['submit'])) {
     //update info pribadi
@@ -85,7 +86,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     //echo "<script>alert('Number of Rows 0');</script>";
   }
 
-  
+
 ?>
   <?php
   include("include/header.php");
@@ -428,22 +429,27 @@ if (strlen($_SESSION['admlogin']) == 0) {
                           <img src="img/<?php echo htmlentities($userphoto); ?>" class="avatar rounded-circle mr-3">
                         <?php endif; ?>
                         <b>
-                          <?php $nama_acc = $row['nama_acc'];
-                          if ($userphoto == "" || $userphoto == "NULL") {
-                            echo htmlentities($row['username']);
-                          } else {
-                            echo htmlentities($row['nama_acc']);
-                          }
 
+                        <?php $dtl_bsw_row = htmlentities($row['username']);
+                                                                                if (strlen($dtl_bsw_row) > 10) $dtl_bsw_row = substr($dtl_bsw_row, 0, 10) . "...";
+                                                                                echo $dtl_bsw_row;
 
-                          ?>
+                                                                                ?>
                         </b>
                       </td>
                       <td>
-                        <span class="text-muted"><?php echo htmlentities($row['createDate']); ?></span>
+                        <span class="text-muted"><?php $dtl_bsw_row = htmlentities($row['createDate']);
+                                                                                if (strlen($dtl_bsw_row) > 10) $dtl_bsw_row = substr($dtl_bsw_row, 0, 10) . "";
+                                                                                echo $dtl_bsw_row;
+
+                                                                                ?></span>
                       </td>
                       <td>
-                        <a href="mailto:<?php echo htmlentities($row['email']); ?>" class="font-weight-bold"><?php echo htmlentities($row['email']); ?></a>
+                        <a href="mailto:<?php echo htmlentities($row['email']); ?>" class="font-weight-bold"><?php $dtl_bsw_row = htmlentities($row['email']);
+                                                                                if (strlen($dtl_bsw_row) > 10) $dtl_bsw_row = substr($dtl_bsw_row, 0, 10) . "";
+                                                                                echo $dtl_bsw_row;
+
+                                                                                ?></a>
                       </td>
                       <td>
                         <a href="tel:<?php echo htmlentities($row['no_telp']); ?>" class="font-weight-bold"><?php echo htmlentities($row['no_telp']); ?></a>
@@ -495,71 +501,71 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             <i class="fas fa-ellipsis-v"></i>
                           </a>
                           <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                            <?php $status = $row['status']; 
+                            <?php $status = $row['status'];
                             if ($status > 0) :
                             ?>
                               <a class="dropdown-item" href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&off=0"><i class="fas fa-lock" style="color:#fb6340;"></i> Nonaktifkan Akun</a>
                             <?php else : ?>
                               <a class="dropdown-item" href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&on=1"><i class="fas fa-lock-open" style="color:#2dce89;"></i> Aktifkan Akun</span></a>
                             <?php endif; ?>
-                            <a class="dropdown-item" href="data_penyeleksi_edit?id=<?php echo $row['id_acc'] ?>&&user=<?php echo $row['username'] ?>" style="color: black;" type="button" ><i class="fas fa-pen" style="color:#172b4d;"></i> Edit Akun</a>
-                            <a class="dropdown-item" style="color: black;" type="button" data-toggle="modal" data-target="#reset<?php echo $row['id_acc'] ?>" ><i class="fas fa-key" style="color:#5e72e4;"></i> Reset Password</a>
+                            <a class="dropdown-item" href="data_penyeleksi_edit?id=<?php echo $row['id_acc'] ?>&&user=<?php echo $row['username'] ?>" style="color: black;" type="button"><i class="fas fa-pen" style="color:#172b4d;"></i> Edit Akun</a>
+                            <a class="dropdown-item" style="color: black;" type="button" data-toggle="modal" data-target="#reset<?php echo $row['id_acc'] ?>"><i class="fas fa-key" style="color:#5e72e4;"></i> Reset Password</a>
                             <a class="dropdown-item" href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&del=delete" onClick="return confirm('Yakin ingin menghapus penyeleksi, <?php echo htmlentities($row['username']); ?> ?')"><i class="fas fa-trash" style="color:#f5365c;"></i> Hapus Akun</a>
                           </div>
                         </div>
                       </td>
-                      <!-- href="data_penyeleksi?id=<?php echo $row['id_acc'] ?>&reset=true" -->
-                  <!-- batas modal form validasi edit profil -->
-                  <div class="col-md-4">
-                    <div class="modal fade" id="reset<?php echo $row['id_acc'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-                      <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                        <div class="modal-content">
-                          <div class="modal-body p-0">
-                            <div class="card bg-secondary border-0 mb-0">
-                            <form method="post">
-                              <div class="card-body px-lg-5 py-lg-5">
-                                <div class="text-center text-muted mb-4">
-                                  <small>Masukkan password anda untuk mereset password user :  <b>
-                          <?php $nama_acc = $row['nama_acc'];
-                          if ($userphoto == "" || $userphoto == "NULL") {
-                            echo htmlentities($row['username']);
-                          } else {
-                            echo htmlentities($row['nama_acc']);
-                          }
+
+                      <!-- batas modal form validasi edit profil -->
+                      <div class="col-md-4">
+                        <div class="modal fade" id="reset<?php echo $row['id_acc'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                          <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                            <div class="modal-content">
+                              <div class="modal-body p-0">
+                                <div class="card bg-secondary border-0 mb-0">
+                                  <form method="post">
+                                    <div class="card-body px-lg-5 py-lg-5">
+                                      <div class="text-center text-muted mb-4">
+                                        <small>Masukkan password anda untuk mereset password user : <b>
+                                            <?php $nama_acc = $row['nama_acc'];
+                                            if ($userphoto == "" || $userphoto == "NULL") {
+                                              echo htmlentities($row['username']);
+                                            } else {
+                                              echo htmlentities($row['nama_acc']);
+                                            }
 
 
-                          ?>
-                        </b></small>
-                                </div>
+                                            ?>
+                                          </b></small>
+                                      </div>
 
-                                <div class="form-group">
-                                  <div class="input-group input-group-merge input-group-alternative">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                      <div class="form-group">
+                                        <div class="input-group input-group-merge input-group-alternative">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                          </div>
+                                          <input type="hidden" name="id_user" value="<?php echo $row['id_acc'] ?>">
+                                          <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
+                                        </div>
+
+                                      </div>
+                                      <div class="input-group input-group-merge">
+                                        <div class="input-group-prepend text-left text-muted">
+                                          <span><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi <code style="font-size: 1rem;">1234</code>. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user tersebut. </small></span>
+                                        </div>
+
+                                      </div>
+                                      <div class="text-center">
+                                        <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
+                                      </div>
+
                                     </div>
-                                    <input type="hidden" name="id_user" value="<?php echo $row['id_acc'] ?>">
-                                    <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
-                                  </div>
-
                                 </div>
-                                <div class="input-group input-group-merge">
-                                    <div class="input-group-prepend text-left text-muted">
-                                      <span ><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi <code style="font-size: 1rem;">1234</code>. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user tersebut. </small></span>
-                                    </div>
-                                  
-                                  </div>
-                                <div class="text-center">
-                                  <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
-                                </div>
-
                               </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  </form>
+                      </form>
 
 
 

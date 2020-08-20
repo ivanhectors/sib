@@ -88,9 +88,11 @@
 		if($kd_fakultas == ''){
 		     exit;
 		}else{
-		     $getcity = mysqli_query($con,"SELECT  * FROM user_acc WHERE kd_fakultas ='$kd_fakultas' ORDER BY nama_acc ASC") or die ('Query Gagal');
-		     while($data = mysqli_fetch_array($getcity)){
-		          echo '<option value="'.$data['id_acc'].'">'.$data['nama_acc'].'</option>';
+			echo '<option value="selected">Pilih Wali Studi Mahasiswa</option>';
+		     $getacc = mysqli_query($con,"SELECT  * FROM user_acc WHERE kd_fakultas ='$kd_fakultas' ORDER BY nama_acc ASC") or die ('Query Gagal');
+		     while($data_acc = mysqli_fetch_array($getacc)){
+				  
+		          echo '<option value="'.$data_acc['id_acc'].'">'.$data_acc['nama_acc'].'</option>';
 		     }
 		     exit;    
 		}
