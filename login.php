@@ -49,30 +49,62 @@ if (isset($_POST["login"])) {
     while ($row = mysqli_fetch_array($mhs)) {
       if (password_verify($password, $row["password"])) {
         //return true;  
+        $extra = "mhs/?id"; //
         $_SESSION["mhslogin"] = $username;
-        header("location:mhs/");
+        $_SESSION['id'] = $num['id'];
+        $host = $_SERVER['HTTP_HOST'];
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 1;
+        $log = mysqli_query($con, "insert into userlog(iduserlog,username,userip,status) values('" . $_SESSION['id'] . "','" . $_SESSION['mhslogin'] . "','$uip','$status')");
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        header("location:http://$host$uri/$extra");
+        exit();
       } else {
+        $extra = "login";
+        $host  = $_SERVER['HTTP_HOST'];
+        $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $_SESSION['mhslogin'] = $username;
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 0;
+        mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['mhslogin'] . "','$uip','$status')");
+        $_SESSION['errmsg'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra?failed=1");
         echo '';
+        exit();
       }
     }
   } elseif (mysqli_num_rows($acc) > 0) {
     while ($row = mysqli_fetch_array($acc)) {
       if (password_verify($password, $row["password"])) {
         //return true;  
+        $extra = "acc/?id"; //
         $_SESSION["acclogin"] = $username;
-        header("location:acc/");
+        $_SESSION['id'] = $num['id'];
+        $host = $_SERVER['HTTP_HOST'];
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 1;
+        $log = mysqli_query($con, "insert into userlog(iduserlog,username,userip,status) values('" . $_SESSION['id'] . "','" . $_SESSION['acclogin'] . "','$uip','$status')");
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        header("location:http://$host$uri/$extra");
+        exit();
       } else {
-        echo '<script>alert("Wrong User Details")</script>';
+        $extra = "login";
+        $host  = $_SERVER['HTTP_HOST'];
+        $uri  = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $_SESSION['acclogin'] = $username;
+        $uip = $_SERVER['REMOTE_ADDR'];
+        $status = 0;
+        mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['acclogin'] . "','$uip','$status')");
+        $_SESSION['errmsg'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra?failed=1");
+        echo '';
+        exit();
       }
     }
   } else {
-
-    echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
-                  <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
-                  <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
-                  <span data-notify="message">Terjadi kesalahan dengan akun anda. Pastikan akun anda aktif untuk dapat login.</span>
-                </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
-                <span aria-hidden="true">×</span></button></div>';
+    $_SESSION['error'] = 'Terjadi kesalahan dengan akun anda. Pastikan akun anda aktif untuk dapat login.';
+    header('location: login.php');
+    exit();
   }
 }
 
@@ -103,7 +135,7 @@ if (isset($_POST["login"])) {
   <!-- Navbar -->
   <nav id="navbar-main" class="navbar navbar-horizontal navbar-transparent navbar-main navbar-expand-lg navbar-light">
     <div class="container">
-      <a class="navbar-brand" href="../../pages/dashboards/dashboard.html">
+      <a class="navbar-brand" href="../sib/">
         <img src="assets/img/brand/white.png">
       </a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -128,7 +160,7 @@ if (isset($_POST["login"])) {
 
 
         <ul class="navbar-nav align-items-lg-center ml-lg-auto">
-        <li class="nav-item">
+          <li class="nav-item">
             <a class="nav-link nav-link-icon d-lg-none" href="../sib/index" data-toggle="tooltip" title="" data-original-title="Home">
               <i class="fas fa-home d-lg-none"></i>
               <span class="nav-link-inner--text d-lg-none">Home</span>
@@ -146,7 +178,7 @@ if (isset($_POST["login"])) {
               <i class="fab fa-instagram"></i>
               <span class="nav-link-inner--text d-lg-none">Instagram</span>
             </a>
-          </li> 
+          </li>
           <li class="nav-item">
             <a class="nav-link nav-link-icon" href="https://twitter.com/ukdwyogyakarta" target="_blank" data-toggle="tooltip" title="" data-original-title="Follow UKDW di Twitter">
               <i class="fab fa-twitter-square"></i>
@@ -218,6 +250,18 @@ if (isset($_POST["login"])) {
               </div> -->
             </div>
             <div class="card-body px-lg-5 py-lg-5">
+              <?php
+              if (isset($_SESSION['error'])) {
+                echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
+                <span data-notify="message">' . $_SESSION['error'] . '</span>
+              </div><button type="button" id="close_direct" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+              <span aria-hidden="true">×</span></button></div>';
+                unset($_SESSION['error']);
+              }
+
+              ?>
               <form role="form" method="post" class="needs-validation">
                 <div class="form-group mb-3">
                   <?php if (isset($_GET['failed']) && $_GET['failed'] == 1) { ?>
@@ -267,7 +311,7 @@ if (isset($_POST["login"])) {
                   <button type="submit" id="login" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Sign In" name="login" value="Login" class="btn btn-primary my-4 btnlogin">Sign in</button>
                 </div>
               </form>
-            </div> 
+            </div>
           </div>
           <div class="row mt-3">
             <div class="col-6">
@@ -285,19 +329,19 @@ if (isset($_POST["login"])) {
   <footer class="py-5" id="footer-main">
     <div class="container">
       <div class="row align-items-center justify-content-xl-between">
-          <div class="col-lg-6">
-            <div class="copyright text-center text-lg-left text-muted">
-              &copy; 2020 <a href="https://www.ukdw.ac.id" class="font-weight-bold ml-1" target="_blank">UKDW</a>
-            </div>
+        <div class="col-lg-6">
+          <div class="copyright text-center text-lg-left text-muted">
+            &copy; 2020 <a href="https://www.ukdw.ac.id" class="font-weight-bold ml-1" target="_blank">UKDW</a>
           </div>
-          <div class="col-lg-6"> 
-            <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+        </div>
+        <div class="col-lg-6">
+          <ul class="nav nav-footer justify-content-center justify-content-lg-end">
             <div class="copyright text-center text-lg-left text-muted">
-            Made with <i  style="color: #e25555;" class="fas fa-heart"></i> by<a href="https://ivanhectors.me/" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>
+              Made with <i style="color: #e25555;" class="fas fa-heart"></i> by<a href="https://ivanhectors.me/" class="font-weight-bold ml-1" target="_blank">Ivan Hectors</a>
             </div>
-            
-            </ul>
-          </div>
+
+          </ul>
+        </div>
       </div>
     </div>
   </footer>
@@ -359,13 +403,13 @@ if (isset($_POST["login"])) {
     });
   </script>
   <script>
-$('.btnlogin').on('click', function() {
-    var $this = $(this);
-  $this.button('loading');
-    setTimeout(function() {
-       $this.button('reset');
-   }, 8000);
-});
+    $('.btnlogin').on('click', function() {
+      var $this = $(this);
+      $this.button('loading');
+      setTimeout(function() {
+        $this.button('reset');
+      }, 8000);
+    });
   </script>
 </body>
 

@@ -34,7 +34,7 @@ $columns = array(
     array( 'db' => 'nama_mhs',  'dt' => 2 ),
     array( 'db' => 'email',   'dt' => 3 ),
     array( 'db' => 'no_telp',     'dt' => 4 )
-
+  
 );
  
 // SQL server connection information

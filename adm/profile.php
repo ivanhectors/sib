@@ -95,7 +95,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
        ";
       } else {
         //rename the image file
-        $imgnewfile = md5($imgfile) . $extension;
+        $imgnewfile = md5($imgfile) . uniqid() . $extension;
         // Code for move image into directory
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], "img/" . $imgnewfile);
         // Query for insertion data into database
@@ -243,7 +243,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             <div class="col-lg-12 col-md-10">
               <h1 class="display-2 text-white">Hello,
                 <?php $nama_admin = $row['nama_admin'];
-                if ($userphoto == "" || $userphoto == "NULL") {
+                if ($nama_admin == "" || $nama_admin == "NULL") {
                   echo htmlentities($row['username']);
                 } else {
                   echo htmlentities($row['nama_admin']);
@@ -543,27 +543,21 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
                             </div>
-                            <select class="form-control" name="gender" placeholder="Pilih Gender" value="<?php
-
-                                                                                                          $gender = $row['gender'];
-                                                                                                          if ($gender == "1") {
-                                                                                                            echo "Pria";
-                                                                                                          } else {
-                                                                                                            echo "Wanita";
-                                                                                                          }
-                                                                                                          ?>" id="exampleFormControlSelect1">
+                            <select class="form-control" name="gender" placeholder="Pilih Gender" id="exampleFormControlSelect1">
                               <option value="<?php echo htmlentities($row['gender']); ?>"><?php
 
                                                                                           $gender = $row['gender'];
-                                                                                          if ($gender == "1") {
+                                                                                           if ($gender == "Pria") {
                                                                                             echo "Pria";
-                                                                                          } else {
+                                                                                          } elseif ($gender == "Wanita") {
                                                                                             echo "Wanita";
+                                                                                          } else {
+                                                                                            echo "Pilih Gender";
                                                                                           }
                                                                                           ?></option>
                                                                                           <div class="dropdown-divider"></div>
-                              <option value="1">Pria</option>
-                              <option value="2">Wanita</option>
+                              <option value="Pria">Pria</option>
+                              <option value="Wanita">Wanita</option>
                             </select>
                           </div>
 
@@ -754,7 +748,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
           todayHighlight: true
         });
       </script>
-
+        <script>
+            $(document).on('change', '.custom-file-input', function(event) {
+                $(this).next('.custom-file-label').html(event.target.files[0].name);
+            })
+        </script>
 
 
   </div>

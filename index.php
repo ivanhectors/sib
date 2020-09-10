@@ -19,58 +19,50 @@
 
   function make_query($con)
   {
-   $query = "SELECT * FROM img WHERE status='1' ORDER BY id_img ASC";
-   $result = mysqli_query($con, $query);
-   return $result;
+    $query = "SELECT * FROM img WHERE status='1' ORDER BY id_img ASC";
+    $result = mysqli_query($con, $query);
+    return $result;
   }
-  
+
   function make_slide_indicators($con)
   {
-   $output = ''; 
-   $count = 0;
-   $result = make_query($con);
-   while($row = mysqli_fetch_array($result))
-   {
-    if($count == 0)
-    {
-     $output .= '
-     <li data-target="#slider" data-slide-to="'.$count.'" class="active"></li>
+    $output = '';
+    $count = 0;
+    $result = make_query($con);
+    while ($row = mysqli_fetch_array($result)) {
+      if ($count == 0) {
+        $output .= '
+     <li data-target="#slider" data-slide-to="' . $count . '" class="active"></li>
      ';
-    }
-    else
-    {
-     $output .= '
-     <li data-target="#slider" data-slide-to="'.$count.'"></li>
+      } else {
+        $output .= '
+     <li data-target="#slider" data-slide-to="' . $count . '"></li>
      ';
+      }
+      $count = $count + 1;
     }
-    $count = $count + 1;
-   }
-   return $output;
+    return $output;
   }
-  
+
   function make_slides($con)
   {
-   $output = '';
-   $count = 0;
-   $result = make_query($con);
-   while($row = mysqli_fetch_array($result))
-   {
-    if($count == 0)
-    {
-     $output .= '
+    $output = '';
+    $count = 0;
+    $result = make_query($con);
+    while ($row = mysqli_fetch_array($result)) {
+      if ($count == 0) {
+        $output .= '
      <div class="carousel-inner card-body border-0 py-5">
      <div class="carousel-item active">';
-    }
-    else
-    {
-     $output .= '<div class="carousel-item">';
-    }
-    $output .= '
-     <img class="content cover shadow" width="800" height="400" src="assets/img/slider/'.$row["img"].'" alt="'.$row["jdl_img"].'" />
+      } else {
+        $output .= '<div class="carousel-item">';
+      }
+      $output .= '
+     <img class="content cover shadow" width="800" height="400" src="assets/img/slider/' . $row["img"] . '" alt="' . $row["jdl_img"] . '" />
     </div>
     ';
 
-    $output .= '
+      $output .= '
      
     <a class="carousel-control-prev" href="#slider" data-slide="prev">
     <div class="icon icon-shape bg-white text-primary">
@@ -84,9 +76,9 @@
     </div>
   </a>
     ';
-    $count = $count + 1;
-   }
-   return $output;
+      $count = $count + 1;
+    }
+    return $output;
   }
 
   ?>
@@ -94,13 +86,11 @@
   include("include/header.php");
   ?>
 
- 
+
  <style>
    .content.cover {
      border-radius: 20px;
    }
-
-
  </style>
 
  </head>
@@ -185,8 +175,8 @@
      <div id="slider" class="carousel slide" data-ride="carousel">
        <!-- Indicators -->
        <ul class="carousel-indicators pt-2">
-       <?php echo make_slide_indicators($con); ?>
-         
+         <?php echo make_slide_indicators($con); ?>
+
        </ul>
 
 
@@ -197,8 +187,8 @@
          <?php echo make_slides($con); ?>
 
 
-           <!-- Left and right controls -->
-           <!-- <a class="carousel-control-prev" href="#slider" data-slide="prev">
+         <!-- Left and right controls -->
+         <!-- <a class="carousel-control-prev" href="#slider" data-slide="prev">
              <div class="icon icon-shape bg-white text-primary">
                <i class="fas fa-chevron-left"></i>
              </div>
@@ -210,13 +200,13 @@
              </div>
            </a> -->
 
-         </div>
        </div>
      </div>
+ </div>
 
 
 
-     <!-- <div class="row justify-content-center text-center">
+ <!-- <div class="row justify-content-center text-center">
          <div class="col-md-6">
            <h3 class="display-3 text-white">Pengumuman</h3>
              <p class="lead text-white">
@@ -236,7 +226,7 @@
      <div class="row justify-content-center">
 
 
-       <div class="col-lg-6">
+       <!-- <div class="col-lg-6">
          <div class="card card-lift--hover shadow border-0">
            <div class="card-body py-5">
 
@@ -256,22 +246,12 @@
                  <a href="#" class="btn btn-sm btn-primary" data-calendar-view="basicWeek">Minggu</a>
                  <a href="#" class="btn btn-sm btn-primary" data-calendar-view="basicDay">Hari</a>
                </div>
-
-
-
-
              </div>
              <br>
-
-             <!-- Card header -->
-             <!-- Card body -->
              <div id="calendar" class="fc fc-unthemed fc-ltr"></div>
-
-
-
            </div>
          </div>
-       </div>
+       </div> -->
 
        <!-- informasi beasiswa dan pinjaman -->
 
@@ -288,7 +268,7 @@
 
           ?>
 
-           <div class="card card-lift--hover shadow border-0">
+           <div class="card shadow border-0">
              <div class="card-body py-5">
                <div class="icon icon-shape bg-gradient-primary text-white rounded-circle mb-4">
                  <i class="fas fa-graduation-cap"></i>
@@ -351,7 +331,9 @@
              </div>
            </div>
          <?php } ?>
+       </div>
 
+       <div class="col-lg-6">
          <?php
           $id_bsw = '2';
           $sql = "SELECT * FROM beasiswa WHERE id_bsw=?";
@@ -363,7 +345,7 @@
 
 
           ?>
-           <div class="card card-lift--hover shadow border-0">
+           <div class="card shadow border-0">
              <div class="card-body py-5">
                <div class="icon icon-shape bg-gradient-primary text-white rounded-circle mb-4">
                  <i class="fas fa-hand-holding-usd"></i>
@@ -444,7 +426,7 @@
         while ($row = $result->fetch_assoc()) {
         ?>
          <div class="col-lg-6">
-           <div class="card card-lift--hover shadow border-0">
+           <div class="card shadow border-0">
              <div class="card-body py-5">
                <div class="icon icon-shape bg-gradient-default text-white rounded-circle mb-4">
                  <i class="fas fa-graduation-cap"></i>
@@ -489,7 +471,7 @@
        <?php
         $status = '1';
         $id_info = '1';
-        $sql = "SELECT * FROM informasi WHERE id_info =? and status=?";
+        $sql = "SELECT * FROM informasi WHERE id_info =? and status=? LIMIT 1";
         $stmt = $con->prepare($sql);
         $stmt->bind_param("ii", $id_info, $status);
         $stmt->execute();
@@ -499,15 +481,13 @@
          <div class='col-lg-12'>
            <div class='row'>
              <div class='col-lg-12' id='pengumuman'>
-               <div class='card card-lift--hover shadow border-0'>
-                 <div class='card-body py-5'>
-                   <div class='icon icon-shape bg-gradient-primary text-white rounded-circle mb-4'>
-                     <i class='fas fa-newspaper'></i>
-                   </div>
-
-                   <h4 class='h3 text-primary text-uppercase'><?php echo $row['jdl_info']; ?></h4>
+               <div class='card shadow border-0'>
+                 <div class="card-header">
+                   <h5 class="text-black text-uppercase ls-1 mb-1">PENGUMUMAN</h5>
+                   <h4 class="h3 text-uppercase text-primary mb-0"><?php echo $row['jdl_info']; ?></h4>
+                 </div>
+                 <div class='card-body py-3'>
                    <?php echo $row['detail_info']; ?>
-
                  </div>
 
                </div>
@@ -739,7 +719,7 @@
 
        eventLimit: true, // allow "more" link when too many events
        selectable: true,
-       selectHelper: true,
+       selectHelper: false,
        select: function(start, end) {
 
          $('#ModalAdd #start').val(moment(start).format('YYYY-MM-DD '));
@@ -932,7 +912,7 @@
 
      var contentString = '<div class="info-window-content"><div class="text-lg-left"><center><h2 class="h3 text-primary text-uppercase">Universitas Kristen Duta Wacana</h2></center>' +
        '<p>Jl. dr. Wahidin Sudirohusodo no. 5-25 Yogyakarta, Indonesia – 55224</p></div>' +
-       '<p>Telp. +62274563929, Fax: +62274513235</p></div>' + 
+       '<p>Telp. +62274563929, Fax: +62274513235</p></div>' +
        '<div class="card-body pl-0 pt-0 pb-0 pr-0"><center><a type="button" href="https://www.facebook.com/ukdwyogyakarta/" target="_blank" class="btn btn-facebook btn-icon-only rounded-circle"><span class="btn-inner--icon"><i class="fab fa-facebook"></i></span></a><a type="button" href="https://www.twitter.com/ukdwyogyakarta/" target="_blank" class="btn btn-twitter btn-icon-only rounded-circle"> <span class="btn-inner--icon"><i class="fab fa-twitter"></i></span> </a> <a type="button" href="https://www.instagram.com/ukdwyogyakarta/" target="_blank" class="btn btn-instagram btn-icon-only rounded-circle"> <span class="btn-inner--icon"><i class="fab fa-instagram"></i></span> </a> <a type="button" href="https://www.youtube.com/channel/UC5cKNXrmMhLC8jdbap_ZBbg" target="_blank" class="btn btn-youtube btn-icon-only rounded-circle"> <span class="btn-inner--icon"><i class="fab fa-youtube"></i></span> </a><a type="button" href="https://www.ukdw.ac.id/" target="_blank" class="btn btn-google-plus btn-icon-only rounded-circle"> <span class="btn-inner--icon"><i class="fas fa-globe-asia"></i></span> </a></div> </div> </div>';
 
      var infowindow = new google.maps.InfoWindow({

@@ -58,7 +58,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     }
 
     if (isset($_GET['del'])) {
-        mysqli_query($con, "delete from ref_prodi where id_prodi = '" . $_GET['id'] . "'");
+        mysqli_query($con, "delete from beasiswa where id_bsw = '" . $_GET['id'] . "'");
         $_SESSION['delmsg'] = "1";
     } else {
         $_SESSION['delmsg'] = "0";
@@ -68,35 +68,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
     <?php
     include("include/header.php");
     ?>
-    <script>
-        function userAvailability() {
-            $("#loaderIcon").show();
-            jQuery.ajax({
-                url: "check_prodi.php",
-                data: 'kd_prodi=' + $("#kd_prodi").val(),
-                type: "POST",
-                success: function(data) {
-                    $("#user-availability-status1").html(data);
-                    $("#loaderIcon").hide();
-                },
-                error: function() {}
-            });
-        }
-
-        function userAvailability2() {
-            $("#loaderIcon").show();
-            jQuery.ajax({
-                url: "check_prodi.php",
-                data: 'kd_prodi2=' + $("#kd_prodi2").val(),
-                type: "POST",
-                success: function(data) {
-                    $("#user-availability-status2").html(data);
-                    $("#loaderIcon").hide();
-                },
-                error: function() {}
-            });
-        }
-    </script>
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -242,7 +213,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                     <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
                                     <li class="breadcrumb-item"><a href="../adm">Dashboards</a></li>
-                                    <li class="breadcrumb-item"><a href="#">Data Master</a></li>
+                                    <li class="breadcrumb-item"><a href="#">Beasiswa</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Data Beasiswa</li>
                                 </ol>
                             </nav>
@@ -350,7 +321,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <tr>
                                         <th>Kode Beasiswa</th>
                                         <th>Nama Beasiswa</th>
-                                        <th>Detail Beasiswa</th>
                                         <th>Tanggal Buka</th>
                                         <th>Tanggal Tutup</th>
                                         <th>Tampilkan</th>
@@ -361,7 +331,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <tbody>
                                     <?php
 
-                                    $sql = "select * from beasiswa order by kd_bsw ASC";
+                                    $sql = "select * from beasiswa order by id_bsw ASC";
                                     $stmt = $con->prepare($sql);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
@@ -374,15 +344,12 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             </td>
                                             <td>
                                                 <b> <span class="text-muted"><?php $dtl_bsw_row = htmlentities($row['nama_bsw']);
-                                                                            if (strlen($dtl_bsw_row) > 23) $dtl_bsw_row = substr($dtl_bsw_row, 0, 23) . "..."; echo $dtl_bsw_row; 
+                                                                                if (strlen($dtl_bsw_row) > 23) $dtl_bsw_row = substr($dtl_bsw_row, 0, 23) . "...";
+                                                                                echo $dtl_bsw_row;
 
-                                                                            ?></span></b>
+                                                                                ?></span></b>
                                             </td>
-                                            <td>
-                                                <span class="text-muted"><?php $dtl_bsw_row = htmlentities($row['dtl_bsw']);
-                                                                            if (strlen($dtl_bsw_row) > 12) $dtl_bsw_row = substr($dtl_bsw_row, 0, 12) . "...";
-                                                                            echo $dtl_bsw_row; ?></span>
-                                            </td>
+                                            
                                             <td class="table-user">
                                                 <b> <?php
                                                     $tanggal = $row['tgl_buka'];
@@ -419,101 +386,19 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                         <?php else : ?>
                                                             <a class="dropdown-item" href="list_beasiswa?id=<?php echo $row['id_bsw']; ?>&on=1"><i class="fas fa-eye" style="color:#5e72e4;"></i>Tampilkan Beasiswa</span></a>
                                                         <?php endif; ?>
-                                                        <a class="dropdown-item" data-toggle="modal" data-target="#modal-form2<?php echo $row['id_bsw']; ?>" type="button"> <i class="fas fa-pen" style="color:#172b4d;"></i>Edit Beasiswa</span></a>
-                                                        <a class="dropdown-item" href="data_prodi?id=<?php echo $row['id_prodi'] ?>&del=delete" onClick="return confirm('Yakin ingin menghapus Beasiswa <?php echo htmlentities($row['nama_prodi']); ?> ?')"><i class="fas fa-trash" style="color:#f5365c;"></i> Hapus Beasiswa</a>
+                                                        <a class="dropdown-item" href="list_beasiswa_edit?id_bsw=<?php echo $row['id_bsw'] ?>" type="button"> <i class="fas fa-pen" style="color:#172b4d;"></i>Edit Beasiswa</span></a>
+                                                        <a class="dropdown-item" href="list_beasiswa?id=<?php echo $row['id_bsw'] ?>&del=delete" onClick="return confirm('Yakin ingin menghapus, Beasiswa <?php echo htmlentities($row['nama_bsw']); ?> ?')"><i class="fas fa-trash" style="color:#f5365c;"></i> Hapus Beasiswa</a>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <!-- <td class="table-actions">
-                  <a href="#!" class="table-action" data-toggle="tooltip" data-original-title="Edit product">
-                    <i class="fas fa-user-edit"></i>
-                  </a>
-                  <a href="#!" class="table-action table-action-delete" data-toggle="tooltip" data-original-title="Delete product">
-                    <i class="fas fa-trash"></i>
-                  </a>
-                </td> -->
                                         </tr>
-                                        <div class="col-md-4">
-                                            <div class="modal fade" id="modal-form2<?php echo $row['id_bsw']; ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form2" aria-hidden="true">
-                                                <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-body p-0">
-                                                            <div class="card bg-secondary border-0 mb-0">
-                                                                <div class="card-body px-lg-5 py-lg-5">
-                                                                    <div class="text-center text-muted mb-4">
-                                                                        <small>Form Ubah Beasiswa</small>
-                                                                    </div>
-                                                                    <form role="form" method="post">
-                                                                        <div class="form-group mb-3">
-                                                                            <div class="input-group input-group-merge input-group-alternative">
-                                                                                <div class="input-group-prepend">
-                                                                                    <span class="input-group-text"><small class="font-weight-bold">#</small></span>
-                                                                                </div>
-                                                                                <input type="hidden" name="id_bsw2" value="<?php echo $row['id_bsw']; ?>" />
-                                                                                <input type="text" id="kd_bsw" name="kd_bsw2" value="<?php echo $row['kd_bsw']; ?>" class="form-control" oninput="let p=this.selectionStart;this.value=this.value.toUpperCase();this.setSelectionRange(p, p);" placeholder="Kode Beasiswa" title="Masukkan Kode Beasiswa" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Beasiswa.')" oninput="setCustomValidity('')" required>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group mb-3">
-                                                                            <div class="input-group input-group-merge input-group-alternative">
-
-                                                                                <input class="form-control" name="nama_bsw2" value="<?php echo $row['nama_bsw']; ?>" placeholder="Nama Beasiswa" type="text" title="Masukkan Nama Beasiswa" oninvalid="this.setCustomValidity('Selahkan masukkan Nama Beasiswa.')" oninput="setCustomValidity('')" required>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="form-group mb-3">
-                                                                            <div class="input-group input-group-merge input-group-alternative">
-
-                                                                                <textarea class="form-control" name="dtl_bsw2" placeholder="Detail Beasiswa" rows="3" resize="none"><?php echo $row['dtl_bsw']; ?></textarea>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label class="form-control-label">Tanggal Buka</label>
-                                                                                    <input class="form-control" name="tgl_buka2" data-provide="datepicker" value="<?php echo $row['tgl_buka']; ?>" data-date-format="yyyy-mm-dd" placeholder="Pilih Tanggal" type="text">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <div class="form-group">
-                                                                                    <label class="form-control-label">Tanggal Tutup</label>
-                                                                                    <input class="form-control" name="tgl_tutup2" data-provide="datepicker" value="<?php echo $row['tgl_tutup']; ?>" data-date-format="yyyy-mm-dd" placeholder="Pilih Tanggal" type="text">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="text-center">
-                                                                            <button type="submit" id="edit" name="edit" class="btn btn-primary my-4">Edit Beasiswa</button>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     <?php } ?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
-
-
-
-
-
-
-
                 </div>
             </div>
-
-
-
-
-
-
-
-
             <?php
             include("include/footer.php"); //Edit topnav on this page
             ?>

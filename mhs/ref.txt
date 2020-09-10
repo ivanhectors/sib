@@ -1,0 +1,126 @@
+--
+Select Syarat Beasiswa untuk beasiswa tertuju
+--
+SELECT
+ref_syarat.kd_syarat AS kd_syarat
+, ref_syarat.nama_syarat As nama_syarat
+, syarat_bsw.kd_bsw AS checked
+FROM ref_syarat
+LEFT JOIN syarat_bsw ON (
+ref_syarat.kd_syarat = syarat_bsw.kd_syarat
+AND kd_bsw= '1' ) 
+
+
+--
+Select beasiswa dari pendaftaran mencocokkan dengan beasiswa nya
+--
+SELECT
+pendaftaran.kd_daftar AS kd_daftar
+, pendaftaran.tgl_daftar As tgl_daftar
+, pendaftaran.nominal_disetujui AS status
+, beasiswa.nama_bsw AS nm_beasiswa
+FROM pendaftaran
+JOIN beasiswa ON (
+pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.nim ='72160057'
+
+
+--
+Select file where KD_DAFTAR sama
+--
+
+SELECT
+syarat_daftar.isi_syarat As isi_syarat
+, pendaftaran.kd_daftar AS kd_daftar
+FROM pendaftaran
+JOIN syarat_daftar WHERE pendaftaran.kd_daftar = syarat_daftar.kd_daftar AND
+syarat_daftar.kd_daftar = '7216005720201203'
+
+--
+[BELUM BERHASIL] Query untuk menampilkan timeline
+--
+SELECT
+user_mhs.username AS NIM
+, user_mhs.kd_fakultas AS KD_FAKULTAS
+, user_mhs.id_dosen_wali AS id_dosen_wali
+, user_acc.id_acc AS id_acc
+, user_acc.kd_role AS acc_role
+, user_acc.username AS acc_username
+, pendaftaran.kd_daftar AS kd_daftar
+, sts_daftar.kd_daftar AS STS_KD_DAFTAR
+, sts_daftar.acc_role AS STS_ROLE
+, sts_daftar.acc_username AS STS_USERNAME
+, sts_daftar.acc_tanggal AS TGL_ACC
+, sts_daftar.status AS STATUS_ACC
+FROM user_mhs, user_acc, pendaftaran
+LEFT JOIN sts_daftar ON (
+pendaftaran.kd_daftar = sts_daftar.kd_daftar
+) WHERE user_mhs.username = '72160057'
+
+--
+Select query untuk menampilkan grapic pada chart
+--
+SELECT DISTINCT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE nim = '72160057' and status = 'diterima' GROUP BY tahun
+
+
+
+--
+Ref Tahap Seleksi
+--
+
+                                        <?php
+                                        $kd_daftar = $_GET['kd_daftar'];
+                                        $acc_role_wali_studi = '4';
+                                        $query = "SELECT * FROM sts_daftar WHERE kd_daftar = ? and acc_role = ? LIMIT 1";
+                                        $stmt = $con->prepare($query);
+                                        $stmt->bind_param("is", $kd_daftar, $acc_role_wali_studi);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                            <div class="timeline-block">
+                                                <span class="timeline-step badge-<?php $dosen_wali_status = $row['status'];
+                                                                                    echo ($dosen_wali_status == "diterima" ? "success" : "danger") ?>">
+                                                    <i class="fas fa-<?php $dosen_wali_status = $row['status'];
+                                                                        echo ($dosen_wali_status == "diterima" ? "check" : "exclamation") ?>"></i>
+                                                </span>
+                                                <div class="timeline-content">
+                                                    <span class="badge badge-pill badge-<?php $dosen_wali_status = $row['status'];
+                                                                                        echo ($dosen_wali_status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
+                                                    <h5 class=" mt-3 mb-0">Seleksi Wali Studi</h5>
+
+                                                    <div class="mt-3">
+                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php
+                                        $kd_daftar = $_GET['kd_daftar'];
+                                        $acc_role_wakil_dekan = '3';
+                                        $query = "SELECT * FROM sts_daftar WHERE kd_daftar = ? and acc_role = ? LIMIT 1";
+                                        $stmt = $con->prepare($query);
+                                        $stmt->bind_param("is", $kd_daftar, $acc_role_wakil_dekan);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                            <div class="timeline-block">
+                                                <span class="timeline-step badge-<?php $wakil_dekan_status = $row['status'];
+                                                                                    echo ($wakil_dekan_status == "diterima" ? "success" : "danger") ?>">
+                                                    <i class="fas fa-<?php $wakil_dekan_status = $row['status'];
+                                                                        echo ($wakil_dekan_status == "diterima" ? "check" : "exclamation") ?>"></i>
+                                                </span>
+                                                <div class="timeline-content">
+                                                    <span class="badge badge-pill badge-<?php $wakil_dekan_status = $row['status'];
+                                                                                        echo ($wakil_dekan_status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
+                                                    <h5 class=" mt-3 mb-0">Seleksi Wakil Dekan III Fakultas</h5>
+
+                                                    <div class="mt-3">
+                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
