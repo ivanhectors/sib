@@ -3,7 +3,7 @@ session_start();
 
 include("include/config.php");
 
-if (strlen($_SESSION['mhslogin']) == 0) {
+if (strlen($_SESSION['acclogin']) == 0) {
     header('location:../403');
 } else {
     date_default_timezone_set('Asia/Jakarta'); // change according timezone
@@ -13,20 +13,20 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $parentpage = "pengajuan";
 
 
-    // Mengambil data Genap/Gasal berdasarkan Tahun saat ini dan Bulan saat ini
+    // Mengambil data Genap/Ganjil berdasarkan Tahun saat ini dan Bulan saat ini
     $year = date('Y');
     $bulan_ini = date('n');
     if ($bulan_ini <= 6) {
         $bulan_ini = 'Genap';
     } else {
-        $bulan_ini = 'Gasal';
+        $bulan_ini = 'Ganjil';
     }
 
-    // Membuat Format nama file "Semester = 2020_Gasal" record pada inputan file
+    // Membuat Format nama file "Semester = 2020_Ganjil" record pada inputan file
     $string_gabungan = $year . "_" . $bulan_ini;
     $semester = $string_gabungan;
 
-    // Membuat output semester menjadi 1 / 2 alias dari Gasal / Genap
+    // Membuat output semester menjadi 1 / 2 alias dari Ganjil / Genap
     $semester_ini = date('n');
     if ($semester_ini <= 6) {
         $semester_ini = '2';
@@ -46,7 +46,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $digits = 3;
     $unik_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
     $limit = 2 * 1024 * 1024; //10MB. Bisa diubah2
-    $nim = $_SESSION['mhslogin'];
+    $nim = $_SESSION['acclogin'];
 
     if (isset($_FILES['syarat'])) {
         //karena ada multiple, jadi dilakukan pengecekan foreach
@@ -164,10 +164,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <h6 class="h2 text-white d-inline-block mb-0">Form Pengajuan</h6>
                             <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                    <li class="breadcrumb-item"><a href="../mhs?id"><i class="fas fa-home"></i></a></li>
-                                    <li class="breadcrumb-item"><a href="../mhs?id">Dashboards</a></li>
-                                    <li class="breadcrumb-item"><a href="../mhs/pengajuan">Pilih Beasiswa</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Form Pengajuan</li>
+                                    <li class="breadcrumb-item"><a href="../acc?id"><i class="fas fa-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="../acc?id">Dashboards</a></li>
+                                    <li class="breadcrumb-item"><a href="../acc/beasiswa-kebutuhan">Data Pengajuan</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Form Pengajuan Detail</li>
                                 </ol>
                             </nav>
                         </div>
@@ -318,10 +318,18 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <!-- Batas Awal Info Pribadi Mahasiswa -->
 
                         <?php
-                        $nim = $_SESSION['mhslogin'];
-                        $query = "select * from user_mhs where username=?";
+                        $kd_daftar = $_GET['form'];
+                        $query = "SELECT
+                        user_mhs.username
+                        , user_mhs.nama_mhs
+                        , user_mhs.email
+                        , user_mhs.no_telp
+                        , pendaftaran.kd_daftar
+                        FROM user_mhs
+                        JOIN pendaftaran 
+                        WHERE pendaftaran.kd_daftar = ? AND pendaftaran.nim = user_mhs.username";
                         $stmt = $con->prepare($query);
-                        $stmt->bind_param("s", $nim);
+                        $stmt->bind_param("s", $kd_daftar);
                         $stmt->execute();
                         $result = $stmt->get_result();
                         if ($result->num_rows > 0) {

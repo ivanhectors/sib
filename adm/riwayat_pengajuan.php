@@ -3,14 +3,14 @@ session_start();
 
 include("include/config.php");
 
-if (strlen($_SESSION['acclogin']) == 0) {
+if (strlen($_SESSION['admlogin']) == 0) {
     header('location:../403');
 } else {
     date_default_timezone_set('Asia/Jakarta'); // change according timezone
     $currentTime = date('d-m-Y h:i:s A', time());
     // include("include/header.php");
     // include("include/sidebar.php");
-    $parentpage = "riwayat_pengajuan";
+    $page = "riwayat_pengajuan";
 
 
 ?>
@@ -50,14 +50,14 @@ if (strlen($_SESSION['acclogin']) == 0) {
                             <h6 class="h2 text-white d-inline-block mb-0">Pengajuan</h6>
                             <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                                    <li class="breadcrumb-item"><a href="../acc?id"><i class="fas fa-home"></i></a></li>
-                                    <li class="breadcrumb-item"><a href="../acc?id">Dashboards</a></li>
+                                    <li class="breadcrumb-item"><a href="../adm?id"><i class="fas fa-home"></i></a></li>
+                                    <li class="breadcrumb-item"><a href="../adm?id">Dashboards</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Riwayat Pengajuan Mahasiswa</li>
                                 </ol>
                             </nav>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
-
+                        <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a>
 
                         </div>
                     </div>
@@ -114,37 +114,21 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                         </th>
                                     </tr>
                                 </thead>
-                                <?php
-                                if ($_SESSION['role'] == "4") {
-                                ?>
                                     <tbody>
                                         <?php
-                                        $id_dosen_wali = $_SESSION['iddosenwali'];
-                                        $acc_role = $_SESSION['role'];
-                                        $sql = "SELECT
-                                        pendaftaran.kd_daftar AS KD_DAFTAR_PENDAFTARAN
-                                        , pendaftaran.nim
-                                        , pendaftaran.kd_bsw
-                                        , pendaftaran.tgl_daftar
-                                        , pendaftaran.thn_ajaran
-                                        , pendaftaran.semester
-                                        , sts_daftar.kd_daftar AS KD_DAFTAR_STS
-                                        , sts_daftar.acc_role
-                                        , sts_daftar.status AS STATUS_STS_DAFTAR
-                                        , user_mhs.id_dosen_wali ID_DOSEN_WALI
-                                        
-                                        FROM pendaftaran, user_mhs
-                                        JOIN sts_daftar
-                                        WHERE pendaftaran.kd_daftar = sts_daftar.kd_daftar AND user_mhs.id_dosen_wali = ? AND user_mhs.username = pendaftaran.nim AND sts_daftar.acc_role = ? ";
+                                        $status = 'diterima';
+                                        $sql = "SELECT *
+                                        FROM pendaftaran
+                                        WHERE status = ? ";
                                         $stmt = $con->prepare($sql);
-                                        $stmt->bind_param("ss", $id_dosen_wali, $acc_role);
+                                        $stmt->bind_param("s", $status);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
                                         ?>
                                             <tr>
                                                 <td>
-                                                    <b> <?php echo htmlentities($row['KD_DAFTAR_PENDAFTARAN']); ?></b>
+                                                    <b> <?php echo htmlentities($row['kd_daftar']); ?></b>
 
                                                 </td>
                                                 <td>
@@ -166,7 +150,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                     <?php echo htmlentities($row['semester']); ?>
                                                 </td>
                                                 <td>
-                                                    <?php $status = $row['STATUS_STS_DAFTAR'];
+                                                    <?php $status = $row['status'];
                                                     if ($status == 'Ditolak') {
                                                         echo '<span class="badge badge-danger">Ditolak</span>';
                                                     } else {
@@ -177,17 +161,13 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                                 <td class="text-center">
 
-                                                    <a type="button" href="form?id=<?php echo htmlentities($row['kd_bsw']); ?>&kd_daftar=<?php echo htmlentities($row['KD_DAFTAR_PENDAFTARAN']); ?>" class=" btn btn-primary btn-sm btn-icon-only rounded-circle">
+                                                    <a type="button" href="form?id_bsw=<?php echo htmlentities($row['kd_bsw']); ?>&kd_daftar=<?php echo htmlentities($row['kd_daftar']); ?>&total_invoice=<?php echo htmlentities($row['nominal_pengajuan']); ?>" class=" btn btn-primary btn-sm btn-icon-only rounded-circle">
                                                         <span class="btn-inner--icon text-white"><i class="fas fa-chevron-circle-right"></i></span></a>
                                                 </td>
                                             </tr>
                                         <?php
                                         } ?>
                                     </tbody>
-                                <?php
-                                }
-
-                                ?>
 
                             </table>
                         </div>

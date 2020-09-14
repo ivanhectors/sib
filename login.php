@@ -80,6 +80,8 @@ if (isset($_POST["login"])) {
         $extra = "acc/?id"; //
         $_SESSION["acclogin"] = $username;
         $_SESSION['id'] = $num['id'];
+        $_SESSION['role'] = $row["kd_role"];
+        $_SESSION['iddosenwali'] = $row["id_acc"];
         $host = $_SERVER['HTTP_HOST'];
         $uip = $_SERVER['REMOTE_ADDR'];
         $status = 1;

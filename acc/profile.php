@@ -3,7 +3,7 @@ session_start();
 
 include("include/config.php");
 
-if (strlen($_SESSION['mhslogin']) == 0) {
+if (strlen($_SESSION['acclogin']) == 0) {
   header('location:../403');
 } else {
   date_default_timezone_set('Asia/Jakarta'); // change according timezone
@@ -15,15 +15,16 @@ if (strlen($_SESSION['mhslogin']) == 0) {
   if (isset($_POST['submit'])) {
     //update info pribadi
     $password_valid =  $_POST["password_valid"];
-    $username_valid = $_SESSION['mhslogin'];
+    $username_valid = $_SESSION['acclogin'];
+    $username = $_POST['username'];
     $email = $_POST['email'];
-    $nama_mhs = $_POST['nama_mhs'];
+    $nama_acc = $_POST['nama_acc'];
     $no_telp = $_POST['no_telp'];
     $gender = $_POST['gender'];
     $tgl_lahir = $_POST['tgl_lahir'];
 
 
-    //$photo_mhs=$_POST['photo_mhs'];
+    //$photo_acc=$_POST['photo_acc'];
 
     //update kontak
     $alamat = $_POST['alamat'];
@@ -33,14 +34,14 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $kode_pos = $_POST['kode_pos'];
 
     //validasi password user
-    $pass_valid = "SELECT * FROM user_mhs WHERE username = '$username_valid'";
-    $mahasiswa = mysqli_query($con, $pass_valid);
+    $pass_valid = "SELECT * FROM user_acc WHERE username = '$username_valid'";
+    $acc = mysqli_query($con, $pass_valid);
 
-    if (mysqli_num_rows($mahasiswa) > 0) {
-      while ($row = mysqli_fetch_array($mahasiswa)) {
+    if (mysqli_num_rows($acc) > 0) {
+      while ($row = mysqli_fetch_array($acc)) {
         if (password_verify($password_valid, $row["password"])) {
           //return true;   
-          $sql = mysqli_query($con, "update user_mhs set nama_mhs='$nama_mhs',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where username='" . $_SESSION['mhslogin'] . "'");
+          $sql = mysqli_query($con, "update user_acc set username='$username',nama_acc='$nama_acc',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where username='" . $_SESSION['acclogin'] . "'");
           $_SESSION['msg'] = "1";
           //$successmsg="Data profil anda berhasil diubah.";
 
@@ -94,11 +95,11 @@ if (strlen($_SESSION['mhslogin']) == 0) {
        ";
       } else {
         //rename the image file
-        $imgnewfile = md5($imgfile). uniqid() . $extension;
+        $imgnewfile = md5($imgfile) . uniqid() . $extension;
         // Code for move image into directory
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], "img/" . $imgnewfile);
         // Query for insertion data into database
-        $query = mysqli_query($con, "update user_mhs set photo_mhs='$imgnewfile' where username='" . $_SESSION['mhslogin'] . "'");
+        $query = mysqli_query($con, "update user_acc set photo_acc='$imgnewfile' where username='" . $_SESSION['acclogin'] . "'");
         if ($query) {
           echo " 
          <div data-notify='container' class='alert alert-dismissible alert-success alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
@@ -120,25 +121,24 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         }
       }
     }
-  } 
+  }
 
-
-  // password mahasiswa : $2y$10$biOI1T7.vdq0kgCOmv6vC.ndpob2oi26QqCmWg4wcxrJV9K8FR8Qu
+  // password acc : $2y$10$biOI1T7.vdq0kgCOmv6vC.ndpob2oi26QqCmWg4wcxrJV9K8FR8Qu
 
   if (isset($_POST['changepsw'])) {
     $password =  $_POST["password"];
-    $usernames = $_SESSION['mhslogin'];
+    $usernames = $_SESSION['acclogin'];
     $newpassword = $_POST["newpassword"];
     $passwordhash = password_hash($password, PASSWORD_DEFAULT);
     $newpasswordhash = password_hash($newpassword, PASSWORD_DEFAULT);
-    $passchange = "SELECT * FROM user_mhs WHERE username = '$usernames'";
-    $mahasiswa = mysqli_query($con, $passchange);
+    $passchange = "SELECT * FROM user_acc WHERE username = '$usernames'";
+    $acc = mysqli_query($con, $passchange);
 
-    if (mysqli_num_rows($mahasiswa) > 0) {
-      while ($row20 = mysqli_fetch_array($mahasiswa)) {
+    if (mysqli_num_rows($acc) > 0) {
+      while ($row20 = mysqli_fetch_array($acc)) {
         if (password_verify($password, $row20["password"])) {
           //return true;   
-          $log = mysqli_query($con, "update user_mhs set password='$newpasswordhash' where username='" . $_SESSION['mhslogin'] . "'");
+          $log = mysqli_query($con, "update user_acc set password='$newpasswordhash' where username='" . $_SESSION['acclogin'] . "'");
           echo ("<script>location.href = 'logout';</script>");
           exit();
         } else {
@@ -154,6 +154,21 @@ if (strlen($_SESSION['mhslogin']) == 0) {
   <?php
   include("include/header.php");
   ?>
+  <script>
+    function userAvailability() {
+      $("#loaderIcon").show();
+      jQuery.ajax({
+        url: "check_username.php",
+        data: 'username=' + $("#username").val(),
+        type: "POST",
+        success: function(data) {
+          $("#user-availability-status1").html(data);
+          $("#loaderIcon").hide();
+        },
+        error: function() {}
+      });
+    }
+  </script>
   <script type="text/javascript">
     function valid() {
       if (document.chngpwd.password.value == "") {
@@ -215,7 +230,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         </div>
     <?php }
     } ?>
-    <?php $query = mysqli_query($con, "select * from user_mhs where username = '" . $_SESSION['mhslogin'] . "'");
+    <?php $query = mysqli_query($con, "select * from user_acc where username = '" . $_SESSION['acclogin'] . "'");
     $cnt = 1;
     while ($row = mysqli_fetch_array($query)) {
     ?>
@@ -223,15 +238,15 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         <!-- Mask -->
         <span class="mask bg-gradient-default opacity-8"></span>
         <!-- Header container -->
-        <div class="container-fluid d-flex align-items-center"> 
+        <div class="container-fluid d-flex align-items-center">
           <div class="row">
             <div class="col-lg-12 col-md-10">
               <h1 class="display-2 text-white">Hello,
-                <?php $nama_mhs = $row['nama_mhs'];
-                if ($nama_mhs == "" || $nama_mhs == "NULL") {
+                <?php $nama_acc = $row['nama_acc'];
+                if ($nama_acc == "" || $nama_acc == "NULL") {
                   echo htmlentities($row['username']);
                 } else {
-                  echo htmlentities($row['nama_mhs']);
+                  echo htmlentities($row['nama_acc']);
                 }
 
 
@@ -241,7 +256,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
             <div class="col-lg-7 col-md-10">
 
               <p class="text-white mt-0 mb-5">Ini merupakan halaman detail profil kamu. Kamu dapat mengubah data pribadi kamu disini. Demi keamanan data pribadi, kamu diharapkan untuk memasukkan password kembali saat mengubah data tersebut.</p>
-              <a href="../mhs?id" type="button" class="btn btn-neutral btn-icon">
+              <a href="../acc?id=" type="button" class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon"><i class="fas fa-home"></i></span>
                 <span class="btn-inner--text">Dashboard</span>
               </a>
@@ -259,7 +274,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
               <div class="row justify-content-center">
                 <div class="col-lg-3 order-lg-2">
                   <div class="card-profile-image">
-                    <?php $userphoto = $row['photo_mhs'];
+                    <?php $userphoto = $row['photo_acc'];
                     if ($userphoto == "" || $userphoto == "NULL") :
                     ?>
                       <img src="img/profile.png" class="rounded-circle">
@@ -363,16 +378,16 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 </div>
             </div>
             </form>
-
+ 
           </div>
         </div>
         <div class="col-xl-8 order-xl-1">
           <div class="row">
             <?php $query10 = mysqli_query($con, "SELECT 
-                                          ((CASE WHEN `nama_mhs` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          ((CASE WHEN `nama_acc` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `gender` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `tgl_lahir` IS NULL OR '' THEN 0 ELSE 1 END)
-                                          + (CASE WHEN `photo_mhs` IS NULL OR '' THEN 0 ELSE 1 END)
+                                          + (CASE WHEN `photo_acc` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `email` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `alamat` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `provinsi` IS NULL OR '' THEN 0 ELSE 1 END)
@@ -381,7 +396,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                           + (CASE WHEN `kode_pos` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `no_telp` IS NULL OR '' THEN 0 ELSE 1 END)) AS sum_of_nulls
 
-                                          FROM user_mhs WHERE username='" . $_SESSION['mhslogin'] . "'");
+                                          FROM user_acc WHERE username='" . $_SESSION['acclogin'] . "'");
             $cnt = 1;
             while ($row2 = mysqli_fetch_array($query10)) {
             ?>
@@ -446,8 +461,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
               </div>
             </div>
             <div class="card-body">
-              <form name="mhs" method="post">
-                <?php $query2 = mysqli_query($con, "select * from user_mhs where username = '" . $_SESSION['mhslogin'] . "'");
+              <form name="dosen" method="post">
+                <?php $query2 = mysqli_query($con, "select * from user_acc where username = '" . $_SESSION['acclogin'] . "'");
                 $cnt = 1;
                 while ($row = mysqli_fetch_array($query2)) {
                 ?>
@@ -456,10 +471,17 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label class="form-control-label" for="username">NIM</label>
+                          <label class="form-control-label" for="input-username">Username</label>
                           <div class="input-group input-group-merge">
-                            <input type="text" id="username" class="form-control" placeholder="Username" value="<?php echo htmlentities($row['username']); ?>" disabled>
+                            <div class="input-group-prepend">
+                              <span class="input-group-text"><small class="font-weight-bold">@</small></span>
+                            </div>
+                            <input type="text" onBlur="userAvailability()" id="username" name="username" class="form-control" placeholder="Username" value="<?php echo htmlentities($row['username']); ?>">
+                            <div class="input-group-append">
+                              <span class="input-group-text" id="user-availability-status1"></span>
+                            </div>
                           </div>
+                          <span id="user-availability-status1"></span>
                         </div>
                       </div>
                       <div class="col-lg-6">
@@ -483,7 +505,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" id="input-first-name" name="nama_mhs" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlentities($row['nama_mhs']); ?>">
+                            <input type="text" id="input-first-name" name="nama_acc" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlentities($row['nama_acc']); ?>">
                           </div>
 
                         </div>
@@ -564,7 +586,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                         <select class="form-control" name="provinsi" title="provinsi" id="provinsi">
                           <?php
-                          $sql_provinsi = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_provinsi = mysqli_query($con, "select * from user_acc join provinces, regencies, districts where user_acc.provinsi=provinces.id AND user_acc.kab_kota=regencies.id and user_acc.kecamatan=districts.id and user_acc.username = '" . $_SESSION['acclogin'] . "'");
                           ?>
 
                           <?php
@@ -594,7 +616,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <label class="form-control-label" for="input-city">Kab/Kota</label>
                         <select class="form-control" name="kab_kota" title="Pilih Kab/Kota" id="kota">
                           <?php
-                          $sql_kota = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_kota = mysqli_query($con, "select * from user_acc join provinces, regencies, districts where user_acc.provinsi=provinces.id AND user_acc.kab_kota=regencies.id and user_acc.kecamatan=districts.id and user_acc.username = '" . $_SESSION['acclogin'] . "'");
                           ?>
 
                           <?php
@@ -619,7 +641,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <label class="form-control-label" for="input-country">Kecamatan</label>
                         <select class="form-control" name="kecamatan" title="Pilih Kecamatan" id="kecamatan">
                           <?php
-                          $sql_kecamatan = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_kecamatan = mysqli_query($con, "select * from user_acc join provinces, regencies, districts where user_acc.provinsi=provinces.id AND user_acc.kab_kota=regencies.id and user_acc.kecamatan=districts.id and user_acc.username = '" . $_SESSION['acclogin'] . "'");
                           ?>
 
                           <?php
@@ -641,7 +663,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                       <div class="form-group">
                         <label class="form-control-label" for="input-country">Kode Pos</label>
                         <?php
-                        $sql_kodepos = mysqli_query($con, "select * from user_mhs where user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                        $sql_kodepos = mysqli_query($con, "select * from user_acc where user_acc.username = '" . $_SESSION['acclogin'] . "'");
                         while ($row = mysqli_fetch_array($sql_kodepos)) {
                         ?>
 
@@ -653,8 +675,9 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                   </div>
                   </div>
                   <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
-                  <button type="button" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-primary">Ubah Data</button>
+                  <button type="button" id="submit" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-primary">Ubah Data</button>
                   </div>
+
 
                   <!-- batas modal form validasi edit profil -->
                   <div class="col-md-4">

@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <pages>
   <link>
-    <title>HTML a tag</title>
-    <url>https://www.w3schools.com/tags/tag_a.asp</url>
+    <title>Data Admin</title>
+    <url>data_admin</url>
   </link>
   <link>
-    <title>HTML br tag</title>
-    <url>https://www.w3schools.com/tags/tag_br.asp</url>
+    <title>Data Penyeleksi</title>
+    <url>data_penyeleksi</url>
   </link>
   <link>
-    <title>CSS background Property</title>
-    <url>https://www.w3schools.com/cssref/css3_pr_background.asp</url>
+    <title>Data Mahasiswa</title>
+    <url>data_mahasiswa</url>
   </link>
   <link>
-    <title>CSS border Property</title>
-    <url>https://www.w3schools.com/cssref/pr_border.asp</url>
+    <title>Data Fakultas</title>
+    <url>data_fakultas</url>
   </link>
   <link>
-    <title>JavaScript Date Object</title>
-    <url>https://www.w3schools.com/jsref/jsref_obj_date.asp</url>
+    <title>Data Program Studi</title>
+    <url>data_prodi</url>
   </link>
   <link>
-    <title>JavaScript Array Object</title>
-    <url>https://www.w3schools.com/jsref/jsref_obj_array.asp</url>
+    <title>List Beasiswa</title>
+    <url>list_beasiswa</url>
+  </link>
+    <link>
+    <title>List Persyaratan Beasiswa</title>
+    <url>list_persyaratan_beasiswa</url>
+  </link>
+    <link>
+    <title>Kalender</title>
+    <url>kalender</url>
+  </link>
+    <link>
+    <title>Riwayat Login User</title>
+    <url>userlog</url>
+  </link>
+    <link>
+    <title>Slider Halaman Utama</title>
+    <url>slider</url>
+  </link>
+    <link>
+    <title>Pengumuman</title>
+    <url>pengumuman</url>
+  </link>
+    <link>
+    <title>Profil Saya</title>
+    <url>profile</url>
+  </link>
+    <link>
+    <title>Import Data Mahasiswa</title>
+    <url>import_mhs_csv</url>
   </link>
 </pages>

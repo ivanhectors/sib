@@ -34,7 +34,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
             <!-- Nav items -->
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link <?php echo ($parentpage == "index" ? "active" : "") ?>" href="../mhs?id">
+                <a class="nav-link <?php echo ($parentpage == "index" ? "active" : "") ?>" href="../acc?id">
                   <i class="ni ni-shop text-primary"></i>
                   <span class="nav-link-text">Dashboards</span>
                 </a>
@@ -57,24 +57,54 @@ if (strlen($_SESSION['acclogin']) == 0) {
                   if ($role == '2') :
                   ?>
                     <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="pengajuan?id=<?php echo htmlentities($row['kd_role']); ?>">
+                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-forms">
                         <i class="ni ni-single-copy-04 text-danger"></i>
                         <span class="nav-link-text">Pengajuan Mahasiswa</span>
                       </a>
+                      <div class="collapse" id="navbar-forms">
+                        <ul class="nav nav-sm flex-column">
+                          <li class="nav-item">
+                            <a href="../acc/dw/beasiswa-kebutuhan" class="nav-link">Beasiswa Kebutuhan</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href=".../acc/dw/pinjaman-registrasi" class="nav-link">Pinjaman Registrasi</a>
+                          </li>
+                        </ul>
+                      </div>
                     </li>
                   <?php elseif ($role == '3') : ?>
                     <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="pengajuan?id=<?php echo htmlentities($row['kd_role']); ?>">
+                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-forms">
                         <i class="ni ni-single-copy-04 text-danger"></i>
                         <span class="nav-link-text">Pengajuan Mahasiswa</span>
                       </a>
+                      <div class="collapse" id="navbar-forms">
+                        <ul class="nav nav-sm flex-column">
+                          <li class="nav-item">
+                            <a href="../acc/dw/beasiswa-kebutuhan" class="nav-link">Beasiswa Kebutuhan</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="../acc/dw/pinjaman-registrasi" class="nav-link">Pinjaman Registrasi</a>
+                          </li>
+                        </ul>
+                      </div>
                     </li>
                   <?php elseif ($role == '4') : ?>
                     <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="pengajuan?id=<?php echo htmlentities($row['kd_role']); ?>">
+                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-forms">
                         <i class="ni ni-single-copy-04 text-danger"></i>
                         <span class="nav-link-text">Pengajuan Mahasiswa</span>
                       </a>
+                      <div class="collapse" id="navbar-forms">
+                        <ul class="nav nav-sm flex-column">
+                          <li class="nav-item">
+                            <a href="../acc/beasiswa-kebutuhan" class="nav-link">Beasiswa Kebutuhan</a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="../acc/pinjaman-registrasi" class="nav-link">Pinjaman Registrasi</a>
+                          </li>
+                        </ul>
+                      </div>
                     </li>
                   <?php else : ?>
 
@@ -90,6 +120,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                 <a class="nav-link <?php echo ($parentpage == "riwayat_pengajuan" ? "active" : "") ?>" href="riwayat_pengajuan">
                   <i class="ni ni-money-coins text-primary"></i>
                   <span class="nav-link-text">Riwayat Pengajuan</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link <?php echo ($parentpage == "data-mahasiswa" ? "active" : "") ?>" href="data_mahasiswa">
+                  <i class="fas fa-users text-info"></i>
+                  <span class="nav-link-text">Data Mahasiswa</span>
                 </a>
               </li>
               <li class="nav-item">

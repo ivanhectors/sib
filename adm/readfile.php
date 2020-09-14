@@ -3,7 +3,7 @@ session_start();
 
 include("include/config.php");
 
-if (strlen($_SESSION['acclogin']) == 0) {
+if (strlen($_SESSION['admlogin']) == 0) {
     header('location:../403');
 } else {
     date_default_timezone_set('Asia/Jakarta'); // change according timezone

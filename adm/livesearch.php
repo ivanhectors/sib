@@ -36,7 +36,7 @@ if (strlen($q)>0) {
 // or to the correct values
 if ($hint=="") {
 //   $response="no suggestion";
-  $response="<a class='dropdown-item' href='#' target='_blank'><i class='fas fa-exclamation-circle' style='color:#fb6340;'></i> Tidak Ditemukan" . "</a>";
+  $response="<a class='dropdown-item' ><i class='fas fa-exclamation-circle' style='color:#fb6340;'></i> Tidak Ditemukan" . "</a>";
 } else {
   $response=$hint;
 }

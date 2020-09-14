@@ -13,20 +13,20 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $parentpage = "riwayat_pengajuan";
 
 
-    // Mengambil data Genap/Ganjil berdasarkan Tahun saat ini dan Bulan saat ini
+    // Mengambil data Genap/Gasal berdasarkan Tahun saat ini dan Bulan saat ini
     $year = date('Y');
     $bulan_ini = date('n');
     if ($bulan_ini <= 6) {
         $bulan_ini = 'Genap';
     } else {
-        $bulan_ini = 'Ganjil';
+        $bulan_ini = 'Gasal';
     }
 
-    // Membuat Format nama file "Semester = 2020_Ganjil" record pada inputan file
+    // Membuat Format nama file "Semester = 2020_Gasal" record pada inputan file
     $string_gabungan = $year . "_" . $bulan_ini;
     $semester = $string_gabungan;
 
-    // Membuat output semester menjadi 1 / 2 alias dari Ganjil / Genap
+    // Membuat output semester menjadi 1 / 2 alias dari Gasal / Genap
     $semester_ini = date('n');
     if ($semester_ini <= 6) {
         $semester_ini = '2';

@@ -236,23 +236,24 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 <h6 class="text-overflow m-0" data-toggle="tooltip" data-placement="left" title="Username Anda">@<?php echo htmlentities($_SESSION['admlogin']); ?></h6>
               </div>
             <?php } ?>
+            <div class="dropdown-divider"></div>
             <a href="profile" class="dropdown-item">
               <i class="ni ni-single-02"></i>
               <span>Profil Saya</span>
             </a>
-            <a href="#!" class="dropdown-item">
+            <!-- <a href="#!" class="dropdown-item">
               <i class="ni ni-settings-gear-65"></i>
               <span>Settings</span>
-            </a>
-            <a href="#!" class="dropdown-item">
+            </a> -->
+            <a href="kalender" class="dropdown-item">
               <i class="ni ni-calendar-grid-58"></i>
-              <span>Activity</span>
+              <span>Kalender</span>
             </a>
-            <a href="#!" class="dropdown-item">
+            <!-- <a href="#!" class="dropdown-item">
               <i class="ni ni-support-16"></i>
               <span>Support</span>
-            </a>
-            <div class="dropdown-divider"></div>
+            </a> -->
+
             <a href="logout" class="dropdown-item">
               <i class="ni ni-user-run"></i>
               <span>Logout</span>

@@ -9,13 +9,11 @@ if (strlen($_SESSION['acclogin']) == 0) {
   // error_reporting(0);
   date_default_timezone_set('Asia/Jakarta'); // change according timezone
   $currentTime = date('d-m-Y h:i:s A', time());
-
-
   $parentpage = "index";
-  include("include/header.php");
-  include("include/sidebar.php");
 
-  function getPercentageChange($oldNumber, $newNumber) {
+
+  function getPercentageChange($oldNumber, $newNumber)
+  {
     $decreaseValue = $newNumber - $oldNumber;
 
     return ($decreaseValue / $oldNumber) * 100;
@@ -23,7 +21,25 @@ if (strlen($_SESSION['acclogin']) == 0) {
   }
 ?>
 
+  <?php
+  include("include/header.php");
+  ?>
+  <style>
+    .card2:hover {
 
+      background-color: #e9ecef;
+
+    }
+  </style>
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
+  </head>
+  <?php
+  include("include/sidebar.php");
+  ?>
 
   <!-- Main content -->
   <div class="main-content" id="panel">
@@ -54,14 +70,14 @@ if (strlen($_SESSION['acclogin']) == 0) {
           <!-- Card stats -->
           <div class="row">
             <div class="col-xl-6 col-md-6">
-              <div class="card card-stats">
+              <div class="card card2 card-stats">
                 <!-- Card body -->
                 <a href="#">
                   <div class="card-body">
                     <div class="row">
                       <div class="col">
                         <h5 class="card-title text-uppercase text-muted mb-0">Pengajuan Beasiswa Kebutuhan</h5>
-                        <span class="h2 font-weight-bold mb-0">350,897 </span>
+                        <span class="h2 font-weight-bold mb-0">350,897 </span><span class="h5 font-weight-bold mb-0"><span class="badge badge-pill badge-warning">belum di acc</span></span>
                       </div>
                       <div class="col-auto">
                         <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
@@ -70,7 +86,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                       </div>
                     </div>
                     <p class="mt-3 mb-0 text-sm">
-                      <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> <?php echo getPercentageChange(900,1900);?>%</span>
+                      <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> <?php echo getPercentageChange(900, 1900); ?>%</span>
                       <span class="text-nowrap text-black">Dari semester lalu</span>
                     </p>
                   </div>
@@ -78,26 +94,26 @@ if (strlen($_SESSION['acclogin']) == 0) {
               </div>
             </div>
             <div class="col-xl-6 col-md-6">
-              <div class="card card-stats">
+              <div class="card card2 card-stats">
                 <!-- Card body -->
                 <a href="#">
-                <div class="card-body">
-                  <div class="row">
-                    <div class="col">
-                      <h5 class="card-title text-uppercase text-muted mb-0">Pengajuan Pinjaman Registrasi</h5>
-                      <span class="h2 font-weight-bold mb-0">350,897</span>
-                    </div>
-                    <div class="col-auto">
-                      <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
-                        <i class="fas fa-database"></i>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col">
+                        <h5 class="card-title text-uppercase text-muted mb-0">Pengajuan Pinjaman Registrasi</h5>
+                        <span class="h2 font-weight-bold mb-0">350,897 </span><span class="h5 font-weight-bold mb-0"><span class="badge badge-pill badge-warning">belum di acc</span></span>
+                      </div>
+                      <div class="col-auto">
+                        <div class="icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
+                          <i class="fas fa-database"></i>
+                        </div>
                       </div>
                     </div>
+                    <p class="mt-3 mb-0 text-sm">
+                      <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
+                      <span class="text-nowrap">Dari semester lalu</span>
+                    </p>
                   </div>
-                  <p class="mt-3 mb-0 text-sm">
-                    <span class="text-success mr-2"><i class="fa fa-arrow-up"></i> 3.48%</span>
-                    <span class="text-nowrap">Dari semester lalu</span>
-                  </p>
-                </div>
                 </a>
               </div>
             </div>

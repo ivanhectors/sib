@@ -426,7 +426,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         ?>
                           <img src="img/profile.png" class="avatar rounded-circle mr-3">
                         <?php else : ?>
-                          <img src="img/<?php echo htmlentities($userphoto); ?>" class="avatar rounded-circle mr-3">
+                          <img src="../acc/img/<?php echo htmlentities($userphoto); ?>" class="avatar rounded-circle mr-3">
                         <?php endif; ?>
                         <b>
 

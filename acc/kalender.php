@@ -3,7 +3,7 @@ session_start();
 
 include("include/config.php");
 
-if (strlen($_SESSION['mhslogin']) == 0) {
+if (strlen($_SESSION['acclogin']) == 0) {
   header('location:../403');
 } else {
   date_default_timezone_set('Asia/Jakarta'); // change according timezone
@@ -60,7 +60,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
               <nav aria-label="breadcrumb" class="d-none d-lg-inline-block ml-lg-4">
                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                   <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
-                  <li class="breadcrumb-item"><a href="../mhs?id">Dashboard</a></li>
+                  <li class="breadcrumb-item"><a href="../acc?id">Dashboard</a></li>
                   <li class="breadcrumb-item active" aria-current="page">Kalender</li>
                 </ol>
               </nav>
