@@ -13,7 +13,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $page = "riwayat_pembayaran";
 
 
-?>
+?> 
     <?php
     include("include/header.php");
     ?>

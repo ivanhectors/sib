@@ -857,8 +857,34 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 } ?>
 
 
+                                <!-- Batas Unduh Formulir Mahasiswa -->
 
+                                <div class="card bg-default">
+                                    <div class="card-header bg-default">
+                                        <h3 class="mb-0 text-white">Unduh Formulir Pengajuan</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <form method="post" action="cetak_form.php?id_bsw=<?php echo $_GET['id_bsw'];?>&kd_daftar=<?php echo $_GET['kd_daftar'];?>" target="_form" enctype="multipart/form-data">
+                                            <!-- Multiple -->
 
+                                            <div class="form-group">
+
+                                                <?php
+                                                $kd_daftar = $_GET['kd_daftar'];
+                                                ?>
+                                                <div class="form-group row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" value="<?php echo $_GET['kd_daftar'];?>" /> 
+                                                        <button type="submit" class="btn btn-icon btn-white btn-lg btn-block">
+                                                        <span class="btn-inner--icon"><i class="fas fa-cloud-download-alt"></i></span>
+                                                        <span class="btn-inner--text">Unduh Form</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
 
                             </div>

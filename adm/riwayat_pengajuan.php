@@ -57,7 +57,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             </nav>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
-                        <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a>
+                            <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a>
 
                         </div>
                     </div>
@@ -88,7 +88,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         </div>
                         <!-- Light table -->
                         <div class="table-responsive py-4">
-                            <table class="table align-items-center table-hover table-flush table-striped" id="datatable-buttons">
+                            <table class="table align-items-center table-hover table-flush table-striped" id="tbl-pengajuan">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>
@@ -96,6 +96,38 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         </th>
                                         <th>
                                             <center>NIM
+                                        </th>
+                                        <th>
+                                            <center>BSW
+                                        </th>
+                                        <th>
+                                            <center>Tanggal Daftar
+                                        </th>
+
+                                        <th>
+                                            <center>Tahun Ajaran
+                                        </th>
+                                        <th>
+                                            <center>Semester
+                                        </th>
+                                        <th>
+                                            <center>Status
+                                        </th>
+                                        <th>
+                                            <center>Detail
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>
+                                            <center>Kode Daftar
+                                        </th>
+                                        <th>
+                                            <center>NIM
+                                        </th>
+                                        <th>
+                                            <center>BSW
                                         </th>
                                         <th>
                                             <center>Tanggal Daftar
@@ -113,62 +145,35 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <center>Detail
                                         </th>
                                     </tr>
-                                </thead>
-                                    <tbody>
-                                        <?php
-                                        $status = 'diterima';
-                                        $sql = "SELECT *
-                                        FROM pendaftaran
-                                        WHERE status = ? ";
-                                        $stmt = $con->prepare($sql);
-                                        $stmt->bind_param("s", $status);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        while ($row = $result->fetch_assoc()) {
-                                        ?>
-                                            <tr>
-                                                <td>
-                                                    <b> <?php echo htmlentities($row['kd_daftar']); ?></b>
-
-                                                </td>
-                                                <td>
-                                                    <center>
-                                                        <b> <?php echo htmlentities($row['nim']); ?></b>
-                                                </td>
-
-                                                <td>
-                                                    <b> <?php
-                                                        $tanggal = $row['tgl_daftar'];
-                                                        echo date('d-m-Y', strtotime($tanggal));
-                                                        ?></b>
-
-                                                </td>
-                                                <td class="table-user">
-                                                    <?php echo htmlentities($row['thn_ajaran']); ?>
-                                                </td>
-                                                <td>
-                                                    <?php echo htmlentities($row['semester']); ?>
-                                                </td>
-                                                <td>
-                                                    <?php $status = $row['status'];
-                                                    if ($status == 'Ditolak') {
-                                                        echo '<span class="badge badge-danger">Ditolak</span>';
-                                                    } else {
-                                                        echo '<span class="badge badge-success">Diterima</span>';
-                                                    }
-                                                    ?>
-                                                </td>
-
-                                                <td class="text-center">
-
-                                                    <a type="button" href="form?id_bsw=<?php echo htmlentities($row['kd_bsw']); ?>&kd_daftar=<?php echo htmlentities($row['kd_daftar']); ?>&total_invoice=<?php echo htmlentities($row['nominal_pengajuan']); ?>" class=" btn btn-primary btn-sm btn-icon-only rounded-circle">
-                                                        <span class="btn-inner--icon text-white"><i class="fas fa-chevron-circle-right"></i></span></a>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        } ?>
-                                    </tbody>
-
+                                </tfoot>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <center>Kode Daftar
+                                        </td>
+                                        <td>
+                                            <center>NIM
+                                        </td>
+                                        <td>
+                                            <center>BSW
+                                        </td>
+                                        <td>
+                                            <center>Tanggal Daftar
+                                        </td>
+                                        <td>
+                                            <center>Tahun Ajaran
+                                        </td>
+                                        <td>
+                                            <center>Semester
+                                        </td>
+                                        <td>
+                                            <center>Status
+                                        </td>
+                                        <td>
+                                            <center>Detail
+                                        </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -227,7 +232,72 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     location.href = "data_admin";
                 };
             </script>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var table = $('#tbl-pengajuan').DataTable({
+                        "processing": true,
+                        "serverSide": true,
+                        "pagingType": "full_numbers",
+                        "ajax": "scripts/get_data_pengajuan.php",
+                        "order": [
+                            [1, "asc"]
+                        ],
+                        "language": {
+                            "lengthMenu": "Menampilkan _MENU_ data per halaman",
+                            "zeroRecords": "Maaf, Data yang dicari tidak ditemukan.",
+                            "info": "Menampilkan halaman _PAGE_ dari _PAGES_ halaman",
+                            "infoEmpty": "Tidak ada data tersedia.",
+                            "infoFiltered": "(Difilter dari total _MAX_ data)",
+                            "paginate": {
+                                "previous": "<i class='fas fa-angle-left'></i>",
+                                "next": "<i class='fas fa-angle-right'></i>",
+                                "first": "<i class='fas fa-angle-double-left'></i>",
+                                "last": "<i class='fas fa-angle-double-right'></i>"
+                            }
+                        },
 
+                        "columnDefs": [{
+                                "targets": -1,
+                                "data": null,
+                                "defaultContent": "<button class='btn btn-default btn-sm linkByr'>Detail <i class='fas fa-chevron-circle-right'></button>"
+                            },
+                            {
+                                "targets": -2,
+                                "data": 6,
+
+                                render: function(data, type, row) {
+                                    if (data == 'diterima') {
+                                        return '<span class="badge badge-success">Diterima</span>';
+                                    } else {
+                                        return '<span class="badge badge-warning">Diproses</span>';
+                                    }
+                                }
+                            },
+                            {
+                                "targets": -6,
+                                "data": 2,
+
+                                render: function(data, type, row) {
+                                    if (data == '1') {
+                                        return '<span class="badge badge-default">KBTN</span>';
+                                    } else if (data == '2' ){
+                                        return '<span class="badge badge-primary">PJMN</span>';
+                                    }
+                                    else {
+                                        return '<span class="badge badge-info">LAINNYA</span>';
+                                    }
+                                }
+                            }
+                        ]
+                    });
+
+                    $('#tbl-pengajuan tbody').on('click', '.linkByr', function() {
+                        var data = table.row($(this).parents('tr')).data();
+                        window.location.href = "form?id_bsw=" + data[2] + "&kd_daftar=" + data[0] + "&total_invoice=" + data[7];
+                    });
+
+                });
+            </script>
 
         </div>
     </div>
