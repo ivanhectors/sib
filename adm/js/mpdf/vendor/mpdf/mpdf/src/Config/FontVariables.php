@@ -286,6 +286,9 @@ class FontVariables
 				"unbatang" => [/* Korean */
 					'R' => "UnBatang_0613.ttf",
 				],
+				"fontawesome" => [
+					'R' => "fontawesome.ttf"
+				],
 			],
 
 			// Add fonts to this array if they contain characters in the SIP or SMP Unicode planes
@@ -297,6 +300,7 @@ class FontVariables
 				"dejavuserif",
 				"dejavusansmono",
 			],
+
 
 			// These next 3 arrays do two things:
 			// 1. If a font referred to in HTML/CSS is not available to mPDF, these arrays will determine whether
