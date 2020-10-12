@@ -30,7 +30,7 @@ $primaryKey = 'id_mhs';
 // indexes
 $columns = array(
     array( 'db' => 'id_mhs', 'dt' => 0 ),
-    array( 'db' => 'username', 'dt' => 1 ),
+    array( 'db' => 'nim', 'dt' => 1 ),
     array( 'db' => 'nama_mhs',  'dt' => 2 ),
     array( 'db' => 'email',   'dt' => 3 ),
     array( 'db' => 'no_telp',     'dt' => 4 )

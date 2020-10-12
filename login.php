@@ -7,7 +7,7 @@ if (isset($_POST["login"])) {
   $username = mysqli_real_escape_string($con, $_POST["username"]);
   $password = mysqli_real_escape_string($con, $_POST["password"]);
   $query = "SELECT * FROM user_admin WHERE username = '$username' and status = '1'";
-  $query2 = "SELECT * FROM user_mhs WHERE username = '$username'";
+  $query2 = "SELECT * FROM user_mhs WHERE nim = '$username'";
   $query3 = "SELECT * FROM user_acc WHERE username = '$username'";
   $admin = mysqli_query($con, $query);
   $mhs = mysqli_query($con, $query2);
@@ -51,6 +51,7 @@ if (isset($_POST["login"])) {
         //return true;  
         $extra = "mhs/?id"; //
         $_SESSION["mhslogin"] = $username;
+        $_SESSION['id_mhs'] = $row["id_mhs"];
         $_SESSION['id'] = $num['id'];
         $host = $_SERVER['HTTP_HOST'];
         $uip = $_SERVER['REMOTE_ADDR'];
@@ -303,26 +304,26 @@ if (isset($_POST["login"])) {
                     </div>
                   </div>
                 </div>
-                <div class="custom-control custom-control-alternative custom-checkbox">
+                <!-- <div class="custom-control custom-control-alternative custom-checkbox">
                   <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
                   <label class="custom-control-label" for=" customCheckLogin">
                     <span class="text-muted">Remember me</span>
                   </label>
-                </div>
+                </div> -->
                 <div class="text-center">
                   <button type="submit" id="login" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Sign In" name="login" value="Login" class="btn btn-primary my-4 btnlogin">Sign in</button>
                 </div>
               </form>
             </div>
           </div>
-          <div class="row mt-3">
+          <!-- <div class="row mt-3">
             <div class="col-6">
               <a href="#" class="text-light"><small>Forgot password?</small></a>
             </div>
             <div class="col-6 text-right">
               <a href="#" class="text-light"><small>Create new account</small></a>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

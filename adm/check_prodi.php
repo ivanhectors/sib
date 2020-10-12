@@ -1,13 +1,13 @@
 <?php 
 session_start();
 require_once("include/config.php");
-if(!empty($_POST["kd_prodi"])) {
-	$kd_prodi= $_POST["kd_prodi"];
+if(!empty($_POST["id_prodi"])) {
+	$id_prodi= $_POST["id_prodi"];
 	
 		
-        $sql = "select * from ref_prodi where kd_prodi=?";
+        $sql = "select * from ref_prodi where id_prodi=?";
             $stmt = $con->prepare($sql); 
-            $stmt->bind_param("i", $kd_prodi);
+            $stmt->bind_param("i", $id_prodi);
             $stmt->execute();
             $result = $stmt->get_result();
             $count=mysqli_num_rows($result);
@@ -22,13 +22,13 @@ echo "<span style='color:red' title='Kode Fakultas Tersebut Sudah Ada.'><i class
 }
 }
 
-if(!empty($_POST["kd_prodi2"])) {
-	$kd_prodi= $_POST["kd_prodi2"];
+if(!empty($_POST["id_prodi2"])) {
+	$id_prodi= $_POST["id_prodi2"];
 	
 		
-        $sql = "select * from ref_prodi where kd_prodi=?";
+        $sql = "select * from ref_prodi where id_prodi=?";
             $stmt = $con->prepare($sql); 
-            $stmt->bind_param("i", $kd_prodi);
+            $stmt->bind_param("i", $id_prodi);
             $stmt->execute();
             $result = $stmt->get_result();
             $count=mysqli_num_rows($result);

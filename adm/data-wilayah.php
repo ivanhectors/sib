@@ -50,13 +50,13 @@
 	switch ($_GET['jenis']) {
 		//ambil data kota / kabupaten
 		case 'fakultas':
-		$kd_fakultas = $_POST['kd_fakultas'];
-		if($kd_fakultas == ''){
+		$id_fakultas = $_POST['id_fakultas'];
+		if($id_fakultas == ''){
 		     exit;
 		}else{
-		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE kd_fakultas ='$kd_fakultas' ORDER BY kd_prodi ASC") or die ('Query Gagal');
+		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE id_fakultas ='$id_fakultas' ORDER BY id_prodi ASC") or die ('Query Gagal');
 		     while($data = mysqli_fetch_array($getcity)){
-		          echo '<option value="'.$data['kd_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
+		          echo '<option value="'.$data['id_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
 		     }
 		     exit;    
 		}
@@ -67,13 +67,13 @@
 	switch ($_GET['jenis']) {
 		//ambil data kota / kabupaten
 		case 'fakultasedit':
-		$kd_fakultas = $_POST['kd_fakultas'];
-		if($kd_fakultas == ''){
+		$id_fakultas = $_POST['id_fakultas'];
+		if($id_fakultas == ''){
 		     exit;
 		}else{
-		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE kd_fakultas ='$kd_fakultas' ORDER BY kd_prodi ASC") or die ('Query Gagal');
+		     $getcity = mysqli_query($con,"SELECT  * FROM ref_prodi WHERE id_fakultas ='$id_fakultas' ORDER BY id_prodi ASC") or die ('Query Gagal');
 		     while($data = mysqli_fetch_array($getcity)){
-		          echo '<option value="'.$data['kd_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
+		          echo '<option value="'.$data['id_prodi'].'">Program Studi '.$data['nama_prodi'].'</option>';
 		     }
 		     exit;    
 		}
@@ -84,12 +84,12 @@
 	switch ($_GET['jenis']) {
 		//ambil data kota / kabupaten
 		case 'fakultasedit2':
-		$kd_fakultas = $_POST['kd_fakultas'];
-		if($kd_fakultas == ''){
+		$id_fakultas = $_POST['id_fakultas'];
+		if($id_fakultas == ''){
 		     exit;
 		}else{
 			echo '<option value="selected">Pilih Wali Studi Mahasiswa</option>';
-		     $getacc = mysqli_query($con,"SELECT  * FROM user_acc WHERE kd_fakultas ='$kd_fakultas' ORDER BY nama_acc ASC") or die ('Query Gagal');
+		     $getacc = mysqli_query($con,"SELECT  * FROM user_acc WHERE id_fakultas ='$id_fakultas' ORDER BY nama_acc ASC") or die ('Query Gagal');
 		     while($data_acc = mysqli_fetch_array($getacc)){
 				  
 		          echo '<option value="'.$data_acc['id_acc'].'">'.$data_acc['nama_acc'].'</option>';

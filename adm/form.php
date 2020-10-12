@@ -346,14 +346,14 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <?php
                                 $kd_daftar = $_GET['kd_daftar'];
                                 $query = "SELECT
-                                user_mhs.username
+                                user_mhs.nim
                                 , user_mhs.nama_mhs
                                 , user_mhs.email
                                 , user_mhs.no_telp
                                 , pendaftaran.kd_daftar
                                 FROM user_mhs
                                 JOIN pendaftaran 
-                                WHERE pendaftaran.kd_daftar = ? AND pendaftaran.nim = user_mhs.username";
+                                WHERE pendaftaran.kd_daftar = ? AND pendaftaran.id_mhs = user_mhs.id_mhs";
                                 $stmt = $con->prepare($query);
                                 $stmt->bind_param("s", $kd_daftar);
                                 $stmt->execute();
@@ -367,7 +367,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <div class="form-group row">
                                             <label for="nim" class="col-md-6 col-form-label form-control-label">NIM</label>
                                             <div class="col-md-6">
-                                                <input class="form-control" type="text" value="<?php echo $row['username'] ?>" id="nim" placeholder="NIM" disabled>
+                                                <input class="form-control" type="text" value="<?php echo $row['nim'] ?>" id="nim" placeholder="NIM" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">

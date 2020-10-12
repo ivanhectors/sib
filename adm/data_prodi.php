@@ -17,13 +17,13 @@ $childpage = "data_prodi";
 
 if(isset($_POST['tambah']))
 {
-    $kd_fakultas = $_POST["kd_fakultas"];
-    $kd_prodi = $_POST["kd_prodi"];
+    $id_fakultas = $_POST["id_fakultas"];
+    $id_prodi = $_POST["id_prodi"];
     $nama_prodi = $_POST["nama_prodi"];
 
 
     //tambah fakultas
-    $sql=mysqli_query($con,"INSERT INTO ref_prodi (kd_fakultas, kd_prodi, nama_prodi) VALUES ('$kd_fakultas', '$kd_prodi', '$nama_prodi')");
+    $sql=mysqli_query($con,"INSERT INTO ref_prodi (id_fakultas, id_prodi, nama_prodi) VALUES ('$id_fakultas', '$id_prodi', '$nama_prodi')");
     $_SESSION['msg']="1";
 }else{
     $_SESSION['msg']="0";
@@ -31,14 +31,14 @@ if(isset($_POST['tambah']))
 
 if(isset($_POST['edit']))
 {
-    $id_prodi = $_POST["id_prodi2"];
-    $kd_fakultas = $_POST["kd_fakultas2"];
-    $kd_prodi = $_POST["kd_prodi2"];
-    $nama_prodi = $_POST["nama_prodi2"];
+    $id_prodi = $_POST["id_prodi_saat_ini"];
+    $id_fakultas2 = $_POST["id_fakultas2"];
+    $id_prodi2 = $_POST["id_prodi2"];
+    $nama_prodi2 = $_POST["nama_prodi2"];
 
 
     //edit fakultas
-    $sql=mysqli_query($con,"update ref_prodi set kd_fakultas='$kd_fakultas', kd_prodi='$kd_prodi', nama_prodi='$nama_prodi' where id_prodi='$id_prodi' ");
+    $sql=mysqli_query($con,"update ref_prodi set id_fakultas='$id_fakultas2', id_prodi='$id_prodi2', nama_prodi='$nama_prodi2' where id_prodi='$id_prodi' ");
     $_SESSION['editmsg']="1";
 }else{
     $_SESSION['editmsg']="0";
@@ -63,7 +63,7 @@ function userAvailability() {
 $("#loaderIcon").show();
 jQuery.ajax({
 url: "check_prodi.php",
-data:'kd_prodi='+$("#kd_prodi").val(),
+data:'id_prodi='+$("#id_prodi").val(),
 type: "POST",
 success:function(data){
 $("#user-availability-status1").html(data);
@@ -77,7 +77,7 @@ function userAvailability2() {
 $("#loaderIcon").show();
 jQuery.ajax({
 url: "check_prodi.php",
-data:'kd_prodi2='+$("#kd_prodi2").val(),
+data:'id_prodi2='+$("#id_prodi2").val(),
 type: "POST",
 success:function(data){
 $("#user-availability-status2").html(data);
@@ -210,12 +210,12 @@ include("include/sidebar.php");
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
-                                    <select class="form-control" name="kd_fakultas" title="Pilih Fakultas"  oninvalid="this.setCustomValidity('Selahkan pilih Fakultas.')" oninput="setCustomValidity('')" required>
-                                    <?php $query2=mysqli_query($con,"select * from ref_fakultas order by kd_fakultas ASC");
+                                    <select class="form-control" name="id_fakultas" title="Pilih Fakultas"  oninvalid="this.setCustomValidity('Selahkan pilih Fakultas.')" oninput="setCustomValidity('')" required>
+                                    <?php $query2=mysqli_query($con,"select * from ref_fakultas order by id_fakultas ASC");
                                       while($row=mysqli_fetch_array($query2))
                                       { 
                                       ?>  
-                                            <option value="<?php echo htmlentities($row['kd_fakultas']);?>">Fakultas <?php echo htmlentities($row['nama_fakultas']);?></option>
+                                            <option value="<?php echo htmlentities($row['id_fakultas']);?>">Fakultas <?php echo htmlentities($row['nama_fakultas']);?></option>
                                     <?php } ?> 
                                     </select>
 
@@ -226,7 +226,7 @@ include("include/sidebar.php");
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><small class="font-weight-bold">#</small></span>
                                     </div>
-                                    <input onBlur="userAvailability()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="kd_prodi" name="kd_prodi" class="form-control" maxlength="2" placeholder="Kode Program Studi Baru" title="Masukkan Kode Program Studi" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Program Studi baru.')" oninput="setCustomValidity('')" required>
+                                    <input onBlur="userAvailability()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="id_prodi" name="id_prodi" class="form-control" maxlength="2" placeholder="Kode Program Studi Baru" title="Masukkan Kode Program Studi" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Program Studi baru.')" oninput="setCustomValidity('')" required>
                                     <div class="input-group-append">
                                     <span class="input-group-text" id="user-availability-status1"></span>
                                     </div>
@@ -294,7 +294,7 @@ include("include/sidebar.php");
             <tbody>
             <?php 
 
-            $sql = "select * from ref_prodi join ref_fakultas where ref_fakultas.kd_fakultas=ref_prodi.kd_fakultas order by ref_prodi.kd_prodi ASC";
+            $sql = "select * from ref_prodi join ref_fakultas where ref_fakultas.id_fakultas=ref_prodi.id_fakultas order by ref_prodi.id_prodi ASC";
             $stmt = $con->prepare($sql); 
             $stmt->execute();
             $result = $stmt->get_result();
@@ -306,7 +306,7 @@ include("include/sidebar.php");
                   
                 </td>
                 <td>
-                <b> <span class="text-muted"><?php echo htmlentities($row['kd_prodi']);?></span></b>
+                <b> <span class="text-muted"><?php echo htmlentities($row['id_prodi']);?></span></b>
                 </td>
                 <td>
                 <span class="text-muted"><?php echo htmlentities($row['nama_prodi']);?></span>
@@ -349,13 +349,13 @@ include("include/sidebar.php");
                                       <span class="input-group-text"><i class="fas fa-building"></i></span>
                                     </div>
                                     
-                                    <select class="form-control" name="kd_fakultas2" title="Pilih Fakultas"  oninvalid="this.setCustomValidity('Selahkan pilih Fakultas.')" oninput="setCustomValidity('')" required>
-                                    <option value="<?php echo htmlentities($row['kd_fakultas']);?>">Fakultas <?php echo htmlentities($row['nama_fakultas']);?></option>
-                                    <?php $query3=mysqli_query($con,"select * from ref_fakultas order by kd_fakultas ASC");
+                                    <select class="form-control" name="id_fakultas2" title="Pilih Fakultas"  oninvalid="this.setCustomValidity('Selahkan pilih Fakultas.')" oninput="setCustomValidity('')" required>
+                                    <option value="<?php echo htmlentities($row['id_fakultas']);?>">Fakultas <?php echo htmlentities($row['nama_fakultas']);?></option>
+                                    <?php $query3=mysqli_query($con,"select * from ref_fakultas order by id_fakultas ASC");
                                       while($row1=mysqli_fetch_array($query3))
                                       { 
                                       ?>  
-                                            <option value="<?php echo htmlentities($row1['kd_fakultas']);?>">Fakultas <?php echo htmlentities($row1['nama_fakultas']);?></option>
+                                            <option value="<?php echo htmlentities($row1['id_fakultas']);?>">Fakultas <?php echo htmlentities($row1['nama_fakultas']);?></option>
                                     <?php } ?> 
                                     </select>
 
@@ -366,8 +366,8 @@ include("include/sidebar.php");
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><small class="font-weight-bold">#</small></span>
                                     </div>
-                                    <input type="hidden" name="id_prodi2" value="<?php echo $row['id_prodi'];?>"/>
-                                    <input onBlur="userAvailability2()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="kd_prodi2" name="kd_prodi2" class="form-control" maxlength="2" value="<?php echo $row['kd_prodi'];?>" placeholder="Kode Program Studi" title="Masukkan Kode Program Studi" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Program Studi.')" oninput="setCustomValidity('')" required>
+                                    <input type="hidden" name="id_prodi_saat_ini" value="<?php echo $row['id_prodi'];?>"/>
+                                    <input onBlur="userAvailability2()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="id_prodi2" name="id_prodi2" class="form-control" maxlength="2" value="<?php echo $row['id_prodi'];?>" placeholder="Kode Program Studi" title="Masukkan Kode Program Studi" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Program Studi.')" oninput="setCustomValidity('')" required>
                                     <div class="input-group-append">
                                     <span class="input-group-text" id="user-availability-status2"></span>
                                     </div>

@@ -11,18 +11,19 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $currentTime = date('d-m-Y H:i:s', time());
     $kd_daftar = $_GET['kd_daftar'];
     $query = "SELECT
-            user_mhs.username
+            user_mhs.id_mhs
+            , user_mhs.nim
             , user_mhs.nama_mhs
             , user_mhs.email
             , user_mhs.no_telp
             , pendaftaran.kd_daftar
-            , ref_fakultas.kd_fakultas as KD_REF_FAKULTAS
+            , ref_fakultas.id_fakultas as KD_REF_FAKULTAS
             , ref_fakultas.nama_fakultas
-            , ref_prodi.kd_prodi as KD_REF_PRODI
+            , ref_prodi.id_prodi as KD_REF_PRODI
             , ref_prodi.nama_prodi
             FROM user_mhs
             JOIN pendaftaran, ref_fakultas, ref_prodi 
-            WHERE pendaftaran.kd_daftar = ? AND pendaftaran.nim = user_mhs.username AND user_mhs.kd_fakultas = ref_fakultas.kd_fakultas AND user_mhs.kd_prodi = ref_prodi.kd_prodi";
+            WHERE pendaftaran.kd_daftar = ? AND pendaftaran.id_mhs = user_mhs.id_mhs AND user_mhs.id_fakultas = ref_fakultas.id_fakultas AND user_mhs.id_prodi = ref_prodi.id_prodi";
     $stmt = $con->prepare($query);
     $stmt->bind_param("s", $kd_daftar);
     $stmt->execute();
@@ -43,7 +44,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $stmtdaftar->execute();
     $result = $stmtdaftar->get_result();
     $daftar = $result->fetch_assoc();
-    $filename = $daftar['kd_daftar']."_".$row['username']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
+    $filename = $daftar['kd_daftar']."_".$row['nim']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
     $content = '
 	<!DOCTYPE html>
 <html>
@@ -140,7 +141,7 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
                     <p>NIM </p>
                 </td>
                 <td>
-                    <p>: <strong>' . $row['username'] . '</strong></p>
+                    <p>: <strong>' . $row['nim'] . '</strong></p>
                 </td>
             </tr>
             <tr>
@@ -281,7 +282,7 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
         , ref_role.nama_role
         FROM sts_daftar
         JOIN user_acc, ref_role
-        WHERE sts_daftar.kd_daftar=? AND sts_daftar.acc_username = user_acc.username AND sts_daftar.acc_role = ref_role.kd_role ORDER BY sts_daftar.acc_role DESC
+        WHERE sts_daftar.kd_daftar=? AND sts_daftar.acc_username = user_acc.username AND sts_daftar.acc_role = ref_role.id_role ORDER BY sts_daftar.acc_role DESC
         ";
         $stmtacc = $con->prepare($sql_acc);
         $stmtacc->bind_param("s", $kd_daftar);
@@ -345,6 +346,6 @@ $content7 = '
     $mpdf->WriteHTML($content5);
     $mpdf->WriteHTML($content6);
     $mpdf->WriteHTML($content7);
-    $filename = $daftar['kd_daftar']."_".$row['username']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
+    $filename = $daftar['kd_daftar']."_".$row['nim']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
     $mpdf->Output($filename,'I');
 }

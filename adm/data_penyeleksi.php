@@ -26,7 +26,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
 
     //tambah acc
-    $sql = mysqli_query($con, "INSERT INTO user_acc (username, password, email, status, kd_role, kd_fakultas, kd_prodi) VALUES ('$username', '$passwordhash', '$email', '$status', '$role', '$fakultas', '$prodi')");
+    $sql = mysqli_query($con, "INSERT INTO user_acc (username, password, email, status, id_role, id_fakultas, id_prodi) VALUES ('$username', '$passwordhash', '$email', '$status', '$role', '$fakultas', '$prodi')");
     $_SESSION['msg'] = "1";
   } else {
     $_SESSION['msg'] = "0";
@@ -320,11 +320,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         <select class="form-control" name="fakultas" id="fakultas" placeholder="Pilih Fakultas" title="Masukkan Fakultas User" oninvalid="this.setCustomValidity('Selahkan masukkan Fakultas User. Jika tidak memiliki fakultas, silahkan pilih Fakultas Lainnya.')" oninput="setCustomValidity('')" required>
                           <option value="" selected>Pilih Fakultas</option>
                           <?php
-                          $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by kd_fakultas ASC");
+                          $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
                           ?>
                           <?php
                           while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                            echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                            echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                           }
                           ?>
                           <img src="../assets/img/loading.gif" width="35" id="load1" style="display:none;" />
@@ -446,7 +446,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                       </td>
                       <td>
                         <a href="mailto:<?php echo htmlentities($row['email']); ?>" class="font-weight-bold"><?php $dtl_bsw_row = htmlentities($row['email']);
-                                                                                if (strlen($dtl_bsw_row) > 10) $dtl_bsw_row = substr($dtl_bsw_row, 0, 10) . "";
+                                                                                if (strlen($dtl_bsw_row) > 10) $dtl_bsw_row = substr($dtl_bsw_row, 0, 10) . "...";
                                                                                 echo $dtl_bsw_row;
 
                                                                                 ?></a>
@@ -455,7 +455,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         <a href="tel:<?php echo htmlentities($row['no_telp']); ?>" class="font-weight-bold"><?php echo htmlentities($row['no_telp']); ?></a>
                       </td>
                       <td>
-                        <?php $role = $row['kd_role'];
+                        <?php $role = $row['id_role'];
                         if ($role == 1) {
                           echo '<span class="badge badge-dot mr-4">
                           <i class="bg-danger"></i>

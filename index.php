@@ -501,7 +501,7 @@
  </div>
  </div>
  </section>
- <section class="py-6">
+ <!-- <section class="py-6">
    <div class="container">
      <div class="row row-grid align-items-center">
        <div class="col-md-6 order-md-2">
@@ -569,7 +569,7 @@
        </div>
      </div>
    </div>
- </section>
+ </section> -->
  <section class="py-6">
    <div class="container">
      <!-- <div class="row row-grid align-items-center">

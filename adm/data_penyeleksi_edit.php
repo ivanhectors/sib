@@ -36,7 +36,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             while ($row = mysqli_fetch_array($admin)) {
                 if (password_verify($password_valid, $row["password"])) {
                     //return true;   
-                    $sql = mysqli_query($con, "update user_acc set username='$username', nama_acc='$nama', email='$email', no_telp='$notelp', kd_role='$role', kd_fakultas='$fakultas', kd_prodi='$prodi' where id_acc='$id_user'");
+                    $sql = mysqli_query($con, "update user_acc set username='$username', nama_acc='$nama', email='$email', no_telp='$notelp', id_role='$role', id_fakultas='$fakultas', id_prodi='$prodi' where id_acc='$id_user'");
                     $_SESSION['pswmsg'] = "1";
                     //$successmsg="Data profil anda berhasil diubah.";
 
@@ -225,13 +225,13 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <select class="form-control" name="role" title="Hak Akses" id="role">
                                             <?php
                                             $id_acc = $_GET['id'];
-                                            $sql_role = mysqli_query($con, "select * from user_acc join ref_role where user_acc.kd_role=ref_role.kd_role AND user_acc.id_acc = '" . $id_acc . "'");
+                                            $sql_role = mysqli_query($con, "select * from user_acc join ref_role where user_acc.id_role=ref_role.id_role AND user_acc.id_acc = '" . $id_acc . "'");
                                             ?>
 
                                             <?php
                                             if (mysqli_num_rows($sql_role) > 0) {
                                                 while ($rs_role = mysqli_fetch_assoc($sql_role)) {
-                                                    echo '<option value="' . $rs_role['kd_role'] . '">' . $rs_role['nama_role'] . '</option>';
+                                                    echo '<option value="' . $rs_role['id_role'] . '">' . $rs_role['nama_role'] . '</option>';
                                                 }
                                             } else {
                                                 echo '<option></option>';
@@ -239,11 +239,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                             ?>
                                             <?php
-                                            $sql_role = mysqli_query($con, "select * from ref_role where kd_role!='1' and kd_role!='5' order by kd_role ASC");
+                                            $sql_role = mysqli_query($con, "select * from ref_role where id_role!='1' and id_role!='5' order by id_role ASC");
                                             ?>
                                             <?php
                                             while ($rs_role = mysqli_fetch_assoc($sql_role)) {
-                                                echo '<option value="' . $rs_role['kd_role'] . '">' . $rs_role['nama_role'] . '</option>';
+                                                echo '<option value="' . $rs_role['id_role'] . '">' . $rs_role['nama_role'] . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -255,13 +255,13 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <select class="form-control" name="fakultas" title="fakultas" id="fakultasedit">
                                             <?php
                                             $id_acc = $_GET['id'];
-                                            $sql_fakultas = mysqli_query($con, "select * from user_acc join ref_fakultas where user_acc.kd_fakultas=ref_fakultas.kd_fakultas AND user_acc.id_acc = '" . $id_acc . "'");
+                                            $sql_fakultas = mysqli_query($con, "select * from user_acc join ref_fakultas where user_acc.id_fakultas=ref_fakultas.id_fakultas AND user_acc.id_acc = '" . $id_acc . "'");
                                             ?>
 
                                             <?php
                                             if (mysqli_num_rows($sql_fakultas) > 0) {
                                                 while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                    echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                    echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                                                 }
                                             } else {
                                                 echo '<option></option>';
@@ -269,11 +269,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                             ?>
                                             <?php
-                                            $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by kd_fakultas ASC");
+                                            $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
                                             ?>
                                             <?php
                                             while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                                             }
                                             ?>
                                         </select>
@@ -286,13 +286,13 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                         <select class="form-control" name="prodi" title="Pilih Program Studi" id="prodiedit">
                                             <?php
-                                            $sql_prodi = mysqli_query($con, "select * from user_acc join ref_prodi where user_acc.kd_prodi=ref_prodi.kd_prodi AND user_acc.id_acc = '" . $id_acc . "'");
+                                            $sql_prodi = mysqli_query($con, "select * from user_acc join ref_prodi where user_acc.id_prodi=ref_prodi.id_prodi AND user_acc.id_acc = '" . $id_acc . "'");
                                             ?>
 
                                             <?php
                                             if (mysqli_num_rows($sql_prodi) > 0) {
                                                 while ($rs_prodi = mysqli_fetch_assoc($sql_prodi)) {
-                                                    echo '<option value="' . $rs_prodi['kd_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
+                                                    echo '<option value="' . $rs_prodi['id_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
                                                 }
                                             } else {
                                                 echo '<option></option>';

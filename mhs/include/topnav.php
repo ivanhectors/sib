@@ -52,7 +52,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
           <li class="nav-item dropdown">
             <a class="nav-link pr-0" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="media align-items-center">
-                <?php $query = mysqli_query($con, "select * from user_mhs where username='" . $_SESSION['mhslogin'] . "'");
+                <?php $query = mysqli_query($con, "select * from user_mhs where nim='" . $_SESSION['mhslogin'] . "'");
                 while ($row = mysqli_fetch_array($query)) {
                 ?>
                   <span class="avatar avatar-sm rounded-circle">
@@ -72,12 +72,12 @@ if (strlen($_SESSION['mhslogin']) == 0) {
             </a>
             <div class="dropdown-menu dropdown-menu-right">
               <div class="dropdown-header noti-title">
-                <h6 class="text-overflow m-0" title="Username Anda"><?php echo htmlentities($row['nama_mhs']); ?></h6>
+                <h6 class="text-overflow m-0" title="NIM Anda"><?php echo htmlentities($row['nama_mhs']); ?></h6>
               </div>
             <?php } ?>
             <?php
             $mhs = $_SESSION['mhslogin'];
-            $query = "select * from user_mhs join ref_fakultas, ref_prodi where user_mhs.kd_fakultas=ref_fakultas.kd_fakultas AND user_mhs.kd_prodi=ref_prodi.kd_prodi and user_mhs.username =?";
+            $query = "select * from user_mhs join ref_fakultas, ref_prodi where user_mhs.id_fakultas=ref_fakultas.id_fakultas AND user_mhs.id_prodi=ref_prodi.id_prodi and user_mhs.nim =?";
             $stmt = $con->prepare($query);
             $stmt->bind_param("s", $mhs);
             $stmt->execute();

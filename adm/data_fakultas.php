@@ -14,16 +14,16 @@ $currentTime = date( 'd-m-Y h:i:s A', time () );
 // include("include/sidebar.php");
 $parentpage = "master";
 $childpage = "data_fakultas";
-
+$cnt = 1;
 if(isset($_POST['tambah']))
 {
 
-    $kd_fakultas = $_POST["kd_fakultas"];
+    $id_fakultas = $_POST["id_fakultas"];
     $nama_fakultas = $_POST["nama_fakultas"];
 
 
     //tambah fakultas
-    $sql=mysqli_query($con,"INSERT INTO ref_fakultas (kd_fakultas, nama_fakultas) VALUES ('$kd_fakultas', '$nama_fakultas')");
+    $sql=mysqli_query($con,"INSERT INTO ref_fakultas (id_fakultas, nama_fakultas) VALUES ('$id_fakultas', '$nama_fakultas')");
     $_SESSION['msg']="1";
 }else{
     $_SESSION['msg']="0";
@@ -32,12 +32,12 @@ if(isset($_POST['tambah']))
 if(isset($_POST['edit']))
 {
     $id_fakultas = $_POST["id_fakultas"];
-    $kd_fakultas = $_POST["kd_fakultas2"];
+    $id_fakultas = $_POST["id_fakultas2"];
     $nama_fakultas = $_POST["nama_fakultas2"];
 
 
     //edit fakultas
-    $sql=mysqli_query($con,"update ref_fakultas set kd_fakultas='$kd_fakultas', nama_fakultas='$nama_fakultas' where id_fakultas='$id_fakultas' ");
+    $sql=mysqli_query($con,"update ref_fakultas set id_fakultas='$id_fakultas', nama_fakultas='$nama_fakultas' where id_fakultas='$id_fakultas' ");
     $_SESSION['editmsg']="1";
 }else{
     $_SESSION['editmsg']="0";
@@ -62,7 +62,7 @@ function userAvailability() {
 $("#loaderIcon").show();
 jQuery.ajax({
 url: "check_fakultas.php",
-data:'kd_fakultas='+$("#kd_fakultas").val(),
+data:'id_fakultas='+$("#id_fakultas").val(),
 type: "POST",
 success:function(data){
 $("#user-availability-status1").html(data);
@@ -76,7 +76,7 @@ function userAvailability2() {
 $("#loaderIcon").show();
 jQuery.ajax({
 url: "check_fakultas.php",
-data:'kd_fakultas2='+$("#kd_fakultas2").val(),
+data:'id_fakultas2='+$("#id_fakultas2").val(),
 type: "POST",
 success:function(data){
 $("#user-availability-status2").html(data);
@@ -209,7 +209,7 @@ include("include/sidebar.php");
                                     <div class="input-group-prepend">
                                       <span class="input-group-text"><small class="font-weight-bold">#</small></span>
                                     </div>
-                                    <input onBlur="userAvailability()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="kd_fakultas" name="kd_fakultas" class="form-control" maxlength="2" placeholder="Kode Fakultas Baru" title="Masukkan Kode Fakultas" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Fakultas baru.')" oninput="setCustomValidity('')" required>
+                                    <input onBlur="userAvailability()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="id_fakultas" name="id_fakultas" class="form-control" maxlength="2" placeholder="Kode Fakultas Baru" title="Masukkan Kode Fakultas" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Fakultas baru.')" oninput="setCustomValidity('')" required>
                                     <div class="input-group-append">
                                     <span class="input-group-text" id="user-availability-status1"></span>
                                     </div>
@@ -276,7 +276,7 @@ include("include/sidebar.php");
             <tbody>
             <?php 
 
-            $sql = "select * from ref_fakultas order by kd_fakultas ASC";
+            $sql = "select * from ref_fakultas order by id_fakultas ASC";
             $stmt = $con->prepare($sql); 
             $stmt->execute();
             $result = $stmt->get_result();
@@ -284,7 +284,7 @@ include("include/sidebar.php");
                 ?>
               <tr>
                 <td class="table-user">
-                  <b> <?php echo htmlentities($row['kd_fakultas']);?></b>
+                  <b> <?php echo htmlentities($row['id_fakultas']);?></b>
                 </td>
                 <td>
                   <span class="text-muted"><?php echo htmlentities($row['nama_fakultas']);?></span>
@@ -327,7 +327,7 @@ include("include/sidebar.php");
                                       <span class="input-group-text"><small class="font-weight-bold">#</small></span>
                                     </div>
                                     <input type="hidden" name="id_fakultas" value="<?php echo $row['id_fakultas'];?>"/>
-                                    <input onBlur="userAvailability2()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="kd_fakultas2" name="kd_fakultas2" class="form-control" maxlength="2" value="<?php echo $row['kd_fakultas'];?>" placeholder="Kode Fakultas Baru" title="Masukkan Kode Fakultas" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Fakultas baru.')" oninput="setCustomValidity('')" required>
+                                    <input onBlur="userAvailability2()" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" id="id_fakultas2" name="id_fakultas2" class="form-control" maxlength="2" value="<?php echo $row['id_fakultas'];?>" placeholder="Kode Fakultas Baru" title="Masukkan Kode Fakultas" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Fakultas baru.')" oninput="setCustomValidity('')" required>
                                     <div class="input-group-append">
                                     <span class="input-group-text" id="user-availability-status2"></span>
                                     </div>

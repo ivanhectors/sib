@@ -292,7 +292,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <tbody>
                                     <?php
 
-                                    $sql = "select * from ref_role order by kd_role ASC";
+                                    $sql = "select * from ref_role order by id_role ASC";
                                     $stmt = $con->prepare($sql);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
@@ -300,7 +300,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     ?>
                                         <tr>
                                             <td class="table-user">
-                                                <b> <?php echo htmlentities($row['kd_role']); ?></b>
+                                                <b> <?php echo htmlentities($row['id_role']); ?></b>
 
                                             </td>
                                             <td>

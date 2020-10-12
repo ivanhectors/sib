@@ -20,7 +20,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             $("#loaderIcon").show();
             jQuery.ajax({
                 url: "add_admin_check_username.php",
-                data: 'username=' + $("#username").val(),
+                data: 'nim=' + $("#nim").val(),
                 type: "POST",
                 success: function(data) {
                     $("#user-availability-status1").html(data);
@@ -155,7 +155,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 </tfoot>
 
                                 <tbody>
-                                    <?php $query = "SELECT username, COUNT(username) AS duplikat FROM user_mhs GROUP BY username HAVING  COUNT(username) > 1 ORDER BY username ASC";
+                                    <?php $query = "SELECT nim, COUNT(nim) AS duplikat FROM user_mhs GROUP BY nim HAVING  COUNT(nim) > 1 ORDER BY nim ASC";
                                     $stmt = $con->prepare($query);
                                     $stmt->execute();
                                     $result = $stmt->get_result();
@@ -165,14 +165,14 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <tr>
                                             <td class="table-user">
                                                 <b>
-                                                    <span class="text-muted"><?php echo htmlentities($row['username']); ?></span>
+                                                    <span class="text-muted"><?php echo htmlentities($row['nim']); ?></span>
                                                 </b>
                                             </td>
                                             <td class="text-center">
                                                 <span class="h4 text-muted"><?php echo htmlentities($row['duplikat']); ?></span>
                                             </td>
                                             <td class="text-center">
-                                                <a href="cari_mahasiswa?carimhs=<?php echo htmlentities($row['username']); ?>" class='btn btn-default btn-sm text-white'>Detail <i class='fas fa-chevron-circle-right text-white'></i></a>
+                                                <a href="cari_mahasiswa?carimhs=<?php echo htmlentities($row['nim']); ?>" class='btn btn-default btn-sm text-white'>Detail <i class='fas fa-chevron-circle-right text-white'></i></a>
                                             </td>
                                         </tr>
                                     <?php

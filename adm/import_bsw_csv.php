@@ -30,52 +30,67 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
             while (($column = fgetcsv($file, 10000, ",")) !== FALSE) {
 
-                $nim = "";
+                $kd_daftar = "";
                 if (isset($column[0])) {
-                    $nim = mysqli_real_escape_string($conn, $column[0]);
+                    $kd_daftar = mysqli_real_escape_string($conn, $column[0]);
                 }
-                $nama_mhs = "";
+                $id_mhs = "";
                 if (isset($column[1])) {
-                    $nama_mhs = mysqli_real_escape_string($conn, $column[1]);
+                    $id_mhs = mysqli_real_escape_string($conn, $column[1]);
                 }
-                $password = "";
+                $kd_bsw = "";
                 if (isset($column[2])) {
-                    $password = mysqli_real_escape_string($conn, $column[2]);
+                    $kd_bsw = mysqli_real_escape_string($conn, $column[2]);
                 }
-                $id_fakultas = "";
+                $thn_ajaran = "";
                 if (isset($column[3])) {
-                    $id_fakultas = mysqli_real_escape_string($conn, $column[3]);
+                    $thn_ajaran = mysqli_real_escape_string($conn, $column[3]);
                 }
-                $id_prodi = "";
+                $semester= "";
                 if (isset($column[4])) {
-                    $id_prodi = mysqli_real_escape_string($conn, $column[4]);
+                    $semester = mysqli_real_escape_string($conn, $column[4]);
                 }
-                $id_dosen_wali = "";
+                $tahun = "";
                 if (isset($column[5])) {
-                    $id_dosen_wali = mysqli_real_escape_string($conn, $column[5]);
+                    $tahun = mysqli_real_escape_string($conn, $column[5]);
                 }
-                $id_role = "";
+                $nominal_pengajuan = "";
                 if (isset($column[6])) {
-                    $id_role = mysqli_real_escape_string($conn, $column[6]);
+                    $nominal_pengajuan = mysqli_real_escape_string($conn, $column[6]);
+                }
+                $nominal_disetujui = "";
+                if (isset($column[7])) {
+                    $nominal_disetujui = mysqli_real_escape_string($conn, $column[7]);
+                }
+                $tgl_daftar = "";
+                if (isset($column[8])) {
+                    $tgl_daftar = mysqli_real_escape_string($conn, $column[8]);
+                }
+                $status = "";
+                if (isset($column[9])) {
+                    $status = mysqli_real_escape_string($conn, $column[9]);
                 }
 
-                $sqlInsert = "INSERT into user_mhs (nim,nama_mhs,password,id_fakultas,id_prodi,id_dosen_wali,id_role)
-                       values (?,?,?,?,?,?,?)";
-                $paramType = "sssssis";
+                $sqlInsert = "INSERT into pendaftaran (kd_daftar, id_mhs, kd_bsw, thn_ajaran, semester, tahun, nominal_pengajuan, nominal_disetujui, tgl_daftar, status)
+                       values (?,?,?,?,?,?,?,?,?,?)";
+                $paramType = "ssssssiiss";
                 $paramArray = array(
-                    $nim,
-                    $nama_mhs,
-                    $password,
-                    $id_fakultas,
-                    $id_prodi,
-                    $id_dosen_wali,
-                    $id_role
+                    $kd_daftar,
+                    $id_mhs,
+                    $kd_bsw,
+                    $thn_ajaran,
+                    $semester,
+                    $tahun,
+                    $nominal_pengajuan,
+	    $nominal_disetujui,
+	    $tgl_daftar,
+	    $status
                 );
                 $insertId = $db->insert($sqlInsert, $paramType, $paramArray);
 
                 if (!empty($insertId)) {
                     $type = "success";
-                    $message = "Data Mahasiswa berhasil diimport. Pastikan data tidak ada yang duplikat di halaman Data Mahasiswa";
+                    $message = "Data Riwayat Penerima Pinjaman dan Beasiswa berhasil diimport.";
                 } else {
                     $type = "error";
                     $message = "Terjadi kesalahan saat meng-import data. Pastikan format .CSV benar lalu coba lagi.";

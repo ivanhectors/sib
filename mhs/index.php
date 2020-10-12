@@ -152,7 +152,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
       $peterpan = "SI3423";
       $kp = "SI4313";
       $skripsi = "SI4426";
-      $rt = mysqli_query($con, "SELECT * FROM pendaftaran where nim='" . $_SESSION['mhslogin'] . "' and kd_bsw='$kd_bsw' and status='$status'");
+      $rt = mysqli_query($con, "SELECT * FROM pendaftaran where id_mhs='" . $_SESSION['id_mhs'] . "' and kd_bsw='$kd_bsw' and status='$status'");
       // $peterpan = mysqli_query($con,"SELECT * FROM kehadiran where idusers='".$_SESSION['login']."' and statuskehadiran='$statuskehadiran' and semester='".$_GET['semester']."'");
       // $kp = mysqli_query($con,"SELECT * FROM tblkonsultasi where idusers='".$_SESSION['login']."' and idmatakuliah='$kp' and sts_konsul='$status' and semester='".$_GET['semester']."'");
       // $skripsi = mysqli_query($con,"SELECT * FROM tblkonsultasi where idusers='".$_SESSION['login']."' and idmatakuliah='$skripsi' and sts_konsul='$status' and semester='".$_GET['semester']."'");
@@ -229,10 +229,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 },
                 data: {
                   labels: [<?php
-                            $nim = $_SESSION['mhslogin'];
+                            $nim = $_SESSION['id_mhs'];
                             $status = 'diterima';
                             $kd_bsw = '1';
-                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE nim = ? and kd_bsw=? and status = ? GROUP BY tahun";
+                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE id_mhs = ? and kd_bsw=? and status = ? GROUP BY tahun";
                             $stmt = $con->prepare($query);
                             $stmt->bind_param("sss", $nim, $kd_bsw , $status);
                             $stmt->execute();
@@ -256,10 +256,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             } ?>],
                   datasets: [{
                     data: [<?php
-                            $nim = $_SESSION['mhslogin'];
+                            $nim = $_SESSION['id_mhs'];
                             $status = 'diterima';
                             $kd_bsw = '1';
-                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE nim = ? and kd_bsw=? and status = ? GROUP BY tahun";
+                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE id_mhs = ? and kd_bsw=? and status = ? GROUP BY tahun";
                             $stmt = $con->prepare($query);
                             $stmt->bind_param("sss", $nim,$kd_bsw, $status);
                             $stmt->execute();
@@ -358,10 +358,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 },
                 data: {
                   labels: [<?php
-                            $nim = $_SESSION['mhslogin'];
+                            $nim = $_SESSION['id_mhs'];
                             $status = 'diterima';
                             $kd_bsw = '2';
-                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE nim = ? and kd_bsw=? and status = ? GROUP BY tahun";
+                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE id_mhs = ? and kd_bsw=? and status = ? GROUP BY tahun";
                             $stmt = $con->prepare($query);
                             $stmt->bind_param("sss", $nim,$kd_bsw, $status);
                             $stmt->execute();
@@ -385,10 +385,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             } ?>],
                   datasets: [{
                     data: [<?php
-                            $nim = $_SESSION['mhslogin'];
+                            $nim = $_SESSION['id_mhs'];
                             $status = 'diterima';
                             $kd_bsw = '2';
-                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE nim = ? and kd_bsw=? and status = ? GROUP BY tahun";
+                            $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun FROM pendaftaran WHERE id_mhs = ? and kd_bsw=? and status = ? GROUP BY tahun";
                             $stmt = $con->prepare($query);
                             $stmt->bind_param("sss", $nim,$kd_bsw, $status);
                             $stmt->execute();

@@ -46,7 +46,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $digits = 3;
     $unik_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
     $limit = 2 * 1024 * 1024; //10MB. Bisa diubah2
-    $nim = $_SESSION['mhslogin'];
+    $nim = $_SESSION['id_mhs'];
 
     if (isset($_FILES['syarat'])) {
         //karena ada multiple, jadi dilakukan pengecekan foreach
@@ -386,8 +386,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                 <!-- Batas Awal Info Pribadi Mahasiswa -->
 
                                 <?php
-                                $nim = $_SESSION['mhslogin'];
-                                $query = "select * from user_mhs where username=?";
+                                $nim = $_SESSION['id_mhs'];
+                                $query = "select * from user_mhs where id_mhs=?";
                                 $stmt = $con->prepare($query);
                                 $stmt->bind_param("s", $nim);
                                 $stmt->execute();
@@ -401,7 +401,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                         <div class="form-group row">
                                             <label for="nim" class="col-md-6 col-form-label form-control-label">NIM</label>
                                             <div class="col-md-6">
-                                                <input class="form-control" type="text" value="<?php echo $row['username'] ?>" id="nim" placeholder="NIM" disabled>
+                                                <input class="form-control" type="text" value="<?php echo $row['nim'] ?>" id="nim" placeholder="NIM" disabled>
                                             </div>
                                         </div>
                                         <div class="form-group row">

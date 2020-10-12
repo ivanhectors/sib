@@ -102,7 +102,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                                 <tbody>
                                     <?php
-                                    $nim = $_SESSION['mhslogin'];
+                                    $nim = $_SESSION['id_mhs'];
                                     $sql = "SELECT
                                     pendaftaran.kd_daftar AS kd_daftar
                                     , pendaftaran.tgl_daftar As tgl_daftar
@@ -113,7 +113,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                     , beasiswa.nama_bsw AS nm_beasiswa
                                     FROM pendaftaran
                                     JOIN beasiswa ON (
-                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.nim = ? ";
+                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.id_mhs = ? ";
                                     $stmt = $con->prepare($sql);
                                     $stmt->bind_param("i", $nim);
                                     $stmt->execute();

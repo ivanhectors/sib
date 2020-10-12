@@ -18,18 +18,18 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
         $password = '1234';
         $passwordhash = password_hash($password, PASSWORD_DEFAULT);
-        $username = $_POST["tambahusernamebaru"];
+        $nim = $_POST["tambahnimbaru"];
         $nama_mhs = $_POST["nama_mhs"];
         $email = $_POST['email'];
         $no_telp = $_POST['no_telp'];
-        $kd_fakultas = $_POST['kd_fakultas'];
-        $kd_prodi = $_POST['kd_prodi'];
+        $id_fakultas = $_POST['id_fakultas'];
+        $id_prodi = $_POST['id_prodi'];
         $id_dosen_wali = $_POST['id_dosen_wali'];
-        $kd_role = '5';
+        $id_role = '5';
 
         //Prepare Update User Data
-        $SQL = $con->prepare("INSERT INTO user_mhs (username, password, nama_mhs, email, no_telp, kd_fakultas, kd_prodi, id_dosen_wali, kd_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $SQL->bind_param('sssssssis', $username, $passwordhash, $nama_mhs, $email, $no_telp, $kd_fakultas, $kd_prodi, $id_dosen_wali, $kd_role);
+        $SQL = $con->prepare("INSERT INTO user_mhs (nim, password, nama_mhs, email, no_telp, id_fakultas, id_prodi, id_dosen_wali, id_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $SQL->bind_param('sssssssis', $nim, $passwordhash, $nama_mhs, $email, $no_telp, $id_fakultas, $id_prodi, $id_dosen_wali, $id_role);
         /* Execute the prepared Statement */
         $status = $SQL->execute();
         /* BK: always check whether the execute() succeeded */
@@ -50,7 +50,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             $("#loaderIcon").show();
             jQuery.ajax({
                 url: "check_username.php",
-                data: 'tambahusernamebaru=' + $("#tambahusernamebaru").val(),
+                data: 'tambahnimbaru=' + $("#tambahnimbaru").val(),
                 type: "POST",
                 success: function(data) {
                     $("#user-availability-status1").html(data);
@@ -187,17 +187,17 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="username">NIM</label>
+                                            <label class="form-control-label" for="nim">NIM</label>
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><small class="font-weight-bold">@</small></span>
                                                 </div>
-                                                <input onBlur="userAvailability()" id="tambahusernamebaru" name="tambahusernamebaru" value="" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan Username" oninvalid="this.setCustomValidity('Selahkan masukkan Username Mahasiswa.')" oninput="setCustomValidity('')" required>
+                                                <input onBlur="userAvailability()" id="tambahnimbaru" name="tambahnimbaru" value="" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" oninvalid="this.setCustomValidity('Selahkan masukkan NIM Mahasiswa.')" oninput="setCustomValidity('')" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="user-availability-status1"></span> <img src="../assets/img/loading.gif" width="35" id="loadericon" style="display:none;" />
                                                 </div>
                                             </div>
-                                            <input id="oldusername" name="oldusername" value="" type="hidden" />
+                                            <input id="oldnim" name="oldnim" value="" type="hidden" />
                                             <span id="user-availability-status1"></span>
                                         </div>
                                     </div>
@@ -242,14 +242,14 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="fakultas">Fakultas</label>
-                                            <select class="form-control" name="kd_fakultas" title="fakultas" id="fakultasedit" oninvalid="this.setCustomValidity('Silahkan Pilih Fakultas Mahasiswa.')" oninput="setCustomValidity('')" required>
+                                            <select class="form-control" name="id_fakultas" title="fakultas" id="fakultasedit" oninvalid="this.setCustomValidity('Silahkan Pilih Fakultas Mahasiswa.')" oninput="setCustomValidity('')" required>
                                                 <option value="selected">Pilih Fakultas</option>
                                                 <?php
-                                                $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by kd_fakultas ASC");
+                                                $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
                                                 ?>
                                                 <?php
                                                 while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                    echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                    echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                                                 }
                                                 ?>
                                             </select>
@@ -260,7 +260,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <div class="form-group">
                                             <label class="form-control-label" for="prodi">Program Studi</label>
 
-                                            <select class="form-control" name="kd_prodi" title="Pilih Program Studi" placeholder="Pilih Program Studi" id="prodiedit" oninvalid="this.setCustomValidity('Silahkan Pilih Prodi Mahasiswa.')" oninput="setCustomValidity('')" required>
+                                            <select class="form-control" name="id_prodi" title="Pilih Program Studi" placeholder="Pilih Program Studi" id="prodiedit" oninvalid="this.setCustomValidity('Silahkan Pilih Prodi Mahasiswa.')" oninput="setCustomValidity('')" required>
                                             <option value="selected">Pilih Program Studi</option>
                                         </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />

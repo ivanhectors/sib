@@ -30,7 +30,7 @@ $primaryKey = 'kd_daftar';
 // indexes
 $columns = array(
     array('db' => 'kd_daftar', 'dt' => 0),
-    array('db' => 'nim', 'dt' => 1),
+    array('db' => 'id_mhs', 'dt' => 1),
     array('db' => 'kd_bsw',  'dt' => 2),
     array('db' => 'tgl_daftar',   'dt' => 3),
     array('db' => 'thn_ajaran',   'dt' => 4),  

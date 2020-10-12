@@ -22,12 +22,12 @@ $( document ).ready(function() {
 	//saat pilihan provinsi di pilih maka mengambil data di data-wilayah menggunakan ajax
 	$("#fakultas").change(function(){
 	      $("img#load1").show();
-	      var kd_fakultas = $(this).val(); 
+	      var id_fakultas = $(this).val(); 
 	      $.ajax({
 	         type: "POST",
 	         dataType: "html",
 	         url: "data-wilayah.php?jenis=fakultas",
-	         data: "kd_fakultas="+kd_fakultas,
+	         data: "id_fakultas="+id_fakultas,
 	         success: function(msg){
 	            $("select#prodi").html(msg);                                                       
 	            $("img#load1").hide();
@@ -38,12 +38,12 @@ $( document ).ready(function() {
 	 
 	 $("#fakultasedit").change(function(){
 		$("img#load1").show();
-		var kd_fakultas = $(this).val(); 
+		var id_fakultas = $(this).val(); 
 		$.ajax({
 		   type: "POST",
 		   dataType: "html",
 		   url: "data-wilayah.php?jenis=fakultasedit",
-		   data: "kd_fakultas="+kd_fakultas,
+		   data: "id_fakultas="+id_fakultas,
 		   success: function(msg){
 			  $("select#prodiedit").html(msg);                                                       
 			  $("img#load2").hide();
@@ -55,12 +55,12 @@ $( document ).ready(function() {
 
    $("#fakultasedit").change(function(){
 	$("img#load1").show();
-	var kd_fakultas = $(this).val(); 
+	var id_fakultas = $(this).val(); 
 	$.ajax({
 	   type: "POST",
 	   dataType: "html",
 	   url: "data-wilayah.php?jenis=fakultasedit2",
-	   data: "kd_fakultas="+kd_fakultas,
+	   data: "id_fakultas="+id_fakultas,
 	   success: function(msg){
 		  $("select#dosen_wali").html(msg);                                                       
 		  $("img#load2").hide();
@@ -70,12 +70,12 @@ $( document ).ready(function() {
 }); 
 	
 	
-	var kd_fakultas = document.getElementById("fakultasedit").value; 
+	var id_fakultas = document.getElementById("fakultasedit").value; 
 	$.ajax({
 	   type: "POST",
 	   dataType: "html",
 	   url: "data-wilayah.php?jenis=fakultasedit2",
-	   data: "kd_fakultas="+kd_fakultas,
+	   data: "id_fakultas="+id_fakultas,
 	   success: function(msg){
 		  $("select#dosen_wali").html(msg);                                                       
 		  $("img#load2").hide();

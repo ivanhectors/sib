@@ -17,17 +17,17 @@ if (strlen($_SESSION['admlogin']) == 0) {
     if (isset($_POST['submit'])) {
 
         $id_user = $_GET["carimhs"];
-        $username = $_POST["usernamemhs"];
+        $nim = $_POST["nimmhs"];
         $nama_mhs = $_POST["nama_mhs"];
         $email = $_POST['email'];
         $no_telp = $_POST['no_telp'];
-        $kd_fakultas = $_POST['kd_fakultas'];
-        $kd_prodi = $_POST['kd_prodi'];
+        $id_fakultas = $_POST['id_fakultas'];
+        $id_prodi = $_POST['id_prodi'];
         $id_dosen_wali = $_POST['id_dosen_wali'];
 
         //Prepare Update User Data
-        $SQL = $con->prepare("UPDATE user_mhs SET username=?, nama_mhs=?, email=?, no_telp=?, kd_fakultas=?, kd_prodi=?, id_dosen_wali=? WHERE username=?");
-        $SQL->bind_param('ssssssis', $username, $nama_mhs, $email, $no_telp, $kd_fakultas, $kd_prodi, $id_dosen_wali, $id_user);
+        $SQL = $con->prepare("UPDATE user_mhs SET nim=?, nama_mhs=?, email=?, no_telp=?, id_fakultas=?, id_prodi=?, id_dosen_wali=? WHERE nim=?");
+        $SQL->bind_param('ssssssis', $nim, $nama_mhs, $email, $no_telp, $id_fakultas, $id_prodi, $id_dosen_wali, $id_user);
         /* Execute the prepared Statement */
         $status = $SQL->execute();
         /* BK: always check whether the execute() succeeded */
@@ -102,7 +102,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             $("#loaderIcon").show();
             jQuery.ajax({
                 url: "check_username.php",
-                data: 'usernamemhs=' + $("#usernamemhs").val() + '&oldusername=' + $("#usernamemhsnow").val(),
+                data: 'nimmhs=' + $("#nimmhs").val() + '&oldnim=' + $("#nimmhsnow").val(),
                 type: "POST",
                 success: function(data) {
                     $("#user-availability-status1").html(data);
@@ -314,7 +314,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     <div class="row align-items-center">
                         <?php
                         $id_acc = $_GET['carimhs'];
-                        $query = "select * from user_mhs where username=?";
+                        $query = "select * from user_mhs where nim=?";
                         $stmt = $con->prepare($query);
                         $stmt->bind_param("i", $id_acc);
                         $stmt->execute();
@@ -330,7 +330,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                 <div class="col-4 text-right">
 
-                                <code class="text-default"><mark class="text-default"><?php echo $row['username'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
+                                <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
                                 </div>
                         <?php }
                         } else {
@@ -346,7 +346,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     <!-- Form groups used in grid -->
                     <?php
                     $id_acc = $_GET['carimhs'];
-                    $query = "select * from user_mhs where username=?";
+                    $query = "select * from user_mhs where nim=?";
                     $stmt = $con->prepare($query);
                     $stmt->bind_param("i", $id_acc);
                     $stmt->execute();
@@ -361,18 +361,18 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="username">NIM</label>
+                                            <label class="form-control-label" for="nim">NIM</label>
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><small class="font-weight-bold">@</small></span>
                                                 </div>
-                                                <input type="hidden" name="usernamemhsnow" id="usernamemhsnow" value="<?php echo $_GET['carimhs'] ?>" />
-                                                <input onBlur="userAvailability()" id="usernamemhs" name="usernamemhs" value="<?php echo $row['username'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan Username" oninvalid="this.setCustomValidity('Selahkan masukkan Username Mahasiswa.')" oninput="setCustomValidity('')" required>
+                                                <input type="hidden" name="nimmhsnow" id="nimmhsnow" value="<?php echo $_GET['carimhs'] ?>" />
+                                                <input onBlur="userAvailability()" id="nimmhs" name="nimmhs" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" oninvalid="this.setCustomValidity('Selahkan masukkan NIM Mahasiswa.')" oninput="setCustomValidity('')" required>
                                                 <div class="input-group-append">
                                                     <span class="input-group-text" id="user-availability-status1"></span> <img src="../assets/img/loading.gif" width="35" id="loadericon" style="display:none;" />
                                                 </div>
                                             </div>
-                                            <input id="oldusername" name="oldusername" value="<?php echo $row['username'] ?>" type="hidden" />
+                                            <input id="oldnim" name="oldnim" value="<?php echo $row['nim'] ?>" type="hidden" />
                                             <span id="user-availability-status1"></span>
                                         </div>
                                     </div>
@@ -417,16 +417,16 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="fakultas">Fakultas</label>
-                                            <select class="form-control" name="kd_fakultas" title="fakultas" id="fakultasedit">
+                                            <select class="form-control" name="id_fakultas" title="fakultas" id="fakultasedit">
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
-                                                $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.kd_fakultas=ref_fakultas.kd_fakultas AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.id_fakultas=ref_fakultas.id_fakultas AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
                                                 if (mysqli_num_rows($sql_fakultas) > 0) {
                                                     while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                        echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                        echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                                                     }
                                                 } else {
                                                     echo '<option></option>';
@@ -434,11 +434,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                                 ?>
                                                 <?php
-                                                $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by kd_fakultas ASC");
+                                                $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
                                                 ?>
                                                 <?php
                                                 while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                    echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                    echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
                                                 }
                                                 ?>
                                             </select>
@@ -449,15 +449,15 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <div class="form-group">
                                             <label class="form-control-label" for="prodi">Program Studi</label>
 
-                                            <select class="form-control" name="kd_prodi" title="Pilih Program Studi" id="prodiedit">
+                                            <select class="form-control" name="id_prodi" title="Pilih Program Studi" id="prodiedit">
                                                 <?php
-                                                $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.kd_prodi=ref_prodi.kd_prodi AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.id_prodi=ref_prodi.id_prodi AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
                                                 if (mysqli_num_rows($sql_prodi) > 0) {
                                                     while ($rs_prodi = mysqli_fetch_assoc($sql_prodi)) {
-                                                        echo '<option value="' . $rs_prodi['kd_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
+                                                        echo '<option value="' . $rs_prodi['id_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
                                                     }
                                                 } else {
                                                     echo '<option value="0"></option>';
@@ -475,7 +475,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <select class="form-control" name="id_dosen_wali" title="Dosen Wali" id="dosen_wali">
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
-                                                $sql_role = mysqli_query($con, "select * from user_mhs join user_acc where user_mhs.id_dosen_wali=user_acc.id_acc AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_role = mysqli_query($con, "select * from user_mhs join user_acc where user_mhs.id_dosen_wali=user_acc.id_acc AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
@@ -515,7 +515,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             <?php $status = $row['status'];
                             if ($status > 0) :
                             ?>
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4 <?php
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4 <?php
                                                                                                                                                                                         if ($result->num_rows > 1) {
                                                                                                                                                                                             echo "disabled";
                                                                                                                                                                                         }
@@ -524,7 +524,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     <span class="btn-inner--text">Nonaktifkan Akun</span>
                                 </a>
                             <?php else : ?>
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&on=1" class="btn btn-icon btn-success text-white my-4 <?php
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&on=1" class="btn btn-icon btn-success text-white my-4 <?php
                                                                                                                                                                                         if ($result->num_rows > 1) {
                                                                                                                                                                                             echo "disabled";
                                                                                                                                                                                         }
@@ -557,7 +557,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
+                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
                                 <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Tutup</button>
                             </div>
                         </div>
@@ -570,13 +570,13 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             <div class="modal-content">
                                 <div class="modal-body p-0">
                                     <div class="card bg-secondary border-0 mb-0">
-
+                                    <form role="form" method="post">
                                         <div class="card-body px-lg-5 py-lg-5">
                                             <div class="text-center text-muted mb-4">
                                                 <small>Masukkan password anda untuk mengubah data user : <b>
                                                         <?php $nama_acc = $row['nama_mhs'];
                                                         if ($nama_acc == "" || $nama_acc == "NULL") {
-                                                            echo htmlentities($row['username']);
+                                                            echo htmlentities($row['nim']);
                                                         } else {
                                                             echo htmlentities($row['nama_mhs']);
                                                         }
@@ -612,7 +612,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <div class="text-center">
                                                 <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
                                             </div>
-
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
