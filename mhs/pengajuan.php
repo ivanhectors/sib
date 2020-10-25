@@ -169,8 +169,6 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 </div>
             </div>
 
-
-
             <!-- Image overlay -->
             <div class="card bg-dark text-white border-0">
                 <img class="card-img" src="../assets/img/quotes.jpg" alt="List Beasiswa">

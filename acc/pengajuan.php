@@ -13,7 +13,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
     $parentpage = "pengajuan";
 
 
-?>
+?> 
     <?php
     include("include/header.php");
     ?>
@@ -103,7 +103,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                 <tbody>
                                     <?php
-                                    $kd_role = $_GET['id'];
+                                    $kd_role = $_SESSION['role'];
                                     $status = 'diterima';
                                     $sql = "SELECT
                                     pendaftaran.kd_daftar

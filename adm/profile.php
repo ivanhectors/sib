@@ -258,7 +258,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             <div class="col-lg-7 col-md-10">
 
               <p class="text-white mt-0 mb-5">Ini merupakan halaman detail profil kamu. Kamu dapat mengubah data pribadi kamu disini. Demi keamanan data pribadi, kamu diharapkan untuk memasukkan password kembali saat mengubah data tersebut.</p>
-              <a href="../adm" type="button" class="btn btn-neutral btn-icon">
+              <a href="../adm/?id" type="button" class="btn btn-neutral btn-icon">
                 <span class="btn-inner--icon"><i class="fas fa-home"></i></span>
                 <span class="btn-inner--text">Dashboard</span>
               </a>
@@ -676,22 +676,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     </div>
                   </div>
                   </div>
-                  <hr class="my-4" />
-                  <!-- Description -->
-                  <h6 class="heading-small text-muted mb-4">About me</h6>
-                  <div class="pl-lg-4">
-                    <div class="form-group">
-                      <label class="form-control-label">About Me</label>
-                      <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful premium dashboard for Bootstrap 4.</textarea>
-                    </div>
-                  </div>
-
-                  <div class="card-footer">
-                    <div class="row align-items-center">
-                      <div class="col-8 ">
-                        <button type="button" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-primary">Ubah Data</button>
-                      </div>
-                    </div>
+                  <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
+                  <button type="button" data-toggle="modal" data-target="#modal-form" class="btn btn-sm btn-primary">Ubah Data</button>
                   </div>
 
                   <!-- batas modal form validasi edit profil -->

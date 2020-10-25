@@ -271,7 +271,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                               $display = "'" . $nominal . "'" . ",,";
                               $display_cut = substr($display, 0, -1);
                             ?><?php echo substr($display, 0, -1);
-                            } ?>'10000000' ]
+                            } ?>'1000000' ]
                   }]
                 }
               });

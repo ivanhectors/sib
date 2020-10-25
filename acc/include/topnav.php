@@ -77,7 +77,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
             <?php } ?>
             <?php
             $acc = $_SESSION['acclogin'];
-            $query = "select * from user_acc join ref_fakultas, ref_prodi where user_acc.kd_fakultas=ref_fakultas.kd_fakultas AND user_acc.kd_prodi=ref_prodi.kd_prodi and user_acc.username =?";
+            $query = "select * from user_acc join ref_fakultas, ref_prodi where user_acc.id_fakultas=ref_fakultas.id_fakultas AND user_acc.id_prodi=ref_prodi.id_prodi and user_acc.username =?";
             $stmt = $con->prepare($query);
             $stmt->bind_param("s", $acc);
             $stmt->execute();

@@ -19,7 +19,15 @@
  */
 
 // DB table to use
-$table = 'pendaftaran';
+$table = <<<EOT
+(
+   SELECT pendaftaran.*
+     , user_mhs.nim
+
+   FROM pendaftaran
+   JOIN user_mhs where pendaftaran.id_mhs = user_mhs.id_mhs
+) temp
+EOT;
 
 // Table's primary key
 $primaryKey = 'kd_daftar';
@@ -30,7 +38,7 @@ $primaryKey = 'kd_daftar';
 // indexes
 $columns = array(
     array('db' => 'kd_daftar', 'dt' => 0),
-    array('db' => 'id_mhs', 'dt' => 1),
+    array('db' => 'nim', 'dt' => 1),
     array('db' => 'kd_bsw',  'dt' => 2),
     array('db' => 'tgl_daftar',   'dt' => 3),
     array('db' => 'thn_ajaran',   'dt' => 4),  
@@ -57,5 +65,5 @@ $sql_details = array(
 require('ssp.class.php');
 
 echo json_encode(
-    SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, "status = 'diterima'")
+    SSP::simple($_GET, $sql_details, $table, $primaryKey, $columns)
 );

@@ -240,7 +240,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         "pagingType": "full_numbers",
                         "ajax": "scripts/get_data_pengajuan.php",
                         "order": [
-                            [1, "asc"]
+                            [3, "desc"]
                         ],
                         "language": {
                             "lengthMenu": "Menampilkan _MENU_ data per halaman",
@@ -268,8 +268,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 render: function(data, type, row) {
                                     if (data == 'diterima') {
                                         return '<span class="badge badge-success">Diterima</span>';
+                                    } else if (data == 'ditolak') {
+                                        return '<span class="badge badge-danger">DITOLAK</span>';
                                     } else {
-                                        return '<span class="badge badge-warning">Diproses</span>';
+                                        return '<span class="badge badge-warning">diproses</span>';
                                     }
                                 }
                             },

@@ -20,7 +20,7 @@ if (isset($_POST["login"])) {
     while ($row = mysqli_fetch_array($admin)) {
       if (password_verify($password, $row["password"])) {
         //return true;  
-        $extra = "adm/"; //
+        $extra = "adm/?id"; //
         $_SESSION["admlogin"] = $username;
         $_SESSION['id'] = $num['id'];
         $host = $_SERVER['HTTP_HOST'];
@@ -39,8 +39,8 @@ if (isset($_POST["login"])) {
         $uip = $_SERVER['REMOTE_ADDR'];
         $status = 0;
         mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['admlogin'] . "','$uip','$status')");
-        $_SESSION['errmsg'] = "Username / Password salah";
-        header("location:http://$host$uri/$extra?failed=1");
+        $_SESSION['error'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra");
         echo '';
         exit();
       }
@@ -68,8 +68,8 @@ if (isset($_POST["login"])) {
         $uip = $_SERVER['REMOTE_ADDR'];
         $status = 0;
         mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['mhslogin'] . "','$uip','$status')");
-        $_SESSION['errmsg'] = "Username / Password salah";
-        header("location:http://$host$uri/$extra?failed=1");
+        $_SESSION['error'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra");
         echo '';
         exit();
       }
@@ -81,7 +81,7 @@ if (isset($_POST["login"])) {
         $extra = "acc/?id"; //
         $_SESSION["acclogin"] = $username;
         $_SESSION['id'] = $num['id'];
-        $_SESSION['role'] = $row["kd_role"];
+        $_SESSION['role'] = $row["id_role"];
         $_SESSION['iddosenwali'] = $row["id_acc"];
         $host = $_SERVER['HTTP_HOST'];
         $uip = $_SERVER['REMOTE_ADDR'];
@@ -98,15 +98,15 @@ if (isset($_POST["login"])) {
         $uip = $_SERVER['REMOTE_ADDR'];
         $status = 0;
         mysqli_query($con, "insert into userlog(username,userip,status) values('" . $_SESSION['acclogin'] . "','$uip','$status')");
-        $_SESSION['errmsg'] = "Username / Password salah";
-        header("location:http://$host$uri/$extra?failed=1");
+        $_SESSION['error'] = "Username / Password salah";
+        header("location:http://$host$uri/$extra");
         echo '';
         exit();
       }
     }
   } else {
     $_SESSION['error'] = 'Terjadi kesalahan dengan akun anda. Pastikan akun anda aktif untuk dapat login.';
-    header('location: login.php');
+    header('location: login');
     exit();
   }
 }
@@ -266,6 +266,29 @@ if (isset($_POST["login"])) {
 
               ?>
               <form role="form" method="post" class="needs-validation">
+              <?php
+            if (isset($_SESSION['success'])) {
+                echo '
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                      <span class="alert-text"><i class="fas fa-check-circle"></i>&nbsp</i><strong>' . $_SESSION['success'] . '</strong></span>
+                      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>';
+                unset($_SESSION['success']);
+            }
+            if (isset($_SESSION['error'])) {
+                echo '
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <span class="alert-text"><i class="fas fa-exclamation-circle">&nbsp</i><strong>' . $_SESSION['error'] . '</strong></span>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>';
+                unset($_SESSION['error']);
+            }
+
+            ?>
                 <div class="form-group mb-3">
                   <?php if (isset($_GET['failed']) && $_GET['failed'] == 1) { ?>
                     <div class="alert alert-warning alert-dismissible fade show" role="alert">

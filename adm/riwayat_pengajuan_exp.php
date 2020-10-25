@@ -12,12 +12,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
     // include("include/sidebar.php");
     $page = "riwayat_pengajuan";
 
-
 ?>
     <?php
     include("include/header.php");
     ?>
-
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -29,15 +27,12 @@ if (strlen($_SESSION['admlogin']) == 0) {
     ?>
 
 
-
     <!-- Main content -->
     <div class="main-content" id="panel">
 
         <?php
         include("include/topnav.php"); //Edit topnav on this page
         ?>
-
-
         <!-- Header -->
 
 
@@ -58,7 +53,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                             </nav>
                         </div>
                         <div class="col-lg-3 col-5 text-right">
-
 
                         </div>
                     </div>
@@ -184,10 +178,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                     $status = 'diterima';
                                     $tahun_ajaran = $_GET['tahun'];
                                     $semester = $_GET['semester'];
-                                    $sql = "SELECT pendaftaran.*, user_mhs.nama_mhs, beasiswa.nama_bsw
+                                    $sql = "SELECT pendaftaran.*, user_mhs.nama_mhs, user_mhs.nim, beasiswa.nama_bsw
                                     FROM pendaftaran, user_mhs
                                     JOIN beasiswa
-                                    WHERE pendaftaran.status = ? AND pendaftaran.nim = user_mhs.username AND pendaftaran.thn_ajaran = ? AND pendaftaran.semester = ? AND pendaftaran.kd_bsw = beasiswa.id_bsw ORDER BY pendaftaran.kd_daftar DESC";
+                                    WHERE pendaftaran.status = ? AND pendaftaran.id_mhs = user_mhs.id_mhs AND pendaftaran.thn_ajaran = ? AND pendaftaran.semester = ? AND pendaftaran.kd_bsw = beasiswa.id_bsw ORDER BY pendaftaran.kd_daftar DESC";
                                     $stmt = $con->prepare($sql);
                                     $stmt->bind_param("sss", $status, $tahun_ajaran, $semester);
                                     $stmt->execute();
@@ -229,7 +223,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <td class="table-user">
                                                 <?php echo htmlentities($row['thn_ajaran']); ?> <?php echo htmlentities($row['semester']); ?>
                                             </td>
-                                            <td>
+                                            <td align="right">
                                                 <?php
                                                 $nominal_invoice = $row['nominal_pengajuan'];
                                                 $hasil_rupiah = "Rp " . number_format($nominal_invoice, 0, ',', '.');
@@ -238,7 +232,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                             </td>
 
-                                            <td>
+                                            <td align="right">
                                                 <?php
                                                 $nominal_disetujui = $row['nominal_disetujui'];
                                                 $hasil_rupiah = "Rp " . number_format($nominal_disetujui, 0, ',', '.');

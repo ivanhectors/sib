@@ -46,7 +46,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $digits = 3;
     $unik_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
     $limit = 2 * 1024 * 1024; //10MB. Bisa diubah2
-    $nim = $_SESSION['id_mhs'];
+    $id_mhs = $_SESSION['id_mhs'];
+    $nim = $_SESSION['mhslogin'];
 
     if (isset($_FILES['syarat'])) {
         //karena ada multiple, jadi dilakukan pengecekan foreach
@@ -67,7 +68,6 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         $kd_bsw = $_GET["id"];
         $ipk = $_POST["ipk"];
         $no_telp_ortu = $_POST["no_telp_ortu"];
-
         $nominal_input = $_POST["nominal"];
         $output = str_replace('.', '', $nominal_input);
         $nominal = trim($output, '');
@@ -84,7 +84,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
         for ($i = 0; $i < count($kd_syarat_bsw); $i++) {
             $check_id = $kd_syarat_bsw[$i];
-            $filename2   = $nim . "_" . $namasyarat2[$i] . "_" . $semester . "_" . uniqid() . "_" . time();
+            $filename2   = $nim . "_" . $namasyarat2[$i] . "_" . $semester . "_" . time();
             $extension  = pathinfo($name_array[$i], PATHINFO_EXTENSION); // mengambil ekstensi .pdf
             $basename2   = $filename2 . "." . $extension;
 
@@ -105,13 +105,67 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
 
 
-    if (isset($_GET['del'])) {
-        mysqli_query($con, "delete from user_mhs where id_mhs = '" . $_GET['id'] . "'");
-        $_SESSION['delmsg'] = "1";
-    } else {
-        $_SESSION['delmsg'] = "0";
-    }
+    if (isset($_POST['doc']) && isset($_FILES['fileToUpload'])) {
 
+        define('KB', 1024);
+        define('MB', 1048576);
+        define('GB', 1073741824);
+        define('TB', 1099511627776);
+
+
+        $kd_daftar = $_GET['kd_daftar'];
+        $docFileType = $_FILES["fileToUpload"]["name"];
+        $target_dir = "file/";
+        $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+        $docFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        // // get the image extension
+        $extension = substr($docFileType, strlen($docFileType) - 3, strlen($docFileType));
+        // // allowed extensions
+        // $allowed_extensions = array(".jpg","jpeg",".png",".gif");
+
+        // Validation for allowed extensions .in_array() function searches an array for a specific value.
+        if ($docFileType != "pdf") {
+            $_SESSION['error'] = 'Format dokumen bukan .PDF file, Mohon unggah berkas kembali.';
+        } else {
+            if ($_FILES["fileToUpload"]["size"] > 2 * MB) {
+                $_SESSION['error'] = 'Ukuran File .PDF lebih dari 2MB. Mohon unggah berkas kembali.';
+            } else {
+                $query = "SELECT kd_daftar from pembayaran where kd_daftar = ?";
+                $stmt = $con->prepare($query);
+                $stmt->bind_param("i", $kd_daftar);
+                $stmt->execute();
+                $result = $stmt->get_result();
+                if ($result->num_rows > 0) {
+                    //rename the image file
+                    $sts_bayar = 'Diproses';
+                    $filename   = $kd_daftar . "_" . "Bukti_Pembayaran" . "_" . $semester . "_" . time() . ".pdf";
+                    // Query for insertion data into database
+                    $stmt = $con->prepare("UPDATE pembayaran SET bukti_bayar = ?, sts_bayar = ? WHERE kd_daftar = ?");
+                    $stmt->bind_param('sss', $filename, $sts_bayar, $kd_daftar);
+                    /* execute prepared statement */
+                    $stmt->execute();
+                    //printf("%d Row inserted.\n", $stmt->affected_rows);
+                    /* close statement */
+                    $stmt->close();
+                    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], "file/" . $filename);
+                    $_SESSION['success'] = 'Dokumen Bukti Pembayaran Pinjaman Registrasi Berhasil Diubah.';
+                } else {
+                    //rename the image file
+                    $filename   = $kd_daftar . "_" . "Bukti_Pembayaran" . "_" . $semester . "_" . time() . ".pdf";
+                    // Query for insertion data into database
+                    $stmt = $con->prepare("INSERT INTO pembayaran (kd_daftar, bukti_bayar) VALUES (?, ?)");
+                    $stmt->bind_param('ss', $kd_daftar, $filename);
+                    /* execute prepared statement */
+                    $stmt->execute();
+                    //printf("%d Row inserted.\n", $stmt->affected_rows);
+                    /* close statement */
+                    $stmt->close();
+                    move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], "file/" . $filename);
+                    $_SESSION['success'] = 'Dokumen Bukti Pembayaran Pinjaman Registrasi Berhasil Diunggah.';
+                }
+            }
+        }
+    }
 
 
 ?>
@@ -121,7 +175,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     <style>
         .attachment-box {
             display: flex;
-            margin: 0 20px 20px 0;
+            /* margin: 0 20px 20px 0; */
             background-color: #f4f4f4;
             border-radius: 4px 0 4px 4px;
             font-weight: 600;
@@ -148,6 +202,18 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
         a.attachment-box {
             cursor: pointer
+        }
+
+        .attachment-box:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            border-width: 0 20px 20px 0;
+            border-style: solid;
+            border-color: rgba(0, 0, 0, .15) #fff;
+            transition: .3s;
+            border-radius: 0 0 0 4px
         }
 
         .attachment-box:before {
@@ -294,6 +360,27 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
         <!-- Page content -->
         <div class="container-fluid mt--6">
+            <?php
+            if (isset($_SESSION['success'])) {
+                echo '<div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span> 
+                <span data-notify="message">' . $_SESSION['success'] . '</span>
+              </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+              <span aria-hidden="true">×</span></button></div>';
+                unset($_SESSION['success']);
+            }
+            if (isset($_SESSION['error'])) {
+                echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
+                <span data-notify="message">' . $_SESSION['error'] . '</span>
+              </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+              <span aria-hidden="true">×</span></button></div>';
+                unset($_SESSION['error']);
+            }
+
+            ?>
             <div class="row">
                 <?php
                 $kd_daftar = $_GET['kd_daftar'];
@@ -512,6 +599,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                                         <?php
                                             }
+                                        } else {
+                                            echo '<footer class="blockquote-footer text-danger"><cite title="Source Title">Berkas persyaratan tidak ada atau tidak dilampirkan.</cite></footer>';
                                         }
                                         ?>
 
@@ -599,26 +688,27 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         if ($result->num_rows > 0) {
-                                        while ($row = $result->fetch_assoc()) {
+                                            while ($row = $result->fetch_assoc()) {
                                         ?>
-                                            <div class="timeline-block">
-                                                <span class="timeline-step badge-<?php $wakil_rektor_status = $row['status'];
-                                                                                    echo ($wakil_rektor_status == "diterima" ? "success" : "danger") ?>">
-                                                    <i class="fas fa-<?php $wakil_rektor_status = $row['status'];
-                                                                        echo ($wakil_rektor_status == "diterima" ? "check" : "exclamation") ?>"></i>
-                                                </span>
-                                                <div class="timeline-content">
-                                                    <span class="badge badge-pill badge-<?php $wakil_rektor_status = $row['status'];
-                                                                                        echo ($wakil_rektor_status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi </h5>
+                                                <div class="timeline-block">
+                                                    <span class="timeline-step badge-<?php $wakil_rektor_status = $row['status'];
+                                                                                        echo ($wakil_rektor_status == "diterima" ? "success" : "danger") ?>">
+                                                        <i class="fas fa-<?php $wakil_rektor_status = $row['status'];
+                                                                            echo ($wakil_rektor_status == "diterima" ? "check" : "exclamation") ?>"></i>
+                                                    </span>
+                                                    <div class="timeline-content">
+                                                        <span class="badge badge-pill badge-<?php $wakil_rektor_status = $row['status'];
+                                                                                            echo ($wakil_rektor_status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
+                                                        <h5 class=" mt-3 mb-0">Tahap Seleksi </h5>
 
-                                                    <div class="mt-3">
-                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                        <div class="mt-3">
+                                                            <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                        echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        <?php }} else { ?>
+                                            <?php }
+                                        } else { ?>
                                             <div class="timeline-block">
                                                 <span class="timeline-step badge-warning">
                                                     <i class="fas fa-history"></i>
@@ -632,7 +722,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <?php } ?>
+                                        <?php } ?>
 
 
 
@@ -657,7 +747,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-<?php $status = $row['status'];
                                                                                         echo ($status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
-                                                    <h5 class=" mt-3 mb-0">Status Beasiswa</h5>
+                                                    <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
@@ -699,38 +789,161 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
 
                                 <?php
-                                $kd_bsw = $_GET['id'];
-                                if ($kd_bsw == '2') {
+                                $kd_daftar = $_GET['kd_daftar'];
+                                $status = 'diterima';
+                                $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
+                                $stmt = $con->prepare($query);
+                                $stmt->bind_param("is", $kd_daftar, $status);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
+                                if ($result->num_rows > 0) {
                                 ?>
-                                    <div class="card bg-gradient-success">
-                                        <div class="card-header bg-transparent">
-                                            <h3 class="mb-0 text-white">Unggah Bukti Pembayaran</h3>
-                                        </div>
-                                        <div class="card-body">
-                                            <form method="post" enctype="multipart/form-data">
-                                                <!-- Multiple -->
-                                                <div class="custom-file">
-                                                    <input type="file" accept=".pdf" name="fileToUpload" class="custom-file-input" id="fileToUpload" lang="id" required>
-                                                    <label class="custom-file-label" for="fileToUpload">Pilih File .pdf <i class="fas fa-file-pdf text-danger"></i></label>
-                                                </div>
-                                                <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
-                                                    <div>
-                                                        <!-- <button type="submit" name="gambar" class="btn btn-sm btn-white float-right">UPLOAD</button> -->
-                                                        <a type="submit" name="gambar" class="btn btn-icon btn-white float-right">
-                                                            <span class="btn-inner--icon"><i class="fas fa-cloud-upload-alt"></i></span>
-                                                            <span class="btn-inner--text">Upload</span>
-                                                        </a>
+
+                                    <?php
+                                    $kd_bsw = $_GET['id'];
+                                    if ($kd_bsw == '2') {
+                                    ?>
+                                        <div class="card bg-white">
+                                            <div class="card-header bg-gradient-success">
+                                                <h3 class="mb-0 text-white">Unggah Bukti Pembayaran</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="form-group row">
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <form method="post" enctype="multipart/form-data">
+                                                                <!-- Multiple -->
+                                                                <input type="hidden" value="<?php echo $_GET['kd_daftar']; ?>">
+                                                                <div class="custom-file">
+
+                                                                    <input type="file" accept=".pdf" name="fileToUpload" class="custom-file-input" id="fileToUpload" lang="id" required>
+                                                                    <label class="custom-file-label" for="fileToUpload">Pilih File .pdf <i class="fas fa-file-pdf text-danger"></i></label>
+                                                                </div>
+
+                                                                <div class="text-right pt-4 pt-md-4 pb-0 pb-md-4">
+                                                                    <div>
+                                                                        <!-- <button type="submit" name="gambar" class="btn btn-sm btn-white float-right">UPLOAD</button> -->
+                                                                        <button type="submit" name="doc" class="btn btn-icon bg-gradient-success text-white float-right">
+                                                                            <span class="btn-inner--icon"><i class="fas fa-cloud-upload-alt"></i></span>
+                                                                            <span class="btn-inner--text">Upload</span>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </form>
 
+
+                                                <?php
+                                                $kd_daftar = $_GET['kd_daftar'];
+                                                $query = "SELECT *
+                                                FROM pembayaran
+                                                WHERE kd_daftar = ? order by tgl_bayar desc LIMIT 1";
+                                                $stmt = $con->prepare($query);
+                                                $stmt->bind_param("s", $kd_daftar);
+                                                $stmt->execute();
+                                                $result = $stmt->get_result();
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                ?>
+                                                        <hr class="my-4" />
+                                                        <div class="form-group row">
+
+                                                            <div class="col-md-12">
+
+                                                                <div class="form-group">
+                                                                    <h6 class="heading-small text-muted">Berkas Bukti Pembayaran</h6>
+                                                                    <?php $bukti_bayar = $row['bukti_bayar'];
+                                                                    if ($bukti_bayar == "" || $bukti_bayar == "NULL") :
+                                                                    ?>
+                                                                        <a class="margin-top-10 attachment-box ripple-effect" target="_blank">
+                                                                            <span>FILE TIDAK TERSEDIA</span>
+                                                                            <i>PDF</i>
+                                                                        </a>
+                                                                    <?php else : ?>
+
+                                                                        <a href="readfile.php?file=<?php echo $row['bukti_bayar'] ?>" class="margin-top-10 attachment-box ripple-effect" target="_blank">
+                                                                            <span><?php echo $row['bukti_bayar'] ?></span>
+                                                                            <i>PDF</i>
+                                                                        </a>
+                                                                    <?php endif; ?>
+
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-12">
+                                                                <span class="heading-small text-muted">Status Pembayaran : </span>
+                                                                <?php $sts_bayar = $row['sts_bayar'];
+                                                                if ($sts_bayar == "Dibayar") :
+                                                                ?>
+                                                                    <span class="badge badge-pill badge-success">Dibayar</span>
+                                                                <?php elseif ($sts_bayar == "Diproses") : ?>
+                                                                    <span class="badge badge-pill badge-warning">Diproses</span>
+                                                                <?php elseif ($sts_bayar == "Mohon Mengunjungi Biro III") : ?>
+                                                                    <span class="badge badge-pill badge-warning">Mohon Mengunjungi Biro III</span>
+                                                                <?php elseif ($sts_bayar == "Ditolak") : ?>
+                                                                    <span class="badge badge-pill badge-danger">Ditolak</span>
+                                                                <?php else : ?>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </div>
+                                                <?php }
+                                                } else {
+                                                    echo "";
+                                                } ?>
+                                            </div>
                                         </div>
-                                    </div>
-                                <?php } else {
-                                    '';
+
+                                    <?php } elseif ($kd_bsw == '1') {
+                                    ?>
+                                        <div class="card ">
+                                            <div class="card-header ">
+                                                <h3 class="mb-0">Info Dana Bantuan</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <form method="post" enctype="multipart/form-data">
+                                                    <!-- Multiple -->
+
+                                                    <div class="form-group">
+
+                                                        <?php
+                                                        $kd_daftar = $_GET['kd_daftar'];
+                                                        $query = "SELECT *
+                                                FROM pendaftaran
+                                                WHERE kd_daftar = ? LIMIT 1";
+                                                        $stmt = $con->prepare($query);
+                                                        $stmt->bind_param("s", $kd_daftar);
+                                                        $stmt->execute();
+                                                        $result = $stmt->get_result();
+                                                        if ($result->num_rows > 0) {
+                                                            while ($row = $result->fetch_assoc()) {
+                                                        ?>
+                                                                <h6 class="heading-small text-muted">Dana Diberikan Sebesar :</h6>
+
+
+                                                                <h3 class="heading-big "><?php
+                                                                                            $nominal_invoice = $row['nominal_disetujui'];
+                                                                                            $hasil_rupiah = "Rp " . number_format($nominal_invoice, 0, ',', '.');
+                                                                                            echo $hasil_rupiah;  ?></h3>
+
+                                                        <?php
+                                                            }
+                                                        } ?>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <!-- Batas Informasi Beasiswa Kebutuhan -->
+                                    <?php
+                                    } else {
+                                        '';
+                                    }
+                                    ?>
+                                <?php
+                                } else {
+                                    echo "";
                                 }
                                 ?>
-
 
 
                             </div>

@@ -145,7 +145,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             </div>
                                             <input id="kd_bsw" name="kd_bsw" value="<?php echo $row['kd_bsw'] ?>" class="form-control" placeholder="Username Kode Beasiswa" type="text" title="Masukkan Kode Beasiswa" oninvalid="this.setCustomValidity('Selahkan masukkan Kode Beasiswa.')" oninput="setCustomValidity('')" required>
                                         </div>
-                                        <input id="id_bsw" name="id_bsw" value="<?php echo $row['id_bsw'] ?>" type="hidden" />
+                                        <input id="id_bsw" name="id_bsw" value="<?php echo $row['id_bsw'] ?>" type="text" />
                                     </div>
                                 </div>
                                 <div class="col-md-6">

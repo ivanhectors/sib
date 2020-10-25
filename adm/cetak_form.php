@@ -6,7 +6,7 @@ include("include/config.php");
 if (strlen($_SESSION['admlogin']) == 0) {
     header('location:../403');
 } else {
-    
+
     date_default_timezone_set('Asia/Jakarta'); // change according timezone
     $currentTime = date('d-m-Y H:i:s', time());
     $kd_daftar = $_GET['kd_daftar'];
@@ -44,14 +44,14 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $stmtdaftar->execute();
     $result = $stmtdaftar->get_result();
     $daftar = $result->fetch_assoc();
-    $filename = $daftar['kd_daftar']."_".$row['nim']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
+    $filename = $daftar['kd_daftar'] . "_" . $row['nim'] . "_" . $row['nama_mhs'] . "_" . $daftar['thn_ajaran'] . "_" . $daftar['semester'] . ".pdf";
     $content = '
 	<!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>'.$filename.'</title>
+    <title>' . $filename . '</title>
     <link rel="icon" href="../assets/img/brand/favicon.png" type="image/png">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
     <link rel="stylesheet" href="../assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" type="text/css">
@@ -103,7 +103,7 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
                         </td>
                         <td rowspan="2" class="barcodecell" style="text-align:right">
                             <div style="float: right; width:50%;">
-                                <barcode code="'. $daftar['kd_daftar'].'" type="C128B" class="barcode"
+                                <barcode code="' . $daftar['kd_daftar'] . '" type="C128B" class="barcode"
                                     style="text-align: right; width:258px;" size="0.8" />
                                 <div style="font-family: ocrb; font-size:12px;">
                                     <center>KD DAFTAR: ' . $daftar['kd_daftar'] . '</center>
@@ -229,86 +229,82 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
         <table >
             <tbody>
     ';
-        $kd_daftar = $_GET['kd_daftar'];
-        $sql_syarat = "SELECT
+    $kd_daftar = $_GET['kd_daftar'];
+    $sql_syarat = "SELECT
         syarat_daftar.isi_syarat As isi_syarat
         , pendaftaran.kd_daftar AS kd_daftar
-        , syarat_bsw.kd_syarat_bsw
         , ref_syarat.nama_syarat
-        FROM pendaftaran, syarat_bsw, ref_syarat
+        FROM pendaftaran, ref_syarat
         JOIN syarat_daftar WHERE pendaftaran.kd_daftar = syarat_daftar.kd_daftar AND
-        syarat_daftar.kd_daftar =? AND syarat_bsw.kd_syarat_bsw = syarat_daftar.kd_syarat_bsw AND syarat_bsw.kd_syarat = ref_syarat.kd_syarat";
-        $stmtdoc = $con->prepare($sql_syarat);
-        $stmtdoc->bind_param("s", $kd_daftar);
-        $stmtdoc->execute();
-        $resultdocument = $stmtdoc->get_result();
-        if ($resultdocument->num_rows > 0) {
-            while ($rowdocument = $resultdocument->fetch_assoc()) {
-                $content3 .= '
+        syarat_daftar.kd_daftar = ? AND ref_syarat.kd_syarat = syarat_daftar.kd_syarat_bsw";
+    $stmtdoc = $con->prepare($sql_syarat);
+    $stmtdoc->bind_param("s", $kd_daftar);
+    $stmtdoc->execute();
+    $resultdocument = $stmtdoc->get_result();
+    if ($resultdocument->num_rows > 0) {
+        while ($rowdocument = $resultdocument->fetch_assoc()) {
+            $content3 .= '
                 <tr>
                     <td><span style="font-family: fontawesome">&#xf058;</span></td>
                     <td>
-                        <p>'.$rowdocument['nama_syarat'].'</p><span style="font-size:11px;">('.$rowdocument['isi_syarat'].')</span>
+                        <p>' . $rowdocument['nama_syarat'] . '</p><span style="font-size:11px;">(' . $rowdocument['isi_syarat'] . ')</span>
                     </td>
                 </tr>
                 ';
-    
-            }
-            
-        } else {
-            $content3 = '<tr>
+        }
+    } else {
+        $content3 = '<tr>
             <td><span style="font-family: fontawesome">&#xf057;</span></td>
             <td>
                 <p class="uppercase"> Berkas Digital tidak tersedia. </p>
             </td>
         </tr>';
-        }
-        $content4 = ' 
+    }
+    $content4 = ' 
             </tbody>
         </table>
     
         ';
 
-    
+
     $content5 = '<br>
     <p style="color:#5e72e4;"> <strong>DISELEKSI OLEH :</strong> </p>
     <table >
         <tbody>';
-    
-        $kd_daftar = $_GET['kd_daftar'];
-        $sql_acc = "SELECT 
+
+    $kd_daftar = $_GET['kd_daftar'];
+    $sql_acc = "SELECT 
         sts_daftar.acc_tanggal
         , user_acc.nama_acc
         , ref_role.nama_role
         FROM sts_daftar
         JOIN user_acc, ref_role
-        WHERE sts_daftar.kd_daftar=? AND sts_daftar.acc_username = user_acc.username AND sts_daftar.acc_role = ref_role.id_role ORDER BY sts_daftar.acc_role DESC
+        WHERE sts_daftar.kd_daftar=? AND sts_daftar.acc_id = user_acc.id_acc AND sts_daftar.acc_role = ref_role.id_role ORDER BY sts_daftar.acc_role DESC
         ";
-        $stmtacc = $con->prepare($sql_acc);
-        $stmtacc->bind_param("s", $kd_daftar);
-        $stmtacc->execute();
-        $resultacc = $stmtacc->get_result();
-        if ($resultacc->num_rows > 0) {
-            while ($rowacc = $resultacc->fetch_assoc()) {
-                $content6 .= '
+    $stmtacc = $con->prepare($sql_acc);
+    $stmtacc->bind_param("s", $kd_daftar);
+    $stmtacc->execute();
+    $resultacc = $stmtacc->get_result();
+    if ($resultacc->num_rows > 0) {
+        while ($rowacc = $resultacc->fetch_assoc()) {
+            $content6 .= '
                 <tr>
                 <td><span style="font-family: fontawesome">&#xf2bd;</span></td>
                 <td>
-                    <p>'.$rowacc['nama_role']. ',<span><b> ' .$rowacc['nama_acc'].'</b></span> pada <span><b>'. date('d/m/Y H:i', strtotime($rowacc['acc_tanggal'])).' WIB</b></span></p>
+                    <p>' . $rowacc['nama_role'] . ',<span><b> ' . $rowacc['nama_acc'] . '</b></span> pada <span><b>' . date('d/m/Y H:i', strtotime($rowacc['acc_tanggal'])) . ' WIB</b></span></p>
                 </td>
             </tr>';
-            }
-            
-        } else {
-            $content6 = '<tr>
+        }
+    } else {
+        $content6 = '<tr>
             <td><span style="font-family: fontawesome">&#xf2bd;</span></td>
             <td>
                 <p class="uppercase">Data tidak tersedia</p>
             </td>
         </tr>';
-        }
+    }
 
-$content7 = '
+    $content7 = '
         </tbody>
     </table>
 </body>
@@ -346,6 +342,6 @@ $content7 = '
     $mpdf->WriteHTML($content5);
     $mpdf->WriteHTML($content6);
     $mpdf->WriteHTML($content7);
-    $filename = $daftar['kd_daftar']."_".$row['nim']."_".$row['nama_mhs']."_".$daftar['thn_ajaran']."_".$daftar['semester'].".pdf";
-    $mpdf->Output($filename,'I');
+    $filename = $daftar['kd_daftar'] . "_" . $row['nim'] . "_" . $row['nama_mhs'] . "_" . $daftar['thn_ajaran'] . "_" . $daftar['semester'] . ".pdf";
+    $mpdf->Output($filename, 'I');
 }

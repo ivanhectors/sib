@@ -21,8 +21,8 @@ if (strlen($_SESSION['acclogin']) == 0) {
     $nama_acc = $_POST['nama_acc'];
     $no_telp = $_POST['no_telp'];
     $gender = $_POST['gender'];
-    $tgl_lahir = $_POST['tgl_lahir'];
-
+    $date = $_POST['tgl_lahir'];
+    $tgl_lahir = (new DateTime($date))->format('Y-m-d');
 
     //$photo_acc=$_POST['photo_acc'];
 
@@ -531,7 +531,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
-                            <input class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php echo htmlentities($row['tgl_lahir']); ?>">
+                            <input class="form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php $date = $row['tgl_lahir']; echo date('d-m-Y', strtotime($date)); ?>">
                           </div>
 
                         </div>

@@ -20,8 +20,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $nama_mhs = $_POST['nama_mhs'];
     $no_telp = $_POST['no_telp'];
     $gender = $_POST['gender'];
-    $tgl_lahir = $_POST['tgl_lahir'];
-
+    $date = $_POST['tgl_lahir'];
+    $tgl_lahir = (new DateTime($date))->format('Y-m-d');
 
     //$photo_mhs=$_POST['photo_mhs'];
 
@@ -33,14 +33,14 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $kode_pos = $_POST['kode_pos'];
 
     //validasi password user
-    $pass_valid = "SELECT * FROM user_mhs WHERE username = '$username_valid'";
+    $pass_valid = "SELECT * FROM user_mhs WHERE nim = '$username_valid'";
     $mahasiswa = mysqli_query($con, $pass_valid);
 
     if (mysqli_num_rows($mahasiswa) > 0) {
       while ($row = mysqli_fetch_array($mahasiswa)) {
         if (password_verify($password_valid, $row["password"])) {
           //return true;   
-          $sql = mysqli_query($con, "update user_mhs set nama_mhs='$nama_mhs',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where username='" . $_SESSION['mhslogin'] . "'");
+          $sql = mysqli_query($con, "update user_mhs set nama_mhs='$nama_mhs',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where nim='" . $_SESSION['mhslogin'] . "'");
           $_SESSION['msg'] = "1";
           //$successmsg="Data profil anda berhasil diubah.";
 
@@ -98,7 +98,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         // Code for move image into directory
         move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], "img/" . $imgnewfile);
         // Query for insertion data into database
-        $query = mysqli_query($con, "update user_mhs set photo_mhs='$imgnewfile' where username='" . $_SESSION['mhslogin'] . "'");
+        $query = mysqli_query($con, "update user_mhs set photo_mhs='$imgnewfile' where nim='" . $_SESSION['mhslogin'] . "'");
         if ($query) {
           echo " 
          <div data-notify='container' class='alert alert-dismissible alert-success alert-notify animated fadeInDown' role='alert' data-notify-position='top-center' style='display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;'>
@@ -131,14 +131,14 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $newpassword = $_POST["newpassword"];
     $passwordhash = password_hash($password, PASSWORD_DEFAULT);
     $newpasswordhash = password_hash($newpassword, PASSWORD_DEFAULT);
-    $passchange = "SELECT * FROM user_mhs WHERE username = '$usernames'";
+    $passchange = "SELECT * FROM user_mhs WHERE nim = '$usernames'";
     $mahasiswa = mysqli_query($con, $passchange);
 
     if (mysqli_num_rows($mahasiswa) > 0) {
       while ($row20 = mysqli_fetch_array($mahasiswa)) {
         if (password_verify($password, $row20["password"])) {
           //return true;   
-          $log = mysqli_query($con, "update user_mhs set password='$newpasswordhash' where username='" . $_SESSION['mhslogin'] . "'");
+          $log = mysqli_query($con, "update user_mhs set password='$newpasswordhash' where nim='" . $_SESSION['mhslogin'] . "'");
           echo ("<script>location.href = 'logout';</script>");
           exit();
         } else {
@@ -215,7 +215,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         </div>
     <?php }
     } ?>
-    <?php $query = mysqli_query($con, "select * from user_mhs where username = '" . $_SESSION['mhslogin'] . "'");
+    <?php $query = mysqli_query($con, "select * from user_mhs where nim = '" . $_SESSION['mhslogin'] . "'");
     $cnt = 1;
     while ($row = mysqli_fetch_array($query)) {
     ?>
@@ -229,7 +229,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
               <h1 class="display-2 text-white">Hello,
                 <?php $nama_mhs = $row['nama_mhs'];
                 if ($nama_mhs == "" || $nama_mhs == "NULL") {
-                  echo htmlentities($row['username']);
+                  echo htmlentities($row['nim']);
                 } else {
                   echo htmlentities($row['nama_mhs']);
                 }
@@ -381,7 +381,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                           + (CASE WHEN `kode_pos` IS NULL OR '' THEN 0 ELSE 1 END)
                                           + (CASE WHEN `no_telp` IS NULL OR '' THEN 0 ELSE 1 END)) AS sum_of_nulls
 
-                                          FROM user_mhs WHERE username='" . $_SESSION['mhslogin'] . "'");
+                                          FROM user_mhs WHERE nim='" . $_SESSION['mhslogin'] . "'");
             $cnt = 1;
             while ($row2 = mysqli_fetch_array($query10)) {
             ?>
@@ -447,7 +447,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
             </div>
             <div class="card-body">
               <form name="mhs" method="post">
-                <?php $query2 = mysqli_query($con, "select * from user_mhs where username = '" . $_SESSION['mhslogin'] . "'");
+                <?php $query2 = mysqli_query($con, "select * from user_mhs where nim = '" . $_SESSION['mhslogin'] . "'");
                 $cnt = 1;
                 while ($row = mysqli_fetch_array($query2)) {
                 ?>
@@ -456,9 +456,9 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                     <div class="row">
                       <div class="col-lg-6">
                         <div class="form-group">
-                          <label class="form-control-label" for="username">NIM</label>
+                          <label class="form-control-label" for="nim">NIM</label>
                           <div class="input-group input-group-merge">
-                            <input type="text" id="username" class="form-control" placeholder="Username" value="<?php echo htmlentities($row['username']); ?>" disabled>
+                            <input type="text" id="nim" class="form-control" placeholder="NIM" value="<?php echo htmlentities($row['nim']); ?>" disabled>
                           </div>
                         </div>
                       </div>
@@ -509,7 +509,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
-                            <input class="form-control" data-provide="datepicker" data-date-format="yyyy-mm-dd" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php echo htmlentities($row['tgl_lahir']); ?>">
+                            <input class="form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php $date = $row['tgl_lahir']; echo date('d-m-Y', strtotime($date)); ?>">
                           </div>
 
                         </div>
@@ -564,7 +564,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                         <select class="form-control" name="provinsi" title="provinsi" id="provinsi">
                           <?php
-                          $sql_provinsi = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_provinsi = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.nim = '" . $_SESSION['mhslogin'] . "'");
                           ?>
 
                           <?php
@@ -594,7 +594,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <label class="form-control-label" for="input-city">Kab/Kota</label>
                         <select class="form-control" name="kab_kota" title="Pilih Kab/Kota" id="kota">
                           <?php
-                          $sql_kota = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_kota = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.nim = '" . $_SESSION['mhslogin'] . "'");
                           ?>
 
                           <?php
@@ -619,7 +619,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <label class="form-control-label" for="input-country">Kecamatan</label>
                         <select class="form-control" name="kecamatan" title="Pilih Kecamatan" id="kecamatan">
                           <?php
-                          $sql_kecamatan = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                          $sql_kecamatan = mysqli_query($con, "select * from user_mhs join provinces, regencies, districts where user_mhs.provinsi=provinces.id AND user_mhs.kab_kota=regencies.id and user_mhs.kecamatan=districts.id and user_mhs.nim = '" . $_SESSION['mhslogin'] . "'");
                           ?>
 
                           <?php
@@ -641,7 +641,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                       <div class="form-group">
                         <label class="form-control-label" for="input-country">Kode Pos</label>
                         <?php
-                        $sql_kodepos = mysqli_query($con, "select * from user_mhs where user_mhs.username = '" . $_SESSION['mhslogin'] . "'");
+                        $sql_kodepos = mysqli_query($con, "select * from user_mhs where user_mhs.nim = '" . $_SESSION['mhslogin'] . "'");
                         while ($row = mysqli_fetch_array($sql_kodepos)) {
                         ?>
 

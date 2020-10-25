@@ -13,7 +13,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     $page = "riwayat_pembayaran";
 
 
-?> 
+?>
     <?php
     include("include/header.php");
     ?>
@@ -100,7 +100,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <th>
                                             <center>Tanggal Bayar
                                         </th>
-                                        <th>
+                                        <th align="right" style="text-align: right;">
                                             <center>Nominal Bayar
                                         </th>
                                         <th>
@@ -122,7 +122,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <th>
                                             <center>Tanggal Bayar
                                         </th>
-                                        <th>
+                                        <th align="right" style="text-align: right;">
                                             <center>Nominal Bayar
                                         </th>
                                         <th>
@@ -144,7 +144,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         <td>
                                             <center>Tanggal Bayar
                                         </td>
-                                        <td>
+                                        <td align="right" style="text-align: right;">
                                             <center>Nominal Bayar
                                         </td>
                                         <td>
@@ -209,23 +209,43 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         },
 
                         "columnDefs": [{
-                            "targets": -1,
-                            "data": null,
-                            "defaultContent": "<button class='btn btn-default btn-sm linkByr'>Detail <i class='fas fa-chevron-circle-right'></button>"
-                        },
-                        {
-                            "targets": -2,
-                            "data": 4,
-                            
-                            render: function(data, type, row) {
-                                if (data == 'Dibayar') {
-                                    return '<span class="badge badge-success">Dibayar</span>';
-                                } else {
-                                    return '<span class="badge badge-warning">Belum Dibayar</span>';
+                                "targets": -1,
+                                "data": null,
+                                "className": "text-right",
+                                "defaultContent": "<button class='btn btn-default btn-sm linkByr'>Detail <i class='fas fa-chevron-circle-right'></button>"
+                            },
+                            {
+                                "targets": -2,
+                                "data": 4,
+                                "className": "text-center",
+
+                                render: function(data, type, row) {
+                                    if (data == 'Dibayar') {
+                                        return '<span class="badge badge-success">Dibayar</span>';
+                                    } else if (data == 'Diproses') {
+                                        return '<span class="badge badge-warning">Perlu Verifikasi</span>';
+                                    } else {
+                                        return '<span class="badge badge-danger">Ditolak</span>';
+                                    }
+                                }
+                            },
+                            {
+                                "targets": -3,
+                                "data": 3,
+                                "className": "text-right",
+
+                                render: function(data, type, row) {
+                                    const formatter = new Intl.NumberFormat('id-ID', {
+                                        style: 'currency',
+                                        currency: 'IDR',
+                                        minimumFractionDigits: 0
+                                    })
+
+                                    var format = formatter.format(data) // "$1,000.00"
+                                    return format;
                                 }
                             }
-                        }
-                    ]
+                        ]
                     });
 
                     $('#tblPembayaran tbody').on('click', '.linkByr', function() {

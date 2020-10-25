@@ -44,124 +44,25 @@ if (strlen($_SESSION['admlogin']) == 0) {
               </div>
             </div>
           </li>
-          <!-- <li class="nav-item d-sm-none">
-              <a class="nav-link" href="#" data-action="search-show" data-target="#navbar-search-main">
-                <i class="ni ni-zoom-split-in"></i>
-              </a>
-            </li> -->
           <li class="nav-item dropdown">
-            <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <!-- <i class="ni ni-bell-55"></i> -->
-              <span class="badge badge-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Kamu Memiliki 13 Notifikasi"><i class="ni ni-bell-55 text-primary"></i> 13</span>
-            </a>
-            <div class="dropdown-menu dropdown-menu-xl dropdown-menu-right py-0 overflow-hidden">
-              <!-- Dropdown header -->
-              <div class="px-3 py-3">
-                <h6 class="text-sm text-muted m-0">You have <strong class="text-primary">13</strong> notifications.</h6>
-              </div>
-              <!-- List group -->
+            <p class="nav-link mb-0 text-sm  font-weight-bold text-white" href="#">
 
-              <div class="list-group list-group-flush">
-                <a href="#!" class="list-group-item list-group-item-action">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <img alt="Image placeholder" src="../assets/img/theme/team-1.jpg" class="avatar rounded-circle">
-                    </div>
-                    <div class="col ml--2">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h4 class="mb-0 text-sm">John Snow</h4>
-                        </div>
+              <i class="ni ni-calendar-grid-58"></i>
+              <?php
+              // Mengambil data Genap/Ganjil berdasarkan Tahun saat ini dan Bulan saat ini
+              // Membuat periode tahun ajaran seperti 2020/2021 pada inputan database
+              $year = date('Y');
+              $periode_tahun = date('n');
+              if ($periode_tahun <= 6) {
+                $periode_tahun = intval($year - 1) . "/" . $year .  " " . " GENAP";
+                echo $periode_tahun;
+              } else {
+                $periode_tahun = $year . "/" . intval($year + 1). " ". " GASAL ";
+                echo $periode_tahun;
+              } ?>
+              <!-- <span class="badge badge-primary" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Kamu Memiliki 13 Notifikasi"><i class="ni ni-bell-55 text-primary"></i> 13</span> -->
+            </p>
 
-                        <div class="text-right text-muted">
-                          <small>2 hrs ago</small>
-                        </div>
-                      </div>
-                      <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#!" class="list-group-item list-group-item-action">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <img alt="Image placeholder" src="../assets/img/theme/team-2.jpg" class="avatar rounded-circle">
-                    </div>
-                    <div class="col ml--2">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h4 class="mb-0 text-sm">John Snow</h4>
-                        </div>
-                        <div class="text-right text-muted">
-                          <small>3 hrs ago</small>
-                        </div>
-                      </div>
-                      <p class="text-sm mb-0">A new issue has been reported for Argon.</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#!" class="list-group-item list-group-item-action">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <img alt="Image placeholder" src="../assets/img/theme/team-3.jpg" class="avatar rounded-circle">
-                    </div>
-                    <div class="col ml--2">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h4 class="mb-0 text-sm">John Snow</h4>
-                        </div>
-                        <div class="text-right text-muted">
-                          <small>5 hrs ago</small>
-                        </div>
-                      </div>
-                      <p class="text-sm mb-0">Your posts have been liked a lot.</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#!" class="list-group-item list-group-item-action">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <img alt="Image placeholder" src="../assets/img/theme/team-4.jpg" class="avatar rounded-circle">
-                    </div>
-                    <div class="col ml--2">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h4 class="mb-0 text-sm">John Snow</h4>
-                        </div>
-                        <div class="text-right text-muted">
-                          <small>2 hrs ago</small>
-                        </div>
-                      </div>
-                      <p class="text-sm mb-0">Let's meet at Starbucks at 11:30. Wdyt?</p>
-                    </div>
-                  </div>
-                </a>
-                <a href="#!" class="list-group-item list-group-item-action">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                      <!-- Avatar -->
-                      <img alt="Image placeholder" src="../assets/img/theme/team-5.jpg" class="avatar rounded-circle">
-                    </div>
-                    <div class="col ml--2">
-                      <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                          <h4 class="mb-0 text-sm">John Snow</h4>
-                        </div>
-                        <div class="text-right text-muted">
-                          <small>3 hrs ago</small>
-                        </div>
-                      </div>
-                      <p class="text-sm mb-0">A new issue has been reported for Argon.</p>
-                    </div>
-                  </div>
-                </a>
-              </div>
-              <!-- View all -->
-              <a href="#!" class="dropdown-item text-center text-primary font-weight-bold py-3">View all</a>
-            </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -187,7 +88,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                   </span>
                   <small>Slider</small>
                 </a>
-                <a href="#!" class="col-4 shortcut-item">
+                <!-- <a href="#!" class="col-4 shortcut-item">
                   <span class="shortcut-media avatar rounded-circle bg-gradient-green">
                     <i class="ni ni-books"></i>
                   </span>
@@ -204,7 +105,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     <i class="ni ni-basket"></i>
                   </span>
                   <small>Shop</small>
-                </a>
+                </a> -->
               </div>
             </div>
           </li>

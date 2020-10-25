@@ -16,10 +16,19 @@
  
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  * Easy set variables
- */
+ */ 
  
 // DB table to use
-$table = 'pembayaran';
+$table = <<<EOT
+(
+   SELECT pembayaran.*
+     , pendaftaran.nominal_disetujui
+
+   FROM pembayaran
+   JOIN pendaftaran where pembayaran.kd_daftar = pendaftaran.kd_daftar order by pembayaran.tgl_bayar DESC
+) temp
+EOT;
+
  
 // Table's primary key
 $primaryKey = 'kd_bayar';
@@ -32,10 +41,10 @@ $columns = array(
     array( 'db' => 'kd_bayar', 'dt' => 0 ),
     array( 'db' => 'kd_daftar', 'dt' => 1 ),
     array( 'db' => 'tgl_bayar',  'dt' => 2 ),
-    array( 'db' => 'nominal_bayar',   'dt' => 3 ),
+    array( 'db' => 'nominal_disetujui',   'dt' => 3 ),
     array( 'db' => 'sts_bayar',     'dt' => 4 )
   
-);
+); 
  
 // SQL server connection information
 $sql_details = array(

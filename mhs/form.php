@@ -42,11 +42,38 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         $periode_tahun = $year . "/" . intval($year + 1);
     }
 
+    // Membuat periode tahun seperti 20201 pada inputan database
+    $periode_tahun = date('n');
+    if ($periode_tahun <= 6) {
+        $periode_tahun = intval($year - 1) . "/" . $year;
+    } else {
+        $periode_tahun = $year . "/" . intval($year + 1);
+    }
+    $tahun = date('n');
+    if ($tahun <= 6) {
+        $tahun = intval($year - 1) . "2";
+    } else {
+        $tahun = $year . "1";
+    }
+
+    // KD Beasiswa dan Detail Beasiswa Tersebut
+    $kd_bsw = $_GET["id"];
+    $kd_bsw_detail = $kd_bsw;
+    if ($kd_bsw_detail == 1) {
+        $kd_bsw_detail = "Beasiswa Kebutuhan";
+    } elseif ($kd_bsw_detail == 2) {
+        $kd_bsw_detail = "Pinjaman Registrasi";
+    } else {
+        $kd_bsw_detail = "Beasiswa";
+    }
+
+
     // Membuat Uniq ID pada belakang KD_DAFTAR 
     $digits = 3;
     $unik_number = str_pad(rand(0, pow(10, $digits) - 1), $digits, '0', STR_PAD_LEFT);
     $limit = 2 * 1024 * 1024; //10MB. Bisa diubah2
     $nim = $_SESSION['mhslogin'];
+    $id_mhs = $_SESSION['id_mhs'];
 
     if (isset($_FILES['syarat'])) {
         //karena ada multiple, jadi dilakukan pengecekan foreach
@@ -64,43 +91,51 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         $namasyarat2 = $_POST["nama_syarat"];
 
 
-        $kd_bsw = $_GET["id"];
+
         $ipk = $_POST["ipk"];
         $no_telp_ortu = $_POST["no_telp_ortu"];
-        
+
         $nominal_input = $_POST["nominal"];
         $output = str_replace('.', '', $nominal_input);
         $nominal = trim($output, '');
 
         $pekerjaan_ortu = $_POST["pekerjaan_ortu"];
-
-        $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, nim, kd_bsw, ipk, no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $registrasi->bind_param('ssisisssi', $kd_daftar, $nim, $kd_bsw, $ipk, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $nominal);
-        /* execute prepared statement */
-        $registrasi->execute();
-        printf("%d Row inserted.\n", $registrasi->affected_rows);
-        /* close statement */
-        $registrasi->close();
-
-        for ($i = 0; $i < count($kd_syarat_bsw); $i++) {
-            $check_id = $kd_syarat_bsw[$i];
-            $filename2   = $nim . "_" . $namasyarat2[$i] . "_" . $semester . "_" . time();
-            $extension  = pathinfo($name_array[$i], PATHINFO_EXTENSION); // mengambil ekstensi .pdf
-            $basename2   = $filename2 . "." . $extension;
-
-            $stmt = $con->prepare("INSERT INTO syarat_daftar (kd_daftar, kd_syarat_bsw, isi_syarat) VALUES (?, ?, ?)");
-            $stmt->bind_param('sss', $kd_daftar, $check_id, $basename2);
+        $query = "SELECT id_mhs, kd_bsw, tahun from pendaftaran where id_mhs = ? AND kd_bsw = ? AND tahun = ?";
+        $stmt = $con->prepare($query);
+        $stmt->bind_param("iis", $id_mhs, $kd_bsw, $tahun);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows > 0) {
+            $_SESSION['error'] = 'Pengajuan' . " " . $kd_bsw_detail . " sudah kamu ajukan semester ini! Kamu dapat kembali melakukan pengajuan pada semester depan.";
+        } else {
+            $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, id_mhs, kd_bsw, ipk, no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, tahun, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $registrasi->bind_param('ssissssssi', $kd_daftar, $id_mhs, $kd_bsw, $ipk, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $tahun, $nominal);
             /* execute prepared statement */
-            $stmt->execute();
-            printf("%d Row inserted.\n", $stmt->affected_rows);
+            $registrasi->execute();
+            printf("%d Row inserted.\n", $registrasi->affected_rows);
             /* close statement */
-            $stmt->close();
-            // mysqli_query($con, "INSERT INTO syarat_daftar (kd_daftar, kd_syarat_bsw, isi_syarat) values ('" . $kd_daftar . "','" . $check_id . "','" . $basename2 . "')");
-            move_uploaded_file($tmp_name_array[$i], "file/" . $basename2);
+            $registrasi->close();
+
+            for ($i = 0; $i < count($kd_syarat_bsw); $i++) {
+                $check_id = $kd_syarat_bsw[$i];
+                $filename2   = $nim . "_" . $namasyarat2[$i] . "_" . $semester . "_" . time();
+                $extension  = pathinfo($name_array[$i], PATHINFO_EXTENSION); // mengambil ekstensi .pdf
+                $basename2   = $filename2 . "." . $extension;
+
+                $stmt = $con->prepare("INSERT INTO syarat_daftar (kd_daftar, kd_syarat_bsw, isi_syarat) VALUES (?, ?, ?)");
+                $stmt->bind_param('sss', $kd_daftar, $check_id, $basename2);
+                /* execute prepared statement */
+                $stmt->execute();
+                printf("%d Row inserted.\n", $stmt->affected_rows);
+                /* close statement */
+                $stmt->close();
+                // mysqli_query($con, "INSERT INTO syarat_daftar (kd_daftar, kd_syarat_bsw, isi_syarat) values ('" . $kd_daftar . "','" . $check_id . "','" . $basename2 . "')");
+                move_uploaded_file($tmp_name_array[$i], "file/" . $basename2);
+            }
+            $_SESSION['success'] = 'Pengajuan Berhasil Dilakukan. Silahkan Tunggu Proses Seleksi Pengajuan Anda.';
+            header('location: riwayat_pengajuan');
+            exit();
         }
-        $_SESSION['success'] = 'Berhasil mengupload seluruh file';
-        header('location: form.php?id=1');
-        exit();
     }
 
 
@@ -185,6 +220,15 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 <div class="card-header">
                     <div class="row align-items-center">
                         <?php
+
+                        // $yearss = '2021';
+                        // $tahun = "2";
+                        // if ($tahun <= 6) {
+                        //     $tahun = intval($yearss - 1) . "2";
+                        // } else {
+                        //     $tahun = $year . "1";
+                        // }
+                        // echo $tahun;
                         // $year = date('Y');
                         // $semester_ini = date('n');
                         // if ($semester_ini <= 6) {
@@ -319,7 +363,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                         <?php
                         $nim = $_SESSION['mhslogin'];
-                        $query = "select * from user_mhs where username=?";
+                        $query = "select * from user_mhs where nim=?";
                         $stmt = $con->prepare($query);
                         $stmt->bind_param("s", $nim);
                         $stmt->execute();
@@ -333,9 +377,9 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                     <div class="row">
                                         <div class="col-md-3">
                                             <div class="form-group">
-                                                <label class="form-control-label" for="username">NIM</label>
+                                                <label class="form-control-label" for="nim">NIM</label>
                                                 <div class="input-group input-group-merge">
-                                                    <input id="username" value="<?php echo $row['username'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan Username" disabled>
+                                                    <input id="nim" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan nim" disabled>
                                                 </div>
                                             </div>
                                         </div>
@@ -510,8 +554,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                                     <div class="custom-file">
                                                         <input type="file" accept=".pdf" name="syarat[]" class="custom-file-input file" id="syarat-file-input-<?php echo ($row['kd_syarat']) ?>" lang="id" required>
                                                         <label id="syarat-file-label-<?php echo ($row['kd_syarat']) ?>" class="custom-file-label" for="syarat-file-label-<?php echo ($row['kd_syarat']) ?>">Pilih File .pdf <i class="fas fa-file-pdf text-danger"></i></label>
-                                                        <input type="hidden" name="nama_syarat[]" value="<?php echo ($row['nama_syarat']) ?>" />
-                                                        <input type="hidden" name="kd_syarat_bsw[]" value="<?php echo ($row['kd_syarat_bsw']) ?>" />
+                                                        <input type="hidden" name="nama_syarat[]" value="<?php $nama_syarat = $row['nama_syarat'];
+                                                                                                            $nama_syarat_underscore = preg_replace('/\s+/', '_', $nama_syarat);
+                                                                                                            echo ($nama_syarat_underscore) ?>" />
+                                                        <input type="hidden" name="kd_syarat_bsw[]" value="<?php echo ($row['kd_syarat']) ?>" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -550,84 +596,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                 </a>
                 </div>
 
-                <!-- Batas verifikasi hapus akun -->
-                <div class="modal fade" id="hapusconfirm<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
-                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                        <div class="modal-content bg-gradient-danger">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="modal-title-notification">Konfirmasi Hapus Akun</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="py-3 text-center">
-                                    <i class="ni ni-bell-55 ni-3x"></i>
-                                    <h4 class="heading mt-4">Perhatian</h4>
-                                    <p>Menghapus akun berarti setuju bahwa akun akan dihapus dari database. Akun yang telah di hapus tidak dapat dipulihkan kembali. Yakin ingin menghapus akun ini?</p>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['username'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
-                                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Tutup</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- batas modal form validasi edit profil -->
-                <div class="col-md-4">
-                    <div class="modal fade" id="reset<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body p-0">
-                                    <div class="card bg-secondary border-0 mb-0">
 
-                                        <div class="card-body px-lg-5 py-lg-5">
-                                            <div class="text-center text-muted mb-4">
-                                                <small>Masukkan password anda untuk mengubah data user : <b>
-                                                        <?php $nama_acc = $row['nama_mhs'];
-                                                        if ($nama_acc == "" || $nama_acc == "NULL") {
-                                                            echo htmlentities($row['username']);
-                                                        } else {
-                                                            echo htmlentities($row['nama_mhs']);
-                                                        }
-
-                                                        ?>
-                                                    </b></small>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="input-group input-group-merge input-group-alternative">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
-                                                    </div>
-                                                    <input type="hidden" name="id_user" value="<?php echo $row['id_mhs'] ?>">
-                                                    <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
-                                                </div>
-                                            </div>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend text-left text-muted">
-                                                    <span><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi <code style="font-size: 1rem;">1234</code>. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user tersebut. </small></span>
-                                                </div>
-
-                                            </div>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend text-left text-muted">
-                                                    <span><i class="fas fa-info-circle"></i> <small>Password anda di butuhkan sebagai verifikasi bahwa anda memiliki akses untuk mengubah data ini. </small></span>
-                                                </div>
-
-                                            </div>
-
-                                            <div class="text-center">
-                                                <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
         <?php }
                     } elseif ($result->num_rows > 1) {
                         $hasil = "duplikat";
@@ -736,4 +705,4 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     </body>
 
     </html>
-<?php } ?>
+<?php }  ?>

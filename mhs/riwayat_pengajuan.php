@@ -72,7 +72,27 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
         <!-- Page content -->
         <div class="container-fluid mt--6">
+        <?php
+            if (isset($_SESSION['success'])) {
+                echo '<div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span> 
+                <span data-notify="message">' . $_SESSION['success'] . '</span>
+              </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+              <span aria-hidden="true">×</span></button></div>';
+                unset($_SESSION['success']);
+            }
+            if (isset($_SESSION['error'])) {
+                echo '<div data-notify="container" class="alert alert-dismissible alert-danger alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
+                <span class="alert-icon ni ni-bell-55" data-notify="icon"></span> 
+                <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Gagal!</span> 
+                <span data-notify="message">' . $_SESSION['error'] . '</span>
+              </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
+              <span aria-hidden="true">×</span></button></div>';
+                unset($_SESSION['error']);
+            }
 
+            ?>
             <!-- Table -->
             <div class="row">
                 <div class="col">
@@ -113,7 +133,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                     , beasiswa.nama_bsw AS nm_beasiswa
                                     FROM pendaftaran
                                     JOIN beasiswa ON (
-                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.id_mhs = ? ";
+                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.id_mhs = ? order by pendaftaran.tgl_daftar DESC";
                                     $stmt = $con->prepare($sql);
                                     $stmt->bind_param("i", $nim);
                                     $stmt->execute();

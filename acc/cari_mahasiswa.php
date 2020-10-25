@@ -72,7 +72,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                     <div class="row align-items-center">
                         <?php
                         $id_acc = $_GET['carimhs'];
-                        $query = "select * from user_mhs where username=?";
+                        $query = "select * from user_mhs where nim=?";
                         $stmt = $con->prepare($query);
                         $stmt->bind_param("i", $id_acc);
                         $stmt->execute();
@@ -88,7 +88,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                 <div class="col-4 text-right">
 
-                                <code class="text-default"><mark class="text-default"><?php echo $row['username'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
+                                <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
                                 </div>
                         <?php }
                         } else {
@@ -104,7 +104,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                     <!-- Form groups used in grid -->
                     <?php
                     $id_acc = $_GET['carimhs'];
-                    $query = "select * from user_mhs where username=?";
+                    $query = "select * from user_mhs where nim=?";
                     $stmt = $con->prepare($query);
                     $stmt->bind_param("i", $id_acc);
                     $stmt->execute();
@@ -119,12 +119,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="username">NIM</label>
+                                            <label class="form-control-label" for="nim">NIM</label>
                                             <div class="input-group input-group-merge">
                                                 <div class="input-group-prepend">
                                                     <span class="input-group-text"><small class="font-weight-bold">@</small></span>
                                                 </div>
-                                                <input id="usernamemhs" value="<?php echo $row['username'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan Username" disabled>
+                                                <input id="usernamemhs" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -172,13 +172,13 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             <select class="form-control" title="fakultas" disabled>
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
-                                                $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.kd_fakultas=ref_fakultas.kd_fakultas AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.id_fakultas=ref_fakultas.id_fakultas AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
                                                 if (mysqli_num_rows($sql_fakultas) > 0) {
                                                     while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                        echo '<option value="' . $rs_fakultas['kd_fakultas'] . '">' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                        echo '<option value="' . $rs_fakultas['id_fakultas'] . '">' . $rs_fakultas['nama_fakultas'] . '</option>';
                                                     }
                                                 } else {
                                                     echo '<option></option>';
@@ -196,13 +196,13 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                             <select class="form-control" title="Pilih Program Studi" disabled>
                                                 <?php
-                                                $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.kd_prodi=ref_prodi.kd_prodi AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.id_prodi=ref_prodi.id_prodi AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
                                                 if (mysqli_num_rows($sql_prodi) > 0) {
                                                     while ($rs_prodi = mysqli_fetch_assoc($sql_prodi)) {
-                                                        echo '<option value="' . $rs_prodi['kd_prodi'] . '">' . $rs_prodi['nama_prodi'] . '</option>';
+                                                        echo '<option value="' . $rs_prodi['id_prodi'] . '">' . $rs_prodi['nama_prodi'] . '</option>';
                                                     }
                                                 } else {
                                                     echo '<option value="0"></option>';
@@ -216,11 +216,11 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                     </div> 
                                     <div class="col-sm-4">
                                         <div class="form-group">
-                                            <label class="form-control-label" for="dosen_wali">Dosen Wali</label>
+                                            <label class="form-control-label" for="dosen_wali">Wali Studi</label>
                                             <select class="form-control" title="Dosen Wali" disabled>
                                                 <?php
                                                 $nim_mhs = $_GET['carimhs'];
-                                                $sql_role = mysqli_query($con, "select * from user_mhs join user_acc where user_mhs.id_dosen_wali=user_acc.id_acc AND user_mhs.username = '" . $nim_mhs . "'");
+                                                $sql_role = mysqli_query($con, "select * from user_mhs join user_acc where user_mhs.id_dosen_wali=user_acc.id_acc AND user_mhs.nim = '" . $nim_mhs . "'");
                                                 ?>
 
                                                 <?php
