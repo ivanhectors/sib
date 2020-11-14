@@ -200,7 +200,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
             <!-- Image overlay -->
             <div class="card bg-dark text-white border-0">
-                <img class="card-img" src="../assets/img/quotes.jpg" alt="List Beasiswa">
+                <img class="card-img" src="../assets/img/quotes.svg" alt="List Beasiswa">
                 <div class="card-img-overlay align-items-center">
                     <div>
                         <!-- <h5 class="h2 card-title text-white mb-2">Cari Mahasiswa</h5> -->

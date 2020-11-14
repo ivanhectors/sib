@@ -88,7 +88,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                 <div class="col-4 text-right">
 
-                                <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
+                                    <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
                                 </div>
                         <?php }
                         } else {
@@ -116,7 +116,35 @@ if (strlen($_SESSION['acclogin']) == 0) {
                             <form role="form" method="post">
                                 <!-- Address -->
                                 <h6 class="heading-small text-muted mb-4">Informasi Pribadi</h6>
+                                <!-- <div class="row">
+                                    <div class="col-md-12">
+                                    <div class="form-group">
+                                            <div class="col-lg-3 order-lg-2">
+                                                <div class="card-profile-image">
+                                                    <?php $userphoto = $row['photo_mhs'];
+                                                    if ($userphoto == "" || $userphoto == "NULL") :
+                                                    ?>
+                                                        <img src="img/profile.png" class="avatar rounded-circle mr-3">
+                                                    <?php else : ?>
+                                                        <img src="img/<?php echo htmlentities($userphoto); ?>" class="avatar rounded-circle mr-3">
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
                                 <div class="row">
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <?php $userphoto = $row['photo_mhs'];
+                                            if ($userphoto == "" || $userphoto == "NULL") :
+                                            ?>
+                                                <img src="img/profile.png" class="avatar mr-3" style="width: 50%; height:auto;">
+                                            <?php else : ?>
+                                                <img src="img/<?php echo htmlentities($userphoto); ?>" class="avatar mr-3" style="width: 50%; height:auto;">
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="nim">NIM</label>
@@ -128,7 +156,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="nama">Nama Mahasiswa</label>
                                             <div class="input-group input-group-merge">
@@ -139,6 +167,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </div>
                                         </div>
                                     </div>
+
+                                </div>
+                                <hr class="my-4" />
+                                <!-- Address -->
+                                <h6 class="heading-small text-muted mb-4">Informasi Akademik</h6>
+                                <div class="row">
                                     <div class="col-md-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="email">Email</label>
@@ -161,12 +195,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <hr class="my-4" />
-                                <!-- Address -->
-                                <h6 class="heading-small text-muted mb-4">Informasi Akademik</h6>
-                                <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="fakultas">Fakultas</label>
                                             <select class="form-control" title="fakultas" disabled>
@@ -185,12 +214,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 }
 
                                                 ?>
-                                                
+
                                             </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-3">
                                         <div class="form-group">
                                             <label class="form-control-label" for="prodi">Program Studi</label>
 
@@ -213,8 +242,8 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
-                                    </div> 
-                                    <div class="col-sm-4">
+                                    </div>
+                                    <!-- <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="dosen_wali">Wali Studi</label>
                                             <select class="form-control" title="Dosen Wali" disabled>
@@ -236,15 +265,15 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
-        <?php }
+                        <?php }
                     } elseif ($result->num_rows > 1) {
                         $hasil = "duplikat";
                     } else {
                         echo '<div class="card bg-dark text-white border-0">
-                            <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.jpg" alt="Mahasiswa Tidak Ditemukan">
+                            <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.svg" alt="Mahasiswa Tidak Ditemukan">
                             <div class="card-img-overlay align-items-center">
                             <div>
                             <center>
@@ -270,53 +299,53 @@ if (strlen($_SESSION['acclogin']) == 0) {
                             </div>
                             </div>';
                     } ?>
+                </div>
+
             </div>
 
-        </div>
 
 
 
-
-        <?php
-        include("include/footer.php"); //Edit topnav on this page
-        ?>
-        <script>
-            function toggle_select(id) {
-                var X = document.getElementById(id);
-                if (X.checked == true) {
-                    X.value = "1";
-                } else {
-                    X.value = "0";
-                }
-                //var sql="update clients set calendar='" + X.value + "' where cli_ID='" + X.id + "' limit 1";
-                var who = X.id;
-                var chk = X.value
-                //alert("Joe is still debugging: (function incomplete/database record was not updated)\n"+ sql);
-                $.ajax({
-                    //this was the confusing part...did not know how to pass the data to the script
-                    url: 'as_status_penyeleksi.php',
-                    type: 'post',
-                    data: 'who=' + who + '&chk=' + chk,
-                    success: function(output) {
-                        alert('success, server says ' + output);
-                    },
-                    error: function() {
-                        alert('something went wrong, save failed');
+            <?php
+            include("include/footer.php"); //Edit topnav on this page
+            ?>
+            <script>
+                function toggle_select(id) {
+                    var X = document.getElementById(id);
+                    if (X.checked == true) {
+                        X.value = "1";
+                    } else {
+                        X.value = "0";
                     }
-                });
-            }
-        </script>
-        <script type="text/javascript">
-            document.getElementById("close_direct").onclick = function() {
-                location.href = "cari_mahasiswa?carimhs=<?php echo $carimahasiswa ?>";
-            };
-        </script>
-        <script>
-            $('.select2').select2();
-        </script>
-        <script src="js/fakultas-prodi.js?v=1"></script>
+                    //var sql="update clients set calendar='" + X.value + "' where cli_ID='" + X.id + "' limit 1";
+                    var who = X.id;
+                    var chk = X.value
+                    //alert("Joe is still debugging: (function incomplete/database record was not updated)\n"+ sql);
+                    $.ajax({
+                        //this was the confusing part...did not know how to pass the data to the script
+                        url: 'as_status_penyeleksi.php',
+                        type: 'post',
+                        data: 'who=' + who + '&chk=' + chk,
+                        success: function(output) {
+                            alert('success, server says ' + output);
+                        },
+                        error: function() {
+                            alert('something went wrong, save failed');
+                        }
+                    });
+                }
+            </script>
+            <script type="text/javascript">
+                document.getElementById("close_direct").onclick = function() {
+                    location.href = "cari_mahasiswa?carimhs=<?php echo $carimahasiswa ?>";
+                };
+            </script>
+            <script>
+                $('.select2').select2();
+            </script>
+            <script src="js/fakultas-prodi.js?v=1"></script>
 
-    </div>
+        </div>
     </div>
 
     </body>

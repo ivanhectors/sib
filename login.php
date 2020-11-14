@@ -82,7 +82,8 @@ if (isset($_POST["login"])) {
         $_SESSION["acclogin"] = $username;
         $_SESSION['id'] = $num['id'];
         $_SESSION['role'] = $row["id_role"];
-        $_SESSION['iddosenwali'] = $row["id_acc"];
+        $_SESSION['id_acc'] = $row["id_acc"];
+        $_SESSION['id_fakultas'] = $row["id_fakultas"];
         $host = $_SERVER['HTTP_HOST'];
         $uip = $_SERVER['REMOTE_ADDR'];
         $status = 1;

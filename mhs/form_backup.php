@@ -99,12 +99,6 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         $output = str_replace('.', '', $nominal_input);
         $nominal = trim($output, '');
 
-        $gaji_ortu_input = $_POST["gaji_ortu"];
-        $output_gaji_ortu = str_replace('.', '', $gaji_ortu_input);
-        $gaji_ortu = trim($output_gaji_ortu, '');
-
-        $semester_ke = $_POST["semester_ke"];
-
         $pekerjaan_ortu = $_POST["pekerjaan_ortu"];
         $query = "SELECT id_mhs, kd_bsw, tahun from pendaftaran where id_mhs = ? AND kd_bsw = ? AND tahun = ?";
         $stmt = $con->prepare($query);
@@ -114,8 +108,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         if ($result->num_rows > 0) {
             $_SESSION['error'] = 'Pengajuan' . " " . $kd_bsw_detail . " sudah kamu ajukan semester ini! Kamu dapat kembali melakukan pengajuan pada semester depan.";
         } else {
-            $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, id_mhs, kd_bsw, ipk, gaji_ortu, semester_ke ,no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, tahun, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $registrasi->bind_param('ssiiissssssi', $kd_daftar, $id_mhs, $kd_bsw, $ipk, $gaji_ortu, $semester_ke, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $tahun, $nominal);
+            $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, id_mhs, kd_bsw, ipk, no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, tahun, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $registrasi->bind_param('ssissssssi', $kd_daftar, $id_mhs, $kd_bsw, $ipk, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $tahun, $nominal);
             /* execute prepared statement */
             $registrasi->execute();
             printf("%d Row inserted.\n", $registrasi->affected_rows);
@@ -418,81 +412,141 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                 <?php } ?>
                                 <hr class="my-4" />
                                 <!-- Batas Akhir Info Pribadi Mahasiswa -->
+                                <?php
+                                $id_bsw = $_GET['id'];
+                                if ($id_bsw == 1) {
+                                ?>
+                                    <!-- Batas Awal Pengisian Form Manual -->
+                                    <h6 class="heading-small text-muted mb-4">Pengisian Form</h6>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="ipk">IPK Terbaru </label><span data-toggle="tooltip" data-placement="top" title="Masukkan IPK dengan 4 Digit Format. Contoh: 2.00, 3.51 atau 4.00 "> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-award"></i></span>
+                                                    </div>
+                                                    <input type="text" name="ipk" class="form-control" onkeypress="return isNumberKey(event,this)" id="ipk" placeholder="IPK Terbaru Anda" title="Masukkan IPK Terbaru anda." oninvalid="this.setCustomValidity('Selahkan masukkan IPK Terbaru Anda.')" oninput="setCustomValidity('')" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="nominal">Nominal Invoice Registrasi </label><span data-toggle="tooltip" data-placement="top" title="Masukkan total nominal pembayaran pada Invoice Registrasi anda."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><b>Rp.</b></span>
+                                                    </div>
+                                                    <input type="text" name="nominal" class="form-control" id="nominal" placeholder="Total Nominal Invoice Registrasi" title="Total Nominal Invoice Registrasi" oninvalid="this.setCustomValidity('Selahkan Masukkan Total Nominal Invoice Registrasi.')" oninput="setCustomValidity('')" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="no_telp_ortu">No. Telpon Orang Tua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan salah satu Nomor Telp aktif orangtua anda."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                    </div>
+                                                    <input type="text" name="no_telp_ortu" class="form-control" id="no_telp_ortu" placeholder="No. Telp Orang tua Anda" title="Masukkan No. Telp Ortu" oninvalid="this.setCustomValidity('Selahkan masukkan No. Telp Orangtua anda.')" oninput="setCustomValidity('')" required>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                                <!-- Batas Awal Pengisian Form Manual -->
-                                <h6 class="heading-small text-muted mb-4">Pengisian Form</h6>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="ipk">IPK Terbaru </label><span data-toggle="tooltip" data-placement="top" title="Masukkan IPK dengan 4 Digit Format. Contoh: 2.00, 3.51 atau 4.00 "> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-award"></i></span>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="pekerjaan-ortu">Pekerjaan Orangtua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan pekerjaan salah satu orangtua anda. Contoh: PNS, Karyawan Swasta atau Petani."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                                    </div>
+                                                    <input type="text" name="pekerjaan_ortu" class="form-control" id="pekerjaan-ortu" placeholder="Pekerjaan Orang Tua" title="Pekerjaan Orang Tua Anda" oninvalid="this.setCustomValidity('Selahkan Masukkan Pekerjaan Orangtua Anda.')" oninput="setCustomValidity('')" required>
                                                 </div>
-                                                <input type="text" name="ipk" class="form-control" onkeypress="return isNumberKey(event,this)" id="ipk" placeholder="IPK Terbaru Anda" title="Masukkan IPK Terbaru anda." oninvalid="this.setCustomValidity('Selahkan masukkan IPK Terbaru Anda.')" oninput="setCustomValidity('')" required>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="nominal">Nominal Invoice Registrasi </label><span data-toggle="tooltip" data-placement="top" title="Masukkan total nominal pembayaran pada Invoice Registrasi anda."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><b>Rp.</b></span>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="gaji_ortu">Gaji Orangtua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan Penghasilan salahsatu orangtua anda, yang tertera pada berkas persyaratan yang akan anda lampirkan."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><b>Rp.</b></span>
+                                                    </div>
+                                                    <input type="text" name="gaji_ortu" class="form-control" id="gaji_ortu" placeholder="Gaji Orangtua Anda" title="Masukkan Gaji Orangtua anda." oninvalid="this.setCustomValidity('Selahkan masukkan Gaji Orangtua Anda.')" oninput="setCustomValidity('')" required>
                                                 </div>
-                                                <input type="text" name="nominal" class="form-control" id="nominal" placeholder="Total Nominal Invoice Registrasi" title="Total Nominal Invoice Registrasi" oninvalid="this.setCustomValidity('Selahkan Masukkan Total Nominal Invoice Registrasi.')" oninput="setCustomValidity('')" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="semester_ke">Semester </label><span data-toggle="tooltip" data-placement="top" title="Masukkan Semester Berapa Anda Saat Ini. Contoh : 1, 2, 3 dst."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-chalkboard-teacher"></i></span>
+                                                    </div>
+                                                    <input name="semester_ke" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" class="form-control" id="semester_ke" placeholder="Semester Anda Saat Ini" title="Masukkan Semester Anda Saat Ini" oninvalid="this.setCustomValidity('Selahkan masukkan Semester Anda Saat Ini.')" oninput="setCustomValidity('')" required>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="no_telp_ortu">No. Telpon Orang Tua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan salah satu Nomor Telp aktif orangtua anda."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                <?php } elseif ($id_bsw == 2) { ?>
+
+                                    <h6 class="heading-small text-muted mb-4">Pengisian Form</h6>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="ipk">IPK Terbaru (*)</label>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-award"></i></span>
+                                                    </div>
+                                                    <input type="text" name="ipk" class="form-control" id="ipk" placeholder="IPK Terbaru Anda" title="Masukkan IPK Terbaru anda." oninvalid="this.setCustomValidity('Selahkan masukkan IPK Terbaru Anda.')" oninput="setCustomValidity('')" required>
                                                 </div>
-                                                <input name="no_telp_ortu" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==13) return false;" class="form-control" id="no_telp_ortu" placeholder="No. Telp Orang tua Anda" title="Masukkan No. Telp Ortu" oninvalid="this.setCustomValidity('Selahkan masukkan No. Telp Orangtua anda.')" oninput="setCustomValidity('')" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="no_telp_ortu">No. Telpon Orang Tua (*)</label>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                    </div>
+                                                    <input type="text" name="no_telp_ortu" class="form-control" id="no_telp_ortu" placeholder="No. Telp Orang tua Anda" title="Masukkan No. Telp Ortu" oninvalid="this.setCustomValidity('Selahkan masukkan No. Telp Orangtua anda.')" oninput="setCustomValidity('')" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="nominal">Nominal Invoice Registrasi (*)</label>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><b>Rp.</b></span>
+                                                    </div>
+                                                    <input type="text" name="nominal" class="form-control" id="nominal" placeholder="Total Nominal Invoice Registrasi" title="Total Nominal Invoice Registrasi" oninvalid="this.setCustomValidity('Selahkan Masukkan Total Nominal Invoice Registrasi.')" oninput="setCustomValidity('')" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="form-group">
+                                                <label class="form-control-label" for="pekerjaan-ortu">Pekerjaan Orangtua (*)</label>
+                                                <div class="input-group input-group-merge">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                                    </div>
+                                                    <input type="text" name="pekerjaan_ortu" class="form-control" id="pekerjaan-ortu" placeholder="Pekerjaan Orang Tua" title="Pekerjaan Orang Tua Anda" oninvalid="this.setCustomValidity('Selahkan Masukkan Pekerjaan Orangtua Anda.')" oninput="setCustomValidity('')" required>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="pekerjaan-ortu">Pekerjaan Orangtua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan pekerjaan salah satu orangtua anda. Contoh: PNS, Karyawan Swasta atau Petani."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
-                                                </div>
-                                                <input type="text" name="pekerjaan_ortu" class="form-control" id="pekerjaan-ortu" placeholder="Pekerjaan Orang Tua" title="Pekerjaan Orang Tua Anda" oninvalid="this.setCustomValidity('Selahkan Masukkan Pekerjaan Orangtua Anda.')" oninput="setCustomValidity('')" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="gaji_ortu">Gaji Orangtua </label><span data-toggle="tooltip" data-placement="top" title="Masukkan Penghasilan salahsatu orangtua anda, yang tertera pada berkas persyaratan yang akan anda lampirkan."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><b>Rp.</b></span>
-                                                </div>
-                                                <input type="text" name="gaji_ortu" class="form-control" id="gaji_ortu" placeholder="Gaji Orangtua Anda" title="Masukkan Gaji Orangtua anda." oninvalid="this.setCustomValidity('Selahkan masukkan Gaji Orangtua Anda.')" oninput="setCustomValidity('')" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="semester_ke">Semester </label><span data-toggle="tooltip" data-placement="top" title="Masukkan Semester Berapa Anda Saat Ini. Contoh : 1, 2, 3 dst."> <i class="fas fa-question-circle" style="font-size: 12px;"></i></span>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-chalkboard-teacher"></i></span>
-                                                </div>
-                                                <input name="semester_ke" type="number" pattern="/^-?\d+\.?\d*$/" onKeyPress="if(this.value.length==2) return false;" class="form-control" id="semester_ke" placeholder="Semester Anda Saat Ini" title="Masukkan Semester Anda Saat Ini" oninvalid="this.setCustomValidity('Selahkan masukkan Semester Anda Saat Ini.')" oninput="setCustomValidity('')" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
+                                <?php } elseif ($id_bsw == 3) { ?>
+
+                                <?php } elseif ($id_bsw == 4) { ?>
+
+                                <?php } elseif ($id_bsw == 5) {
+                                } else {
+                                } ?>
 
                                 <!-- Batas Akhir Pengisian Form Manual -->
 
@@ -669,12 +723,12 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                 }
             }
         </script>
-        <script>
-            var gaji_ortu = document.getElementById("gaji_ortu");
-            gaji_ortu.addEventListener("keyup", function(e) {
-                gaji_ortu.value = convertRupiah(this.value);
+                <script>
+            var nominal = document.getElementById("gaji_ortu");
+            nominal.addEventListener("keyup", function(e) {
+                nominal.value = convertRupiah(this.value);
             });
-            gaji_ortu.addEventListener('keydown', function(event) {
+            nominal.addEventListener('keydown', function(event) {
                 return isNumberKey(event);
             });
 

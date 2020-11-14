@@ -6,6 +6,17 @@ if (strlen($_SESSION['acclogin']) == 0) {
   date_default_timezone_set('Asia/Kolkata'); // change according timezone
   $currentTime = date('d-m-Y h:i:s A', time());
 
+  $id_fakultas = $_SESSION['id_fakultas'];
+  $query = "SELECT
+  COUNT( pendaftaran.kd_daftar) as total_pengajuan
+    FROM pendaftaran
+    JOIN user_mhs where pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.id_fakultas = ? and pendaftaran.status is null";
+  $stmt = $con->prepare($query);
+  $stmt->bind_param("i", $id_fakultas);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  $row = $result->fetch_assoc();
+
 ?>
 
   <body>
@@ -39,83 +50,20 @@ if (strlen($_SESSION['acclogin']) == 0) {
                   <span class="nav-link-text">Dashboards</span>
                 </a>
               </li>
-
-
-              <?php
-              $acc = $_SESSION['acclogin'];
-              $query = "select id_role from user_acc where user_acc.username =?";
-              $stmt = $con->prepare($query);
-              $stmt->bind_param("s", $acc);
-              $stmt->execute();
-              $result = $stmt->get_result();
-              if ($result->num_rows > 0) {
-
-                while ($row = $result->fetch_assoc()) {
-              ?>
-
-                  <?php $role = $row['id_role'];
-                  if ($role == '2') :
-                  ?>
-                    <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "pengajuan" ? "true" : "false") ?>" aria-controls="navbar-forms">
-                        <i class="ni ni-single-copy-04 text-danger"></i>
-                        <span class="nav-link-text">Pengajuan Mahasiswa</span>
-                      </a>
-                      <div class="collapse <?php echo ($parentpage == "pengajuan" ? "show" : "") ?>" id="navbar-forms">
-                        <ul class="nav nav-sm flex-column">
-                          <li class="nav-item">
-                            <a href="../acc/dw/beasiswa-kebutuhan" class="nav-link <?php echo ($childpage == "beasiswa-kebutuhan" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href=".../acc/dw/pinjaman-registrasi" class="nav-link <?php echo ($childpage == "pinjaman-registrasi" ? "active" : "") ?>">Pinjaman Registrasi</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                  <?php elseif ($role == '3') : ?>
-                    <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "pengajuan" ? "true" : "false") ?>" aria-controls="navbar-forms">
-                        <i class="ni ni-single-copy-04 text-danger"></i>
-                        <span class="nav-link-text">Pengajuan Mahasiswa</span>
-                      </a>
-                      <div class="collapse <?php echo ($parentpage == "pengajuan" ? "show" : "") ?>" id="navbar-forms">
-                        <ul class="nav nav-sm flex-column">
-                          <li class="nav-item">
-                            <a href="../acc/dw/beasiswa-kebutuhan" class="nav-link <?php echo ($childpage == "beasiswa-kebutuhan" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="../acc/dw/pinjaman-registrasi" class="nav-link <?php echo ($childpage == "pinjaman-registrasi" ? "active" : "") ?>">Pinjaman Registrasi</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                  <?php elseif ($role == '4') : ?>
-                    <li class="nav-item">
-                      <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-forms" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "pengajuan" ? "true" : "false") ?>" aria-controls="navbar-forms">
-                        <i class="ni ni-single-copy-04 text-danger"></i>
-                        <span class="nav-link-text">Pengajuan Mahasiswa</span>
-                      </a>
-                      <div class="collapse <?php echo ($parentpage == "pengajuan" ? "show" : "") ?>" id="navbar-forms">
-                        <ul class="nav nav-sm flex-column">
-                          <li class="nav-item">
-                            <a href="../acc/beasiswa-kebutuhan" class="nav-link <?php echo ($childpage == "beasiswa-kebutuhan" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="../acc/pinjaman-registrasi" class="nav-link <?php echo ($childpage == "pinjaman-registrasi" ? "active" : "") ?>">Pinjaman Registrasi</a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                  <?php else : ?>
-
+              <li class="nav-item">
+                <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="data_pengajuan">
+                  <i class="ni ni-single-copy-04 text-danger"></i>
+                  <span class="nav-link-text">Pengajuan Mahasiswa</span>&nbsp;
+                  <?php $total_pengajuan = htmlentities($row['total_pengajuan']);
+                  if ($total_pengajuan == 0) : ?>
+                    <!-- <span class="badge badge-pill badge-success"><?php echo $total_pengajuan; ?></span> -->
+                  <?php elseif ($total_pengajuan >= 1) : ?>
+                    <span class="badge badge-pill badge-warning"><?php echo $total_pengajuan; ?></span>
+                  <?php elseif ($total_pengajuan >= 100) : ?>
+                    <span class="badge badge-pill badge-danger"><?php echo $total_pengajuan; ?></span>
                   <?php endif; ?>
-
-
-              <?php }
-              } else {
-                "";
-              } ?>
-
+                </a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link <?php echo ($parentpage == "riwayat_pengajuan" ? "active" : "") ?>" href="riwayat_pengajuan">
                   <i class="ni ni-money-coins text-primary"></i>

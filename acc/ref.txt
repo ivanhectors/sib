@@ -192,3 +192,20 @@ pendaftaran.kd_daftar AS KD_DAFTAR
 FROM pendaftaran
 JOIN user_mhs 
 WHERE user_mhs.id_dosen_wali = '2' AND user_mhs.username = pendaftaran.nim AND pendaftaran.kd_bsw = '1' AND pendaftaran.status is null
+
+
+SELECT
+tahun
+, pendaftaran.tgl_daftar
+, SUM(pendaftaran.nominal_disetujui) as total_dana
+, pendaftaran.semester
+, user_mhs.id_fakultas
+FROM pendaftaran
+JOIN user_mhs
+WHERE pendaftaran.kd_bsw= '1' AND pendaftaran.id_mhs = user_mhs.id_mhs AND pendaftaran.status= 'diterima' AND user_mhs.id_fakultas = '7' GROUP BY tahun
+
+SELECT
+SUM(pendaftaran.nominal_disetujui) as total_dana
+FROM pendaftaran
+JOIN user_mhs
+WHERE pendaftaran.kd_bsw= '1' AND pendaftaran.id_mhs = user_mhs.id_mhs AND pendaftaran.status= 'diterima' AND user_mhs.id_fakultas = '7' and pendaftaran.tahun = '20201'

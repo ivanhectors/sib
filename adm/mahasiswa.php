@@ -130,7 +130,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
         <div class="container-fluid mt--6">
             <!-- Image overlay -->
             <div class="card bg-dark text-white border-0">
-                <img class="card-img" src="../assets/img/cari-mahasiswa.jpg" alt="Cari Mahasiswa">
+                <img class="card-img" src="../assets/img/cari-mahasiswa.svg" alt="Cari Mahasiswa">
                 <div class="card-img-overlay align-items-center">
                     <div>
                         <center>

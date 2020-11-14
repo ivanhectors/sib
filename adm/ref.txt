@@ -1,0 +1,162 @@
+Select kd_daftar,
+CASE
+WHEN gaji_ortu > 2000000 THEN '0'
+WHEN gaji_ortu >= 1800000 THEN '1'
+WHEN gaji_ortu >= 1650000 THEN '2'
+WHEN gaji_ortu >= 1500000 THEN '3'
+WHEN gaji_ortu >= 1300000 THEN '4'
+WHEN gaji_ortu >= 1150000 THEN '5'
+WHEN gaji_ortu >= 1000000 THEN '6'
+WHEN gaji_ortu >= 800000 THEN '7'
+WHEN gaji_ortu >= 650000 THEN '8'
+WHEN gaji_ortu >= 500000 THEN '9'
+WHEN gaji_ortu < 500000 THEN '10'
+Else '0'
+END AS poin_gaji_ortu
+from pendaftaran 
+WHERE tahun = '20201' AND status = 'acc-wakil-dekan'
+
+Select kd_daftar, gaji_ortu,
+CASE
+WHEN gaji_ortu > 2000000 THEN '0'
+WHEN gaji_ortu >= 1800000 THEN '1'
+WHEN gaji_ortu >= 1650000 THEN '2'
+WHEN gaji_ortu >= 1500000 THEN '3'
+WHEN gaji_ortu >= 1300000 THEN '4'
+WHEN gaji_ortu >= 1150000 THEN '5'
+WHEN gaji_ortu >= 1000000 THEN '6'
+WHEN gaji_ortu >= 800000 THEN '7'
+WHEN gaji_ortu >= 650000 THEN '8'
+WHEN gaji_ortu >= 500000 THEN '9'
+WHEN gaji_ortu < 500000 THEN '10'
+Else '0'
+END AS poin_gaji_ortu,
+ipk,
+CASE
+WHEN ipk < 2.25 THEN '0'
+WHEN ipk <= 2.32 THEN '1'
+WHEN ipk <= 2.4 THEN '2'
+WHEN ipk <= 2.5 THEN '3'
+WHEN ipk <= 2.58 THEN '4'
+WHEN ipk <= 2.65 THEN '5'
+WHEN ipk <= 2.75 THEN '6'
+WHEN ipk <= 2.82 THEN '7'
+WHEN ipk <= 2.99 THEN '8'
+WHEN ipk <= 3.5 THEN '9'
+WHEN ipk <= 4 THEN '10'
+Else '0'
+END AS poin_gaji_ortu,
+semester_ke,
+CASE
+WHEN semester_ke >= 11 THEN '0'
+WHEN semester_ke >= 10 THEN '1'
+WHEN semester_ke >= 9 THEN '2'
+WHEN semester_ke >= 8 THEN '3'
+WHEN semester_ke >= 7 THEN '4'
+WHEN semester_ke >= 6 THEN '5'
+WHEN semester_ke >= 5 THEN '6'
+WHEN semester_ke >= 4 THEN '7'
+WHEN semester_ke >= 3 THEN '8'
+WHEN semester_ke >= 2 THEN '9'
+Else '0'
+END AS poin_semester
+from pendaftaran 
+WHERE tahun = '20201' AND status = 'acc-wakil-dekan'
+
+SELECT poin_gaji_ortu + poin_ipk + poin_semester AS total_point
+FROM (
+Select kd_daftar, gaji_ortu,
+CASE
+WHEN gaji_ortu > 2000000 THEN '0'
+WHEN gaji_ortu >= 1800000 THEN '1'
+WHEN gaji_ortu >= 1650000 THEN '2'
+WHEN gaji_ortu >= 1500000 THEN '3'
+WHEN gaji_ortu >= 1300000 THEN '4'
+WHEN gaji_ortu >= 1150000 THEN '5'
+WHEN gaji_ortu >= 1000000 THEN '6'
+WHEN gaji_ortu >= 800000 THEN '7'
+WHEN gaji_ortu >= 650000 THEN '8'
+WHEN gaji_ortu >= 500000 THEN '9'
+WHEN gaji_ortu < 500000 THEN '10'
+Else '0'
+END AS poin_gaji_ortu,
+ipk,
+CASE
+WHEN ipk < 2.25 THEN '0'
+WHEN ipk <= 2.32 THEN '1'
+WHEN ipk <= 2.4 THEN '2'
+WHEN ipk <= 2.5 THEN '3'
+WHEN ipk <= 2.58 THEN '4'
+WHEN ipk <= 2.65 THEN '5'
+WHEN ipk <= 2.75 THEN '6'
+WHEN ipk <= 2.82 THEN '7'
+WHEN ipk <= 2.99 THEN '8'
+WHEN ipk <= 3.5 THEN '9'
+WHEN ipk <= 4 THEN '10'
+Else '0'
+END AS poin_ipk,
+semester_ke,
+CASE
+WHEN semester_ke >= 11 THEN '0'
+WHEN semester_ke >= 10 THEN '1'
+WHEN semester_ke >= 9 THEN '2'
+WHEN semester_ke >= 8 THEN '3'
+WHEN semester_ke >= 7 THEN '4'
+WHEN semester_ke >= 6 THEN '5'
+WHEN semester_ke >= 5 THEN '6'
+WHEN semester_ke >= 4 THEN '7'
+WHEN semester_ke >= 3 THEN '8'
+WHEN semester_ke >= 2 THEN '9'
+Else '0'
+END AS poin_semester
+from pendaftaran 
+WHERE tahun = '20201' AND status = 'acc-wakil-dekan'
+    ) AS total_point
+
+Select kd_daftar, gaji_ortu,
+CASE
+WHEN gaji_ortu > 2000000 THEN '0'
+WHEN gaji_ortu >= 1800000 THEN '1'
+WHEN gaji_ortu >= 1650000 THEN '2'
+WHEN gaji_ortu >= 1500000 THEN '3'
+WHEN gaji_ortu >= 1300000 THEN '4'
+WHEN gaji_ortu >= 1150000 THEN '5'
+WHEN gaji_ortu >= 1000000 THEN '6'
+WHEN gaji_ortu >= 800000 THEN '7'
+WHEN gaji_ortu >= 650000 THEN '8'
+WHEN gaji_ortu >= 500000 THEN '9'
+WHEN gaji_ortu < 500000 THEN '10'
+Else '0'
+END AS poin_gaji_ortu,
+ipk,
+CASE
+WHEN ipk < 2.25 THEN '0'
+WHEN ipk <= 2.32 THEN '1'
+WHEN ipk <= 2.4 THEN '2'
+WHEN ipk <= 2.5 THEN '3'
+WHEN ipk <= 2.58 THEN '4'
+WHEN ipk <= 2.65 THEN '5'
+WHEN ipk <= 2.75 THEN '6'
+WHEN ipk <= 2.82 THEN '7'
+WHEN ipk <= 2.99 THEN '8'
+WHEN ipk <= 3.5 THEN '9'
+WHEN ipk <= 4 THEN '10'
+Else '0'
+END AS poin_ipk,
+semester_ke,
+CASE
+WHEN semester_ke >= 11 THEN '0'
+WHEN semester_ke >= 10 THEN '1'
+WHEN semester_ke >= 9 THEN '2'
+WHEN semester_ke >= 8 THEN '3'
+WHEN semester_ke >= 7 THEN '4'
+WHEN semester_ke >= 6 THEN '5'
+WHEN semester_ke >= 5 THEN '6'
+WHEN semester_ke >= 4 THEN '7'
+WHEN semester_ke >= 3 THEN '8'
+WHEN semester_ke >= 2 THEN '9'
+Else '0'
+END AS poin_semester,
+nominal_pengajuan
+from pendaftaran 
+WHERE tahun = '20201' AND status = 'acc-wakil-dekan'

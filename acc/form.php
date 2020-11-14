@@ -18,25 +18,44 @@ if (strlen($_SESSION['acclogin']) == 0) {
         $status = $_POST["status"];
         $kd_daftar = $_GET["kd_daftar"];
         $acc_role = $_SESSION['role'];
-        $acc_id = $_SESSION['iddosenwali'];
+        $acc_id = $_SESSION['id_acc']; 
 
+        // Update Tabel Seleksi PENDAFTARAN
         $query = "UPDATE pendaftaran SET status = ? WHERE kd_daftar = ? ";
         $stmt = $con->prepare($query);
         $stmt->bind_param("ss", $status, $kd_daftar);
         $stmt->execute();
         $stmt->close();
-
-
-        $queryinsert = "INSERT INTO sts_daftar (kd_daftar, acc_role, acc_id, status ) VALUES (?, ?, ?, ?)";
-        $stmt2 = $con->prepare($queryinsert);
-        $stmt2->bind_param("ssss", $kd_daftar, $acc_role, $acc_id, $status);
+        // Update Tabel Seleksi STS_DAFTAR
+        $query2 = "SELECT kd_daftar from sts_daftar where kd_daftar = ? AND acc_id = ?";
+        $stmt2 = $con->prepare($query2);
+        $stmt2->bind_param("ii", $kd_daftar, $acc_id);
         $stmt2->execute();
-        $stmt2->close();
+        $result = $stmt2->get_result();
+        if ($result->num_rows > 0) {
+            $queryupdate = "UPDATE sts_daftar SET status = ? WHERE kd_daftar = ? AND acc_id = ?";
+            $stmt3 = $con->prepare($queryupdate);
+            $stmt3->bind_param("sss", $status, $kd_daftar, $acc_id);
+            $stmt3->execute();
+            $stmt3->close();
+        } else {
+            $queryinsert = "INSERT INTO sts_daftar (kd_daftar, acc_role, acc_id, status ) VALUES (?, ?, ?, ?)";
+            $stmt3 = $con->prepare($queryinsert);
+            $stmt3->bind_param("ssss", $kd_daftar, $acc_role, $acc_id, $status);
+            $stmt3->execute();
+            $stmt3->close();
+        }
+
         //echo "<script>alert('Number of Rows 0');</script>";
+
+        $host = $_SERVER['HTTP_HOST'];
+        $uri = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+        $extra = "form?id_bsw=" . $_GET['id_bsw'] . "&kd_daftar=" . $_GET['kd_daftar'] . "&total_invoice=" . $_GET['total_invoice'];
+        //header('location: form.php?id=2&kd_daftar=.$7216005720201412');
+        header("location:http://$host$uri/$extra");
         $_SESSION['success'] = 'Berhasil menyeleksi pendaftaran. Anda dapat mengunjungi halaman riwayat pengajuan untuk melihat kembali keseluruhan data.';
-        header('location: riwayat_pengajuan');
         exit();
-    }
+    } 
 
 
 ?>
@@ -401,9 +420,30 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 </div>
                                             </div>
                                             <div class="form-group row">
+                                                <label for="semester_ke" class="col-md-6 col-form-label form-control-label">Semester</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php echo $row['semester_ke'] ?>" id="semester_ke" placeholder="Semester" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
                                                 <label for="no-telp-ortu" class="col-md-6 col-form-label form-control-label">No. Telpon Orang Tua</label>
                                                 <div class="col-md-6">
                                                     <input class="form-control" type="text" value="<?php echo $row['no_telp_ortu'] ?>" id="no-telp-ortu" placeholder="No Telp Orangtua" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="pekerjaan-ortu" class="col-md-6 col-form-label form-control-label">Pekerjaan Orangtua</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php echo $row['pekerjaan_ortu'] ?>" id="pekerjaan-ortu" placeholder="Pekerjaan Orangtua" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="gaji-ortu" class="col-md-6 col-form-label form-control-label">Gaji Orangtua</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php $angka = $row['gaji_ortu'];
+                                                                                                    $hasil_rupiah = "Rp " . number_format($angka, 0, ',', '.');
+                                                                                                    echo $hasil_rupiah;
+                                                                                                    ?>" id="gaji-ortu" placeholder="Gaji Orangtua" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -418,12 +458,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                                                                     echo rupiah($row['nominal_pengajuan']);  ?>" id="nominal" placeholder="Nominal" disabled>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label for="pekerjaan-ortu" class="col-md-6 col-form-label form-control-label">Pekerjaan Orangtua</label>
-                                                <div class="col-md-6">
-                                                    <input class="form-control" type="text" value="<?php echo $row['pekerjaan_ortu'] ?>" id="pekerjaan-ortu" placeholder="Pekerjaan Orangtua" disabled>
-                                                </div>
-                                            </div>
+
 
                                     <?php
                                         }
@@ -546,15 +581,44 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             </div>
                                         <?php } ?>
 
+                                        <?php
+                                        $kd_daftar = $_GET['kd_daftar'];
+                                        $status1 = "acc-wakil-dekan";
+                                        $status2 = "ditolak";
+                                        $acc_id = $_SESSION['id_acc'];
+                                        $query = "SELECT * FROM sts_daftar WHERE kd_daftar = ? and acc_id = ? and status is not null LIMIT 1";
+                                        $stmt = $con->prepare($query);
+                                        $stmt->bind_param("ii", $kd_daftar, $acc_id);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                            <div class="timeline-block">
+                                                <span class="timeline-step badge-<?php $status = $row['status'];
+                                                                                    echo ($status == "acc-wakil-dekan" ? "success" : "danger") ?>">
+                                                    <i class="fas fa-<?php $status = $row['status'];
+                                                                        echo ($status == "acc-wakil-dekan" ? "check" : "exclamation") ?>"></i>
+                                                </span>
+                                                <div class="timeline-content">
+                                                    <span class="badge badge-pill badge-<?php $status = $row['status'];
+                                                                                        echo ($status == "acc-wakil-dekan" ? "success" : "danger") ?>"><?php $status = $row['status'];
+                                                                                                                                                        echo ($status == "acc-wakil-dekan" ? "DITERIMA" : "DITOLAK") ?></span>
+                                                    <h5 class=" mt-3 mb-0">Status Seleksi Anda </h5>
+
+                                                    <div class="mt-3">
+                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
-                                        $status1 = 'acc-dosen-wali';
-                                        $status2 = 'acc-wakil-dekan';
-                                        $status3 = 'acc-wakil-rektor';
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? OR status = ? OR status = ? LIMIT 1";
+                                        $acc_wakil_dekan = 'acc-wakil-dekan';
+                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
                                         $stmt = $con->prepare($query);
-                                        $stmt->bind_param("isss", $kd_daftar, $status1, $status2, $status3);
+                                        $stmt->bind_param("is", $kd_daftar, $acc_wakil_dekan);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
@@ -565,7 +629,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 </span>
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-warning">DIPROSES</span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi</h5>
+                                                    <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold">00-00-0000 00:00 --</small>
@@ -573,7 +637,6 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 </div>
                                             </div>
                                         <?php } ?>
-
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
@@ -591,7 +654,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 </span>
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-success">DITERIMA</span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi</h5>
+                                                    <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
@@ -604,10 +667,10 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
-                                        $status1 = 'ditolak';
+                                        $status = 'ditolak';
                                         $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
                                         $stmt = $con->prepare($query);
-                                        $stmt->bind_param("is", $kd_daftar, $status1);
+                                        $stmt->bind_param("is", $kd_daftar, $status);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
@@ -618,66 +681,11 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                 </span>
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-danger">DITOLAK</span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi</h5>
-
-                                                    <div class="mt-3">
-                                                        <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-
-
-                                        <?php
-                                        $kd_daftar = $_GET['kd_daftar'];
-                                        $status1 = 'diterima';
-                                        $status2 = 'ditolak';
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? OR status = ? LIMIT 1";
-                                        $stmt = $con->prepare($query);
-                                        $stmt->bind_param("iss", $kd_daftar, $status1, $status2);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        while ($row = $result->fetch_assoc()) {
-                                        ?>
-                                            <div class="timeline-block">
-                                                <span class="timeline-step badge-<?php $status = $row['status'];
-                                                                                    echo ($status == "diterima" ? "success" : "danger") ?>">
-                                                    <i class="fas fa-<?php $status = $row['status'];
-                                                                        echo ($status == "diterima" ? "check" : "exclamation") ?>"></i>
-                                                </span>
-                                                <div class="timeline-content">
-                                                    <span class="badge badge-pill badge-<?php $status = $row['status'];
-                                                                                        echo ($status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
                                                     <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
                                                                                                     echo date('d-m-Y g:i A', strtotime($date)); ?></small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-
-                                        <?php
-                                        $kd_daftar = $_GET['kd_daftar'];
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status IS null LIMIT 1";
-                                        $stmt = $con->prepare($query);
-                                        $stmt->bind_param("i", $kd_daftar);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        while ($row = $result->fetch_assoc()) {
-                                        ?>
-                                            <div class="timeline-block">
-                                                <span class="timeline-step badge-warning">
-                                                    <i class="fas fa-history"></i>
-                                                </span>
-                                                <div class="timeline-content">
-                                                    <span class="badge badge-pill badge-warning">DIPROSES</span>
-                                                    <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
-
-                                                    <div class="mt-3">
-                                                        <small class="text-muted font-weight-bold">00-00-0000 00:00 --</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -701,8 +709,8 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                                 <?php
                                                 $kd_daftar = $_GET['kd_daftar'];
-                                                $acc_id = $_SESSION['iddosenwali'];
-                                                $query = "SELECT
+                                                $acc_id = $_SESSION['id_acc'];
+                                                $query = "SELECT 
                                                 pendaftaran.kd_daftar
                                                 , sts_daftar.acc_id
                                                 , sts_daftar.acc_tanggal
@@ -721,7 +729,6 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                         <div class="form-group row">
                                                             <div class="col-md-12">
                                                                 <div class="form-group">
-
                                                                     <?php $status = $row['status'];
                                                                     if ($status == 'ditolak') :
                                                                     ?>
@@ -747,18 +754,35 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                                                                                 echo date('d-m-Y G:i:s', strtotime($tanggal));
                                                                                                                 ?></label>
                                                             </div>
-
                                                         </div>
-
+                                                        <label class="form-control-label text-white" for="status">Ubah pengajuan ini?</label>
+                                                        <div class="form-group row">
+                                                            <div class="col-md-12">
+                                                                <select class="form-control" name="status" type="text" id="status" placeholder="Pilih Status Seleksi" title="Silahkan pilih status seleksi anda." oninvalid="this.setCustomValidity('Silahkan pilih status seleksi anda.')" oninput="setCustomValidity('')" required>
+                                                                    <option selected="selected" value="" disabled>-- Pilih Status Pengajuan --</option>
+                                                                    <option value="acc-wakil-dekan">Terima</option>
+                                                                    <option value="ditolak">Tolak</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="text-right  pb-0 pb-md-4">
+                                                            <div>
+                                                                <!-- <button type="submit" name="gambar" class="btn btn-sm btn-white float-right">UPLOAD</button> -->
+                                                                <button type="button" data-toggle="modal" data-target="#modal-verification" class="btn btn-icon btn-white float-right btn-block">
+                                                                    <span class="btn-inner--icon"><i class="fas fa-cloud-upload-alt"></i></span>
+                                                                    <span class="btn-inner--text">Update Pengajuan</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                     <?php
                                                     }
                                                 } else { ?>
                                                     <label class="form-control-label text-white" for="status">Terima pengajuan ini?</label>
                                                     <div class="form-group row">
                                                         <div class="col-md-12">
-                                                            <select class="form-control" name="status" type="text" id="status" placeholder="NIM" required>
+                                                            <select class="form-control" name="status" type="text" id="status" placeholder="Pilih Status Seleksi" title="Silahkan pilih status seleksi anda." oninvalid="this.setCustomValidity('Silahkan pilih status seleksi anda.')" oninput="setCustomValidity('')" required>
                                                                 <option selected="selected" value="" disabled>-- Pilih Status Pengajuan --</option>
-                                                                <option value="acc-dosen-wali">Terima</option>
+                                                                <option value="acc-wakil-dekan">Terima</option>
                                                                 <option value="ditolak">Tolak</option>
                                                             </select>
                                                         </div>
@@ -790,8 +814,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                             <div class="py-3 text-center">
                                                                 <i class="ni ni-bell-55 ni-3x"></i>
                                                                 <h4 class="heading mt-4">Ketentuan dalam menyeleksi pengajuan</h4>
-                                                                <p>Menyeleksi pengajuan ini dengan mengubah status pengajuan tersebut hanya dapat dilakukan 1 kali. Setelah anda memberikan status pengajuan pada pendaftaran tersebut,
-                                                                    anda tidak dapat kembali mengubah jawaban seleksi anda.
+                                                                <p>Menyeleksi pengajuan ini berarti mengubah status pengajuan tersebut. Pastikan untuk tidak mengganti keputusan seleksi anda setelah pengajuan beasiswa ditutup.
                                                                 </p>
                                                             </div>
                                                         </div>

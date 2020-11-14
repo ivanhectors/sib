@@ -160,7 +160,7 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link <?php echo ($parentpage == "beasiswa" ? "active" : "") ?>" href="#navbar-masterdata2" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "beasiswa" ? "true" : "false") ?>" aria-controls="navbar-masterdata">
+              <a class="nav-link <?php echo ($parentpage == "beasiswa" ? "active" : "") ?>" href="#navbar-masterdata2" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "beasiswa" ? "true" : "false") ?>" aria-controls="navbar-masterdata2">
                 <i class="ni ni-hat-3 text-warning"></i>
                 <span class="nav-link-text">Beasiswa</span>
               </a>
@@ -171,6 +171,9 @@
                   </li>
                   <li class="nav-item">
                     <a href="list_persyaratan_beasiswa" class="nav-link <?php echo ($childpage == "list_persyaratan_beasiswa" ? "active" : "") ?>">List Persyaratan Beasiswa</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="budget" class="nav-link <?php echo ($childpage == "budget" ? "active" : "") ?>">Budget Beasiswa</a>
                   </li>
                 </ul>
               </div>
@@ -188,6 +191,39 @@
               </a>
             </li> -->
             <li class="nav-item">
+              <a class="nav-link <?php echo ($parentpage == "pengajuan" ? "active" : "") ?>" href="#navbar-masterdata3" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "pengajuan" ? "true" : "false") ?>" aria-controls="navbar-masterdata3">
+                <i class="ni ni-archive-2 text-info"></i>
+                <span class="nav-link-text">Pengajuan</span>
+              </a>
+              <div class="collapse <?php echo ($parentpage == "pengajuan" ? "show" : "") ?>" id="navbar-masterdata3">
+                <ul class="nav nav-sm flex-column">
+                  <li class="nav-item">
+                    <a href="#navbar-multilevel1" class="nav-link" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "validasi" ? "true" : "false") ?>" aria-controls="navbar-multilevel1">Validasi Penerima</a>
+                    <div class="collapse <?php echo ($parentpage == "validasi" ? "show" : "") ?>" id="navbar-multilevel1" style="">
+                      <ul class="nav nav-sm flex-column">
+                        <li class="nav-item">
+                          <a href="validasi_pinjaman" class="nav-link <?php echo ($childpage == "validasi_pinjaman" ? "active" : "") ?>">Pinjaman Registrasi</a>
+                        </li>
+                        <li class="nav-item">
+                          <a href="#!" class="nav-link <?php echo ($childpage == "validasi_beasiswa" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="nav-item">
+                    <a href="riwayat_pengajuan_exp?tahun=&semester=" class="nav-link <?php echo ($childpage == "export_data_penerima" ? "active" : "") ?>">Export Data Penerima</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="riwayat_pengajuan" class="nav-link <?php echo ($childpage == "riwayat_pengajuan" ? "active" : "") ?>">Riwayat Pengajuan</a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="riwayat_pembayaran" class="nav-link <?php echo ($childpage == "riwayat_pembayaran" ? "active" : "") ?>">Riwayat Pembayaran</a>
+                  </li>
+
+                </ul>
+              </div>
+            </li>
+            <!-- <li class="nav-item">
               <a class="nav-link <?php echo ($page == "riwayat_pengajuan" ? "active" : "") ?>" href="riwayat_pengajuan">
                 <i class="ni ni-archive-2 text-info"></i>
                 <span class="nav-link-text">Riwayat Pengajuan</span>
@@ -198,7 +234,7 @@
                 <i class="ni ni-archive-2 text-success"></i>
                 <span class="nav-link-text">Riwayat Pembayaran</span>
               </a>
-            </li>
+            </li> -->
             <li class="nav-item">
               <a class="nav-link <?php echo ($page == "kalender" ? "active" : "") ?>" href="kalender">
                 <i class="ni ni-calendar-grid-58 text-red"></i>

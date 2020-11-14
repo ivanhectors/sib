@@ -563,12 +563,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
-                                        $status1 = 'acc-dosen-wali';
-                                        $status2 = 'acc-wakil-dekan';
-                                        $status3 = 'acc-wakil-rektor';
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? OR status = ? OR status = ? LIMIT 1";
+                                        $status = 'acc-wakil-dekan';
+                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
                                         $stmt = $con->prepare($query);
-                                        $stmt->bind_param("isss", $kd_daftar, $status1, $status2, $status3);
+                                        $stmt->bind_param("is", $kd_daftar, $status);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
@@ -651,7 +649,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
-                                        ?>
+                                        ?> 
                                             <div class="timeline-block">
                                                 <span class="timeline-step badge-<?php $status = $row['status'];
                                                                                     echo ($status == "diterima" ? "success" : "danger") ?>">
@@ -701,11 +699,12 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                 <?php
                                 $kd_daftar = $_GET['kd_daftar'];
+                                $status = "diterima";
                                 $query = "SELECT kd_bsw
                                                 FROM pendaftaran
-                                                WHERE kd_daftar = ? LIMIT 1";
+                                                WHERE kd_daftar = ? AND status = ? LIMIT 1";
                                 $stmt = $con->prepare($query);
-                                $stmt->bind_param("s", $kd_daftar);
+                                $stmt->bind_param("ss", $kd_daftar, $status);
                                 $stmt->execute();
                                 $result = $stmt->get_result();
                                 if ($result->num_rows > 0) {

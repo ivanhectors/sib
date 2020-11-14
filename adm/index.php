@@ -19,6 +19,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     return ($decreaseValue / $oldNumber) * 100;
     // echo getPercentageChange(500, 234);
   }
+  
   $year = date('Y');
   $semester_ini = date('n');
   if ($semester_ini <= 6) {

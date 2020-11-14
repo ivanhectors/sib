@@ -10,9 +10,9 @@ if (strlen($_SESSION['acclogin']) == 0) {
     $currentTime = date('d-m-Y h:i:s A', time());
     // include("include/header.php");
     // include("include/sidebar.php");
-    $parentpage = "riwayat_pengajuan";
+    $parentpage = "pengajuan";
 
- 
+
 ?>
     <?php
     include("include/header.php");
@@ -52,12 +52,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                     <li class="breadcrumb-item"><a href="../acc?id"><i class="fas fa-home"></i></a></li>
                                     <li class="breadcrumb-item"><a href="../acc?id">Dashboards</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Riwayat Pengajuan Mahasiswa</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Data Pengajuan Mahasiswa</li>
                                 </ol>
                             </nav>
                         </div>
                         <div class="col-lg-6 col-5 text-right">
-                            <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a>
+                            <!-- <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a> -->
 
                         </div>
                     </div>
@@ -82,13 +82,13 @@ if (strlen($_SESSION['acclogin']) == 0) {
                         <div class="card-header border-0">
                             <div class="row">
                                 <div class="col-6">
-                                    <h3 class="mb-0">Data Riwayat Pengajuan Mahasiswa</h3>
+                                    <h3 class="mb-0">Data Pengajuan Mahasiswa</h3>
                                 </div>
                             </div>
                         </div>
                         <!-- Light table -->
                         <div class="table-responsive py-4">
-                            <table class="table align-items-center table-hover table-flush table-striped" id="tbl-pengajuan">
+                            <table class="table align-items-center table-flush table-striped" id="datatable-buttons">
                                 <thead class="thead-light">
                                     <tr>
                                         <th>
@@ -147,32 +147,49 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <tr>
-                                        <td>
-                                            <center>Kode Daftar
-                                        </td>
-                                        <td>
-                                            <center>NIM
-                                        </td>
-                                        <td>
-                                            <center>BSW
-                                        </td>
-                                        <td>
-                                            <center>Tanggal Daftar
-                                        </td>
-                                        <td>
-                                            <center>Tahun Ajaran
-                                        </td>
-                                        <td>
-                                            <center>Semester
-                                        </td>
-                                        <td>
-                                            <center>Status
-                                        </td>
-                                        <td>
-                                            <center>Detail
-                                        </td>
-                                    </tr>
+                                    <?php
+                                    $id_fakultas = $_SESSION['id_fakultas'];
+                                    $query = "SELECT pendaftaran.*
+                                     , user_mhs.nim
+                                    FROM pendaftaran
+                                    JOIN user_mhs where pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.id_fakultas = ? and pendaftaran.status is null ";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param("i", $id_fakultas);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+                                    ?>
+                                        <tr>
+                                            <td><b><?php echo htmlentities($row['kd_daftar']); ?></b></td>
+                                            <td><?php echo htmlentities($row['nim']); ?></td>
+                                            <td>
+                                                <?php $kd_bsw = htmlentities($row['kd_bsw']);
+                                                if ($kd_bsw == 1) {
+                                                    echo '<span class="badge badge-default">KBTN</span>';
+                                                } elseif ($kd_bsw == 2) {
+                                                    echo '<span class="badge badge-primary">PJMN</span>';
+                                                } else {
+                                                    echo '<span class="badge badge-info">LAINNYA</span>';
+                                                }
+                                                ?></td>
+                                            <td><?php echo htmlentities($row['tgl_daftar']); ?></td>
+                                            <td><?php echo htmlentities($row['thn_ajaran']); ?></td>
+                                            <td><?php echo htmlentities($row['semester']); ?></td>
+                                            <td>
+                                                <?php $status = htmlentities($row['status']);
+                                                if ($status == 'diterima') {
+                                                    echo '<span class="badge badge-success">Diterima</span>';
+                                                } elseif ($status == 'ditolak') {
+                                                    echo '<span class="badge badge-danger">DITOLAK</span>';
+                                                } else {
+                                                    echo '<span class="badge badge-warning">blm acc</span>';
+                                                }
+                                                ?></td>
+                                            <td><a class='btn btn-default btn-sm' href="form?id_bsw=<?php echo htmlentities($row['kd_bsw']); ?>&kd_daftar=<?php echo htmlentities($row['kd_daftar']); ?>&total_invoice=<?php echo htmlentities($row['nominal_pengajuan']); ?>">Detail <i class='fas fa-chevron-circle-right'></a></td>
+                                        </tr>
+                                    <?php
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -238,7 +255,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                         "processing": true,
                         "serverSide": true,
                         "pagingType": "full_numbers",
-                        "ajax": "scripts/get_riwayat_pengajuan.php",
+                        "ajax": "scripts/get_data_pengajuan.php",
                         "order": [
                             [3, "desc"]
                         ],
@@ -282,10 +299,9 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 render: function(data, type, row) {
                                     if (data == '1') {
                                         return '<span class="badge badge-default">KBTN</span>';
-                                    } else if (data == '2' ){
+                                    } else if (data == '2') {
                                         return '<span class="badge badge-primary">PJMN</span>';
-                                    }
-                                    else {
+                                    } else {
                                         return '<span class="badge badge-info">LAINNYA</span>';
                                     }
                                 }
@@ -298,6 +314,12 @@ if (strlen($_SESSION['acclogin']) == 0) {
                         window.location.href = "form?id_bsw=" + data[2] + "&kd_daftar=" + data[0] + "&total_invoice=" + data[7];
                     });
 
+                });
+            </script>
+            <script>
+                $('#datatable-buttons tbody').on('click', '.linkByr', function() {
+                    var data = table.row($(this).parents('tr')).data();
+                    window.location.href = "form?id_bsw=" + data[2] + "&kd_daftar=" + data[0] + "&total_invoice=" + data[7];
                 });
             </script>
 
