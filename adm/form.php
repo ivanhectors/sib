@@ -284,15 +284,15 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
-                                        <div class="col-8">
+                                        <div class="col-12">
                                             <!-- Title -->
                                             <h3 class="mb-0">Detail Pengajuan Beasiswa</h3>
                                         </div>
 
-                                        <div class="col-4 text-right">
+                                        <!-- <div class="col-4 text-right">
 
                                             <code class="text-default"><mark class="text-default">Kode Daftar: <?php echo $row['kd_daftar'] ?></mark></code>
-                                        </div>
+                                        </div> -->
                                 <?php
                                     }
                                 } else {
@@ -408,13 +408,34 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <div class="form-group row">
                                                 <label for="ipk" class="col-md-6 col-form-label form-control-label">IPK</label>
                                                 <div class="col-md-6">
-                                                    <input class="form-control" type="text" value="<?php echo $row['ipk'] ?>" id="ipk" placeholder="IPK" disabled>
+                                                    <input class="form-control" type="text" value="<?php $ipk = $row['ipk']; $numberAsString = number_format($ipk, 2); echo $numberAsString;?>" id="ipk" placeholder="IPK" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="semester_ke" class="col-md-6 col-form-label form-control-label">Semester</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php echo $row['semester_ke'] ?>" id="semester_ke" placeholder="Semester" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label for="no-telp-ortu" class="col-md-6 col-form-label form-control-label">No. Telpon Orang Tua</label>
                                                 <div class="col-md-6">
                                                     <input class="form-control" type="text" value="<?php echo $row['no_telp_ortu'] ?>" id="no-telp-ortu" placeholder="No Telp Orangtua" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="pekerjaan-ortu" class="col-md-6 col-form-label form-control-label">Pekerjaan Orangtua</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php echo $row['pekerjaan_ortu'] ?>" id="pekerjaan-ortu" placeholder="Pekerjaan Orangtua" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <label for="gaji-ortu" class="col-md-6 col-form-label form-control-label">Gaji Orangtua</label>
+                                                <div class="col-md-6">
+                                                    <input class="form-control" type="text" value="<?php $angka = $row['gaji_ortu'];
+                                                                                                    $hasil_rupiah = "Rp " . number_format($angka, 0, ',', '.');
+                                                                                                    echo $hasil_rupiah;
+                                                                                                    ?>" id="gaji-ortu" placeholder="Gaji Orangtua" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -427,13 +448,6 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                                                                         return $hasil_rupiah;
                                                                                                     }
                                                                                                     echo rupiah($row['nominal_pengajuan']);  ?>" id="nominal" placeholder="Nominal" disabled>
-
-                                                </div>
-                                            </div>
-                                            <div class="form-group row">
-                                                <label for="pekerjaan-ortu" class="col-md-6 col-form-label form-control-label">Pekerjaan Orangtua</label>
-                                                <div class="col-md-6">
-                                                    <input class="form-control" type="text" value="<?php echo $row['pekerjaan_ortu'] ?>" id="pekerjaan-ortu" placeholder="Pekerjaan Orangtua" disabled>
                                                 </div>
                                             </div>
 
@@ -536,6 +550,16 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     ?>
 
                             <div class="col-lg-4">
+                            <div class="card">
+                                    <div class="card-header bg-transparent">
+                                        <h3 class="mb-0">Kode Pendaftaran</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div align="center">
+                                            <h1 ><code class="text-default"><?php echo $_GET['kd_daftar']; ?></code></h1>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="card">
                                     <div class="card-header bg-transparent">
                                         <h3 class="mb-0">Jejak Pengajuan</h3>
@@ -552,7 +576,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                     <h5 class=" mt-3 mb-0">Mengisi Formulir</h5>
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_daftar'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -563,10 +587,9 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
-                                        $status = 'acc-wakil-dekan';
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
+                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status is null LIMIT 1";
                                         $stmt = $con->prepare($query);
-                                        $stmt->bind_param("is", $kd_daftar, $status);
+                                        $stmt->bind_param("i", $kd_daftar);
                                         $stmt->execute();
                                         $result = $stmt->get_result();
                                         while ($row = $result->fetch_assoc()) {
@@ -588,6 +611,60 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
+                                        $status1 = 'acc-wakil-dekan';
+                                        $query = "SELECT * FROM sts_daftar WHERE kd_daftar = ? and status = ? LIMIT 1";
+                                        $stmt = $con->prepare($query);
+                                        $stmt->bind_param("is", $kd_daftar, $status1);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                            <div class="timeline-block">
+                                                <span class="timeline-step badge-success">
+                                                    <i class="fas fa-check"></i>
+                                                </span>
+                                                <div class="timeline-content">
+                                                    <span class="badge badge-pill badge-success">DITERIMA</span>
+                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi WD III</h5>
+
+                                                    <div class="mt-3">
+                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+                                        <?php
+                                        $kd_daftar = $_GET['kd_daftar'];
+                                        $status1 = 'ditolak';
+                                        $query = "SELECT * FROM sts_daftar WHERE kd_daftar = ? and status = ? LIMIT 1";
+                                        $stmt = $con->prepare($query);
+                                        $stmt->bind_param("is", $kd_daftar, $status1);
+                                        $stmt->execute();
+                                        $result = $stmt->get_result();
+                                        while ($row = $result->fetch_assoc()) {
+                                        ?>
+                                            <div class="timeline-block">
+                                                <span class="timeline-step badge-danger">
+                                                    <i class="fas fa-exclamation"></i>
+                                                </span>
+                                                <div class="timeline-content">
+                                                    <span class="badge badge-pill badge-danger">DITOLAK</span>
+                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi WD III</h5>
+
+                                                    <div class="mt-3">
+                                                        <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+
+
+
+                                        <?php
+                                        $kd_daftar = $_GET['kd_daftar'];
                                         $status1 = 'diterima';
                                         $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? LIMIT 1";
                                         $stmt = $con->prepare($query);
@@ -602,11 +679,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 </span>
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-success">DITERIMA</span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi</h5>
+                                                    <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -628,46 +705,16 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 </span>
                                                 <div class="timeline-content">
                                                     <span class="badge badge-pill badge-danger">DITOLAK</span>
-                                                    <h5 class=" mt-3 mb-0">Tahap Seleksi</h5>
-
-                                                    <div class="mt-3">
-                                                        <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <?php } ?>
-
-
-                                        <?php
-                                        $kd_daftar = $_GET['kd_daftar'];
-                                        $status1 = 'diterima';
-                                        $status2 = 'ditolak';
-                                        $query = "SELECT * FROM pendaftaran WHERE kd_daftar = ? and status = ? OR status = ? LIMIT 1";
-                                        $stmt = $con->prepare($query);
-                                        $stmt->bind_param("iss", $kd_daftar, $status1, $status2);
-                                        $stmt->execute();
-                                        $result = $stmt->get_result();
-                                        while ($row = $result->fetch_assoc()) {
-                                        ?> 
-                                            <div class="timeline-block">
-                                                <span class="timeline-step badge-<?php $status = $row['status'];
-                                                                                    echo ($status == "diterima" ? "success" : "danger") ?>">
-                                                    <i class="fas fa-<?php $status = $row['status'];
-                                                                        echo ($status == "diterima" ? "check" : "exclamation") ?>"></i>
-                                                </span>
-                                                <div class="timeline-content">
-                                                    <span class="badge badge-pill badge-<?php $status = $row['status'];
-                                                                                        echo ($status == "diterima" ? "success" : "danger") ?>"><?php echo $row['status']; ?></span>
                                                     <h5 class=" mt-3 mb-0">Status Pengajuan</h5>
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
                                         <?php } ?>
+
 
                                         <?php
                                         $kd_daftar = $_GET['kd_daftar'];
@@ -814,7 +861,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                                 <?php
                                                                 }
                                                             } else { ?>
-                                                                <label class="form-control-label text-white" for="status">Verifikasi Pembayaran ini?</label>
+                                                                <label class="form-control-label" for="status">Verifikasi Pembayaran ini?</label>
                                                                 <div class="form-group row">
                                                                     <div class="col-md-12">
                                                                         <select class="form-control" name="status" type="text" id="status" placeholder="Status Pembayaran" required>

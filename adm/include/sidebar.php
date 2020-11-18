@@ -198,14 +198,14 @@
               <div class="collapse <?php echo ($parentpage == "pengajuan" ? "show" : "") ?>" id="navbar-masterdata3">
                 <ul class="nav nav-sm flex-column">
                   <li class="nav-item">
-                    <a href="#navbar-multilevel1" class="nav-link" data-toggle="collapse" role="button" aria-expanded="<?php echo ($parentpage == "validasi" ? "true" : "false") ?>" aria-controls="navbar-multilevel1">Validasi Penerima</a>
-                    <div class="collapse <?php echo ($parentpage == "validasi" ? "show" : "") ?>" id="navbar-multilevel1" style="">
+                    <a href="#navbar-multilevel1" class="nav-link" data-toggle="collapse" role="button" aria-expanded="<?php echo ($subchildpage == "validasi" ? "true" : "false") ?>" aria-controls="navbar-multilevel1">Validasi Penerima</a>
+                    <div class="collapse <?php echo ($subchildpage == "validasi" ? "show" : "") ?>" id="navbar-multilevel1" style="">
                       <ul class="nav nav-sm flex-column">
                         <li class="nav-item">
                           <a href="validasi_pinjaman" class="nav-link <?php echo ($childpage == "validasi_pinjaman" ? "active" : "") ?>">Pinjaman Registrasi</a>
                         </li>
                         <li class="nav-item">
-                          <a href="#!" class="nav-link <?php echo ($childpage == "validasi_beasiswa" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
+                          <a href="validasi_kebutuhan" class="nav-link <?php echo ($childpage == "validasi_kebutuhan" ? "active" : "") ?>">Beasiswa Kebutuhan</a>
                         </li>
                       </ul>
                     </div>

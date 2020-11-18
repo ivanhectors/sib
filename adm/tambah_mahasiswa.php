@@ -24,12 +24,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
         $no_telp = $_POST['no_telp'];
         $id_fakultas = $_POST['id_fakultas'];
         $id_prodi = $_POST['id_prodi'];
-        $id_dosen_wali = $_POST['id_dosen_wali'];
         $id_role = '5';
 
         //Prepare Update User Data
-        $SQL = $con->prepare("INSERT INTO user_mhs (nim, password, nama_mhs, email, no_telp, id_fakultas, id_prodi, id_dosen_wali, id_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $SQL->bind_param('sssssssis', $nim, $passwordhash, $nama_mhs, $email, $no_telp, $id_fakultas, $id_prodi, $id_dosen_wali, $id_role);
+        $SQL = $con->prepare("INSERT INTO user_mhs (nim, password, nama_mhs, email, no_telp, id_fakultas, id_prodi, id_role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $SQL->bind_param('ssssssss', $nim, $passwordhash, $nama_mhs, $email, $no_telp, $id_fakultas, $id_prodi, $id_role);
         /* Execute the prepared Statement */
         $status = $SQL->execute();
         /* BK: always check whether the execute() succeeded */
@@ -239,7 +238,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <!-- Address -->
                                 <h6 class="heading-small text-muted mb-4">Informasi Akademik</h6>
                                 <div class="row">
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="fakultas">Fakultas</label>
                                             <select class="form-control" name="id_fakultas" title="fakultas" id="fakultasedit" oninvalid="this.setCustomValidity('Silahkan Pilih Fakultas Mahasiswa.')" oninput="setCustomValidity('')" required>
@@ -256,7 +255,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <div class="col-sm-6">
                                         <div class="form-group">
                                             <label class="form-control-label" for="prodi">Program Studi</label>
 
@@ -266,14 +265,14 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
                                     </div>
-                                    <div class="col-sm-4">
+                                    <!-- <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="dosen_wali">Dosen Wali</label>
                                             <select class="form-control" name="id_dosen_wali" title="Dosen Wali" id="dosen_wali" oninvalid="this.setCustomValidity('Silahkan Pilih Dosen Wali Mahasiswa.')" oninput="setCustomValidity('')" required>
                                             </select>
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </div>
 
                                 <div class="text-right pb-0">

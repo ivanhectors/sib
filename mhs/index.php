@@ -240,17 +240,18 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             while ($row = $result->fetch_assoc()) {
 
 
-                              $date = $row['tgl_daftar'];
+                              $date = $row['tahun'];
+                              $tahun_cut = substr($date, 0, -1);
                               $tahun = date('Y', strtotime($date));
 
                               $semester = $row['semester'];
-                              if ($semester == 'Ganjil') {
+                              if ($semester == 'Gasal') {
                                 $semester = '1';
                               } else {
                                 $semester = '2';
                               }
 
-                              $display = "'" . $tahun . "-" . $semester . "'" . ",,";
+                              $display = "'" . $tahun_cut . "-" . $semester . "'" . ",,";
                               $display_cut = substr($display, 0, -1);
                             ?><?php echo substr($display, 0, -1);
                             } ?>],
@@ -369,17 +370,18 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             while ($row = $result->fetch_assoc()) {
 
 
-                              $date = $row['tgl_daftar'];
+                              $date = $row['tahun'];
+                              $tahun_cut = substr($date, 0, -1);
                               $tahun = date('Y', strtotime($date));
 
                               $semester = $row['semester'];
-                              if ($semester == 'Ganjil') {
+                              if ($semester == 'Gasal') {
                                 $semester = '1';
                               } else {
                                 $semester = '2';
                               }
 
-                              $display = "'" . $tahun . "-" . $semester . "'" . ",,";
+                              $display = "'" . $tahun_cut . "-" . $semester . "'" . ",,";
                               $display_cut = substr($display, 0, -1);
                             ?><?php echo substr($display, 0, -1);
                             } ?>],

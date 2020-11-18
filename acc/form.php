@@ -18,7 +18,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
         $status = $_POST["status"];
         $kd_daftar = $_GET["kd_daftar"];
         $acc_role = $_SESSION['role'];
-        $acc_id = $_SESSION['id_acc']; 
+        $acc_id = $_SESSION['id_acc'];
 
         // Update Tabel Seleksi PENDAFTARAN
         $query = "UPDATE pendaftaran SET status = ? WHERE kd_daftar = ? ";
@@ -55,7 +55,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
         header("location:http://$host$uri/$extra");
         $_SESSION['success'] = 'Berhasil menyeleksi pendaftaran. Anda dapat mengunjungi halaman riwayat pengajuan untuk melihat kembali keseluruhan data.';
         exit();
-    } 
+    }
 
 
 ?>
@@ -292,15 +292,15 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
                                 ?>
-                                        <div class="col-8">
+                                        <div class="col-12">
                                             <!-- Title -->
                                             <h3 class="mb-0">Detail Pengajuan Beasiswa</h3>
                                         </div>
 
-                                        <div class="col-4 text-right">
+                                        <!-- <div class="col-4 text-right">
 
                                             <code class="text-default"><mark class="text-default">Kode Daftar: <?php echo $row['kd_daftar'] ?></mark></code>
-                                        </div>
+                                        </div> -->
                                 <?php
                                     }
                                 } else {
@@ -416,7 +416,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                             <div class="form-group row">
                                                 <label for="ipk" class="col-md-6 col-form-label form-control-label">IPK</label>
                                                 <div class="col-md-6">
-                                                    <input class="form-control" type="text" value="<?php echo $row['ipk'] ?>" id="ipk" placeholder="IPK" disabled>
+                                                    <input class="form-control" type="text" value="<?php $ipk = $row['ipk']; $numberAsString = number_format($ipk, 2); echo $numberAsString;?>" id="ipk" placeholder="IPK" disabled>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -529,7 +529,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 $hasil = "duplikat";
                             } else {
                                 echo '<div class="card bg-dark text-white border-0">
-                            <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.jpg" alt="Mahasiswa Tidak Ditemukan">
+                            <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.svg" alt="Mahasiswa Tidak Ditemukan">
                             <div class="card-img-overlay align-items-center">
                             <div>
                             <center>
@@ -561,6 +561,16 @@ if (strlen($_SESSION['acclogin']) == 0) {
                             <div class="col-lg-4">
                                 <div class="card">
                                     <div class="card-header bg-transparent">
+                                        <h3 class="mb-0">Kode Pendaftaran</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div align="center">
+                                            <h1 ><code class="text-default"><?php echo $_GET['kd_daftar']; ?></code></h1>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <div class="card-header bg-transparent">
                                         <h3 class="mb-0">Jejak Pengajuan</h3>
                                     </div>
                                     <div class="card-body">
@@ -575,7 +585,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                                     <h5 class=" mt-3 mb-0">Mengisi Formulir</h5>
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_daftar'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -607,7 +617,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['acc_tanggal'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -658,7 +668,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -685,7 +695,7 @@ if (strlen($_SESSION['acclogin']) == 0) {
 
                                                     <div class="mt-3">
                                                         <small class="text-muted font-weight-bold"><?php $date = $row['tgl_update'];
-                                                                                                    echo date('d-m-Y g:i A', strtotime($date)); ?></small>
+                                                                                                    echo date('d-m-Y H:i', strtotime($date)); ?> WIB</small>
                                                     </div>
                                                 </div>
                                             </div>

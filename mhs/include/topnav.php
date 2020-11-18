@@ -107,10 +107,10 @@ if (strlen($_SESSION['mhslogin']) == 0) {
               <i class="ni ni-calendar-grid-58"></i>
               <span>Kalender</span>
             </a>
-            <a href="#!" class="dropdown-item">
+            <!-- <a href="#!" class="dropdown-item">
               <i class="ni ni-support-16"></i>
               <span>Support</span>
-            </a>
+            </a> -->
 
             <a href="logout" class="dropdown-item">
               <i class="ni ni-user-run"></i>

@@ -103,11 +103,15 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
                         </td>
                         <td rowspan="2" class="barcodecell" style="text-align:right">
                             <div style="float: right; width:50%;">
-                                <barcode code="' . $daftar['kd_daftar'] . '" type="C128B" class="barcode"
-                                    style="text-align: right; width:258px;" size="0.8" />
-                                <div style="font-family: ocrb; font-size:12px;">
-                                    <center>KD DAFTAR: ' . $daftar['kd_daftar'] . '</center>
+                                
+                                <div style="font-family: ocrb; font-size:16px;color:#5e72e4;">
+                                    <b>' . $daftar['kd_daftar'] . '</b>
                                 </div>
+                                
+                            </div>
+                            <div style="font-family: ocrb; font-size:12px;" align="right">
+                            <hr style="height:2px;width:35%;text-align:right;margin-left:0;margin-top:1;margin-bottom:3px;">
+                                KD DAFTAR
                             </div>
                         </td>
                     </tr>
@@ -188,7 +192,7 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
                     <p>IPK </p>
                 </td>
                 <td>
-                    <p>: <strong>' . $daftar['ipk'] . '</strong></p>
+                    <p>: <strong>' . number_format($daftar['ipk'], 2) . '</strong></p>
                 </td>
             </tr>
             <tr>
@@ -215,6 +219,14 @@ center; padding: 2mm; padding-top: 4mm;text-align: right;">&nbsp; ' . $daftar['K
                     <p>: <strong>Rp. ' . number_format($daftar['nominal_pengajuan'], 0, ',', '.') . '</strong></p>
                 </td>
             </tr>
+            <tr>
+                <td>
+                    <p> DANA DITERIMA </p>
+                </td>
+                <td>
+                    <p class="uppercase">: <strong>Rp. ' . number_format($daftar['nominal_disetujui'], 0, ',', '.') . '</strong></p>
+                </td>
+        </tr>
         </tbody>
     </table>
 </div>

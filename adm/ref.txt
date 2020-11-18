@@ -160,3 +160,10 @@ END AS poin_semester,
 nominal_pengajuan
 from pendaftaran 
 WHERE tahun = '20201' AND status = 'acc-wakil-dekan'
+
+
+kd_daftar,id_mhs,kd_bsw,no_telp_ortu,ipk,gaji_ortu,semester_ke,pekerjaan_ortu,thn_ajaran,semester,tahun,nominal_pengajuan,tgl_daftar
+
+barcode
+<barcode code="' . $daftar['kd_daftar'] . '" type="C128B" class="barcode"
+                                    style="text-align: right; width:258px;" size="0.8" />

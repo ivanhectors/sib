@@ -56,10 +56,10 @@ if (strlen($_SESSION['acclogin']) == 0) {
                                 </ol>
                             </nav>
                         </div>
-                        <div class="col-lg-6 col-5 text-right">
+                        <!-- <div class="col-lg-6 col-5 text-right">
                             <a href="riwayat_pengajuan_exp?tahun=&semester=" class="btn btn-sm btn-neutral"><i class="fas fa-cloud-download-alt" style="color:primary;"> </i> Download PDF/XLSX</a>
 
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>

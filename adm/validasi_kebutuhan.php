@@ -13,7 +13,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     // include("include/sidebar.php");
     $parentpage = "pengajuan";
     $subchildpage = "validasi";
-    $childpage = "validasi_pinjaman";
+    $childpage = "validasi_kebutuhan";
 
 
 
@@ -24,7 +24,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     } else {
         $tahun = $year . "1";
     }
-    $kd_bsw = '2';
+    $kd_bsw = '1';
     $status = 'diterima';
     $sql = "SELECT budget.nominal AS budget_beasiswa
     FROM budget
@@ -54,12 +54,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
     if (isset($_POST['validasi'])) {
         $status = 'diterima';
         $kd_daftar = $_POST['kd_daftar'];
-        $nominal_pengajuan = $_POST['nominal_pengajuan'];
-        $output = str_replace([':', '\\', ' ', 'Rp', '.'], '', $nominal_pengajuan);
-        $nominal = trim($output, '');
-        if ($nominal <= $budget_sekarang) {
+        $nominal_disetujui = $_POST['nominal_disetujui'];
+        if ($nominal_disetujui <= $budget_sekarang) {
             $valid = $con->prepare("UPDATE pendaftaran SET status = ?, nominal_disetujui = ? WHERE kd_daftar = ?");
-            $valid->bind_param('sii', $status, $nominal, $kd_daftar);
+            $valid->bind_param('sii', $status, $nominal_disetujui, $kd_daftar);
             /* execute prepared statement */
             $valid->execute();
             // printf("%d Row inserted.\n", $valid->affected_rows);
@@ -88,7 +86,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
             $_SESSION['error'] = htmlspecialchars($valid->error);
             // die('execute() failed: ' . htmlspecialchars($valid->error));
         } else {
-            $_SESSION['success'] = "Berhasil mendiskualifikasi atau menolak terhadap Nomor Pendaftaran " . $_POST['kd_daftar'].".";
+            $_SESSION['success'] = "Berhasil mendiskualifikasi atau menolak terhadap Nomor Pendaftaran " . $_POST['kd_daftar'] . ".";
         }
         $valid->close();
     }
@@ -133,7 +131,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                                     <li class="breadcrumb-item"><a href="../adm?id"><i class="fas fa-home"></i></a></li>
                                     <li class="breadcrumb-item"><a href="../adm?id">Dashboards</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Validasi Pinjaman Registrasi</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Validasi Beasiswa Kebutuhan</li>
                                 </ol>
                             </nav>
                         </div>
@@ -184,9 +182,9 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         <div class="card-header border-0">
                             <div class="row">
                                 <div class="col-12">
-                                    <h3 class="mb-0">Data Pengajuan Pinjaman Registrasi</h3>
+                                    <h3 class="mb-0">Data Pengajuan Beasiswa Kebutuhan</h3>
                                     <p class="text-sm mb-0">
-                                        Data pada tabel ini merupakan data hasil seleksi pengajuan dari <strong>Wakil Dekan Fakultas III</strong> yang menjadi kandidat penerima pinjaman registrasi.
+                                        Data pada tabel ini merupakan data hasil seleksi pengajuan dari <strong>Wakil Dekan Fakultas III</strong> yang menjadi kandidat penerima Beasiswa Kebutuhan.
                                         Silahkan menggunakan tombol <strong>opsi</strong>, untuk menentukan validasi anda.
                                     </p>
                                     <p class="text-sm">
@@ -410,7 +408,18 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                         <input type="text" name="nominal_pengajuan" class="form-control nominal_pengajuan" id="nominal_pengajuan" Placeholder="Kode Daftar" onkeypress="return isNumber(event)" readonly />
                                                     </div>
                                                 </div>
-                                                <p>Melakukan Validasi terhadap pendaftaran ini, berarti <b><u>setuju</u></b> bahwa pendaftaran ini telah diterima sebagai salah satu penerima pinjaman registrasi semester ini. Anda tidak dapat kembali mengubah tindakan ini.</p>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-12">
+                                                        <h6 class="heading-small text-muted">Jumlah Diberikan Dana :</h6>
+                                                        <select class="form-control" id="nominal_disetujui" name="nominal_disetujui"  placeholder="Pilih Besaran Dana" title="Silahkan pilih besaran dana yang diberikan." oninvalid="this.setCustomValidity('Silahkan pilih besaran dana yang diberikan.')" oninput="setCustomValidity('')" required>
+                                                            <option selected="selected" value="" disabled>-- Pilih Besaran Dana --</option>
+                                                            <option value="1000000">Rp. 1.000.000</option>
+                                                            <option value="800000">Rp. 800.000</option>
+                                                            <option value="650000">Rp. 650.000</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <p>Melakukan Validasi terhadap pendaftaran ini, berarti <b><u>setuju</u></b> bahwa pendaftaran ini telah diterima sebagai salah satu penerima Beasiswa Kebutuhan semester ini. Anda tidak dapat kembali mengubah tindakan ini.</p>
                                                 <p><b><u>Anda tidak dapat kembali mengubah tindakan ini.</b></u></p>
                                         </div>
 
@@ -444,12 +453,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                     <h4 class="heading mt-4">Ketentuan Diskualifikasi atau Menolak Pengajuan</h4>
                                                 </div>
                                                 <div class="text-left">
-                                                    <input type="text" name="kd_daftar" class="form-control kd_daftar" />
+                                                    <input type="hidden" name="kd_daftar" class="form-control kd_daftar" />
                                                     <p class="mb-0">Anda dapat mendiskualifikasi atau menolak pengajuan ini jika: </p>
                                                     <p class="mb-0"> 1. Anda merasa pengajuan ini terjadi kecurangan atau data yang tidak sah;</p>
                                                     <p class="mb-0"> 2. Dana Budget anda telah mencukupi untuk menerima pengajuan lain.</p>
                                                 </div>
-
                                             </div>
 
                                             <div class="modal-footer">

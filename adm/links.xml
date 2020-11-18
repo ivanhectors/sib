@@ -52,4 +52,28 @@
     <title>Import Data Mahasiswa</title>
     <url>import_mhs_csv</url>
   </link>
+      <link>
+    <title>Riwayat Pengajuan</title>
+    <url>riwayat_pengajuan</url>
+  </link>
+      <link>
+    <title>Export Riwayat Pengajuan</title>
+    <url>riwayat_pengajuan_exp</url>
+  </link>
+      <link>
+    <title>Validasi Pinjaman Registrasi</title>
+    <url>validasi_pinjaman</url>
+  </link>
+      <link>
+    <title>Validasi Beasiswa Kebutuhan</title>
+    <url>validasi_kebutuhan</url>
+  </link>
+      <link>
+    <title>Budget Bantuan Dana</title>
+    <url>budget</url>
+  </link>
+      <link>
+    <title>Riwayat Pembayaran</title>
+    <url>riwayat_pembayaran</url>
+  </link>
 </pages>
