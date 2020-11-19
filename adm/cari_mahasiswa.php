@@ -67,7 +67,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
         $id_user = $_POST['id_user'];
 
         //update password
-        $password =  '1234';
+        $password =  $_POST['tgl_lahir'];
         $passwordhash = password_hash($password, PASSWORD_DEFAULT);
 
         //validasi password user
@@ -97,7 +97,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
     <?php
     include("include/header.php");
     ?>
-    <script>
+    <!-- <script>
         function userAvailability() {
             $("#loaderIcon").show();
             jQuery.ajax({
@@ -111,7 +111,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 error: function() {}
             });
         }
-    </script>
+    </script> -->
 
     <script>
         if (window.history.replaceState) {
@@ -258,7 +258,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                 <div data-notify="container" class="alert alert-dismissible alert-success alert-notify animated fadeInDown" role="alert" data-notify-position="top-center" style="display: inline-block; margin: 0px auto; position: fixed; transition: all 0.5s ease-in-out 0s; z-index: 1080; top: 15px; left: 0px; right: 0px; animation-iteration-count: 1;">
                     <span class="alert-icon ni ni-bell-55" data-notify="icon"></span>
                     <div class="alert-text" div=""> <span class="alert-title" data-notify="title"> Sukses!</span>
-                        <span data-notify="message">Password User berhasil di Reset ke Default : 1234.</span>
+                        <span data-notify="message">Password User berhasil di Reset ke Default menggunakan Tanggal Lahir Mahasiswa Tersebut.</span>
                     </div><button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; right: 10px; top: 5px; z-index: 1082;">
                         <span aria-hidden="true">×</span></button>
                 </div>
@@ -306,181 +306,189 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
         <!-- Page content -->
         <div class="container-fluid mt--6">
-            <div class="card mb-4">
-                <!-- Card header -->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card mb-4">
+                        <!-- Card header -->
 
-                <div class="card-header">
+                        <div class="card-header">
 
-                    <div class="row align-items-center">
-                        <?php
-                        $id_acc = $_GET['carimhs'];
-                        $query = "select * from user_mhs where nim=?";
-                        $stmt = $con->prepare($query);
-                        $stmt->bind_param("i", $id_acc);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
+                            <div class="row align-items-center">
+                                <?php
+                                $id_acc = $_GET['carimhs'];
+                                $query = "select * from user_mhs where nim=?";
+                                $stmt = $con->prepare($query);
+                                $stmt->bind_param("i", $id_acc);
+                                $stmt->execute();
+                                $result = $stmt->get_result();
 
-                        if ($result->num_rows > 0) {
-                            while ($row = $result->fetch_assoc()) {
-                        ?>
-                                <div class="col-8">
-                                    <!-- Title -->
-                                    <h3 class="mb-0">Informasi Data Mahasiswa</h3>
-                                </div>
-
-                                <div class="col-4 text-right">
-
-                                    <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
-                                </div>
-                        <?php }
-                        } else {
-                            echo '<div class="col-8"><h3 class="mb-0">Informasi Data Mahasiswa</h3></div><div class="col-4 text-right"><code class="text-red"><mark>Akun Tidak Ditemukan</code></mark></div>';
-                        }
-                        ?>
-
-                    </div>
-                </div>
-
-                <!-- Card body -->
-                <div class="card-body">
-                    <!-- Form groups used in grid -->
-                    <?php
-                    $id_acc = $_GET['carimhs'];
-                    $query = "select * from user_mhs where nim=?";
-                    $stmt = $con->prepare($query);
-                    $stmt->bind_param("i", $id_acc);
-                    $stmt->execute();
-                    $result = $stmt->get_result();
-                    if ($result->num_rows > 0) {
-
-                        while ($row = $result->fetch_assoc()) {
-                    ?>
-                            <form role="form" method="post">
-                                <!-- Address -->
-                                <h6 class="heading-small text-muted mb-4">Informasi Pribadi</h6>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <?php $userphoto = $row['photo_mhs'];
-                                            if ($userphoto == "" || $userphoto == "NULL") :
-                                            ?>
-                                                <img src="img/profile.png" class="avatar mr-3" style="width: 50%; height:auto;">
-                                            <?php else : ?>
-                                                <img src="../mhs/img/<?php echo htmlentities($userphoto); ?>" class="avatar mr-3" style="width: 50%; height:auto;">
-                                            <?php endif; ?>
+                                if ($result->num_rows > 0) {
+                                    while ($row = $result->fetch_assoc()) {
+                                ?>
+                                        <div class="col-8">
+                                            <!-- Title -->
+                                            <h3 class="mb-0">Informasi Data Mahasiswa</h3>
                                         </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="nim">NIM</label>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><small class="font-weight-bold">@</small></span>
+
+                                        <div class="col-4 text-right">
+
+                                            <code class="text-default"><mark class="text-default"><?php echo $row['nim'] ?> - <?php echo $row['nama_mhs'] ?></mark></code>
+                                        </div>
+                                <?php }
+                                } else {
+                                    echo '<div class="col-8"><h3 class="mb-0">Informasi Data Mahasiswa</h3></div><div class="col-4 text-right"><code class="text-red"><mark>Akun Tidak Ditemukan</code></mark></div>';
+                                }
+                                ?>
+
+                            </div>
+                        </div>
+
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <!-- Form groups used in grid -->
+                            <?php
+                            $id_acc = $_GET['carimhs'];
+                            $query = "select * from user_mhs where nim=?";
+                            $stmt = $con->prepare($query);
+                            $stmt->bind_param("i", $id_acc);
+                            $stmt->execute();
+                            $result = $stmt->get_result();
+                            if ($result->num_rows > 0) {
+
+                                while ($row = $result->fetch_assoc()) {
+                            ?>
+                                    <form role="form" method="post">
+                                        <!-- Address -->
+                                        <h6 class="heading-small text-muted mb-4">Informasi Pribadi</h6>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <?php $userphoto = $row['photo_mhs'];
+                                                    if ($userphoto == "" || $userphoto == "NULL") :
+                                                    ?>
+                                                        <img src="img/profile.png" class="avatar mr-3" style="width: 50%; height:auto;">
+                                                    <?php else : ?>
+                                                        <img src="../mhs/img/<?php echo htmlentities($userphoto); ?>" class="avatar mr-3" style="width: 50%; height:auto;">
+                                                    <?php endif; ?>
                                                 </div>
-                                                <input type="hidden" name="nimmhsnow" id="nimmhsnow" value="<?php echo $_GET['carimhs'] ?>" />
-                                                <input onBlur="userAvailability()" id="nimmhs" name="nimmhs" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" oninvalid="this.setCustomValidity('Selahkan masukkan NIM Mahasiswa.')" oninput="setCustomValidity('')" required>
-                                                <div class="input-group-append">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="nim">NIM</label>
+                                                    <div class="input-group input-group-merge">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><small class="font-weight-bold">@</small></span>
+                                                        </div>
+                                                        <input type="hidden" name="nimmhsnow" id="nimmhsnow" value="<?php echo $_GET['carimhs'] ?>" />
+                                                        <input id="nimmhs" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" oninvalid="this.setCustomValidity('Selahkan masukkan NIM Mahasiswa.')" oninput="setCustomValidity('')" readonly>
+                                                        <!-- <input onBlur="userAvailability()" id="nimmhs" name="nimmhs" value="<?php echo $row['nim'] ?>" class="form-control" placeholder="NIM Mahasiswa" type="text" title="Masukkan NIM" oninvalid="this.setCustomValidity('Selahkan masukkan NIM Mahasiswa.')" oninput="setCustomValidity('')" readonly> -->
+                                                        <!-- <div class="input-group-append">
                                                     <span class="input-group-text" id="user-availability-status1"></span> <img src="../assets/img/loading.gif" width="35" id="loadericon" style="display:none;" />
+                                                </div> -->
+                                                    </div>
+                                                    <input id="oldnim" name="oldnim" value="<?php echo $row['nim'] ?>" type="hidden" />
+                                                    <span id="user-availability-status1"></span>
                                                 </div>
                                             </div>
-                                            <input id="oldnim" name="oldnim" value="<?php echo $row['nim'] ?>" type="hidden" />
-                                            <span id="user-availability-status1"></span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="nama">Nama Mahasiswa</label>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="nama">Nama Mahasiswa</label>
+                                                    <div class="input-group input-group-merge">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                                        </div>
+
+                                                        <input type="text" class="form-control" value="<?php echo $row['nama_mhs'] ?>" id="nama" placeholder="Nama Mahasiswa" readonly>
+                                                        <!-- <input type="text" name="nama_mhs" class="form-control" value="<?php echo $row['nama_mhs'] ?>" id="nama" placeholder="Nama Mahasiswa"> -->
+                                                    </div>
                                                 </div>
-                                                <input type="text" name="nama_mhs" class="form-control" value="<?php echo $row['nama_mhs'] ?>" id="nama" placeholder="Nama Mahasiswa">
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <hr class="my-4" />
-                                <!-- Address -->
-                                <h6 class="heading-small text-muted mb-4">Informasi Akademik</h6>
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="email">Email</label>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                        <hr class="my-4" />
+                                        <!-- Address -->
+                                        <h6 class="heading-small text-muted mb-4">Informasi Akademik</h6>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="email">Email</label>
+                                                    <div class="input-group input-group-merge">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                                        </div>
+                                                        <input type="email" class="form-control" id="email" placeholder="Email Mahasiswa" value="<?php echo $row['email'] ?>" readonly>
+                                                        <!-- <input type="email" name="email" class="form-control" id="email" placeholder="Email Mahasiswa" value="<?php echo $row['email'] ?>"> -->
+
+                                                    </div>
                                                 </div>
-                                                <input type="email" name="email" class="form-control" id="email" placeholder="Email Mahasiswa" value="<?php echo $row['email'] ?>">
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="notelp">No. Telpon</label>
-                                            <div class="input-group input-group-merge">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="notelp">No. Telpon</label>
+                                                    <div class="input-group input-group-merge">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                                                        </div>
+                                                        <input type="number" class="form-control" id="notelp" placeholder="Telpon Mahasiswa" value="<?php echo $row['no_telp'] ?>" readonly>
+                                                        <!-- <input type="number" name="no_telp" class="form-control" id="notelp" placeholder="Telpon Mahasiswa" value="<?php echo $row['no_telp'] ?>"> -->
+                                                    </div>
                                                 </div>
-                                                <input type="number" name="no_telp" class="form-control" id="notelp" placeholder="Telpon Mahasiswa" value="<?php echo $row['no_telp'] ?>">
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="fakultas">Fakultas</label>
-                                            <select class="form-control" name="id_fakultas" title="fakultas" id="fakultasedit">
-                                                <?php
-                                                $nim_mhs = $_GET['carimhs'];
-                                                $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.id_fakultas=ref_fakultas.id_fakultas AND user_mhs.nim = '" . $nim_mhs . "'");
-                                                ?>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="fakultas">Fakultas</label>
+                                                    <select class="form-control" title="fakultas" id="fakultasedit" disabled>
+                                                        <?php
+                                                        $nim_mhs = $_GET['carimhs'];
+                                                        $sql_fakultas = mysqli_query($con, "select * from user_mhs join ref_fakultas where user_mhs.id_fakultas=ref_fakultas.id_fakultas AND user_mhs.nim = '" . $nim_mhs . "'");
+                                                        ?>
 
-                                                <?php
-                                                if (mysqli_num_rows($sql_fakultas) > 0) {
-                                                    while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                        echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
-                                                    }
-                                                } else {
-                                                    echo '<option></option>';
-                                                }
+                                                        <?php
+                                                        if (mysqli_num_rows($sql_fakultas) > 0) {
+                                                            while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
+                                                                echo '<option value="' . $rs_fakultas['id_fakultas'] . '">' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                            }
+                                                        } else {
+                                                            echo '<option></option>';
+                                                        }
 
-                                                ?>
-                                                <?php
-                                                $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
-                                                ?>
-                                                <?php
-                                                while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
-                                                    echo '<option value="' . $rs_fakultas['id_fakultas'] . '">Fakultas ' . $rs_fakultas['nama_fakultas'] . '</option>';
-                                                }
-                                                ?>
-                                            </select>
-                                            <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label class="form-control-label" for="prodi">Program Studi</label>
+                                                        ?>
+                                                        <?php
+                                                        $sql_fakultas = mysqli_query($con, "select * from ref_fakultas order by id_fakultas ASC");
+                                                        ?>
+                                                        <?php
+                                                        while ($rs_fakultas = mysqli_fetch_assoc($sql_fakultas)) {
+                                                            echo '<option value="' . $rs_fakultas['id_fakultas'] . '">' . $rs_fakultas['nama_fakultas'] . '</option>';
+                                                        }
+                                                        ?>
+                                                    </select>
+                                                    <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-3">
+                                                <div class="form-group">
+                                                    <label class="form-control-label" for="prodi">Program Studi</label>
 
-                                            <select class="form-control" name="id_prodi" title="Pilih Program Studi" id="prodiedit">
-                                                <?php
-                                                $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.id_prodi=ref_prodi.id_prodi AND user_mhs.nim = '" . $nim_mhs . "'");
-                                                ?>
+                                                    <select class="form-control" title="Pilih Program Studi" id="prodiedit" disabled>
+                                                        <?php
+                                                        $sql_prodi = mysqli_query($con, "select * from user_mhs join ref_prodi where user_mhs.id_prodi=ref_prodi.id_prodi AND user_mhs.nim = '" . $nim_mhs . "'");
+                                                        ?>
 
-                                                <?php
-                                                if (mysqli_num_rows($sql_prodi) > 0) {
-                                                    while ($rs_prodi = mysqli_fetch_assoc($sql_prodi)) {
-                                                        echo '<option value="' . $rs_prodi['id_prodi'] . '">Program Studi ' . $rs_prodi['nama_prodi'] . '</option>';
-                                                    }
-                                                } else {
-                                                    echo '<option value="0"></option>';
-                                                }
+                                                        <?php
+                                                        if (mysqli_num_rows($sql_prodi) > 0) {
+                                                            while ($rs_prodi = mysqli_fetch_assoc($sql_prodi)) {
+                                                                echo '<option value="' . $rs_prodi['id_prodi'] . '">' . $rs_prodi['nama_prodi'] . '</option>';
+                                                            }
+                                                        } else {
+                                                            echo '<option value="0"></option>';
+                                                        }
 
-                                                ?>
+                                                        ?>
 
-                                            </select>
-                                            <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
-                                        </div>
-                                    </div>
-                                    <!-- <div class="col-sm-4">
+                                                    </select>
+                                                    <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-sm-4">
                                         <div class="form-group">
                                             <label class="form-control-label" for="dosen_wali">Dosen Wali</label>
                                             <select class="form-control" name="id_dosen_wali" title="Dosen Wali" id="dosen_wali">
@@ -503,127 +511,136 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <img src="../assets/img/loading.gif" width="35" id="load2" style="display:none;" />
                                         </div>
                                     </div> -->
-                                </div>
+                                        </div>
 
-                                <div class="text-right pb-0">
-                                    <button type="submit" id="submit" name="submit" class="btn btn-icon btn-primary text-white my-4 <?php
-                                                                                                                                    if ($result->num_rows > 1) {
-                                                                                                                                        echo "disabled";
-                                                                                                                                    }
-                                                                                                                                    ?>" type="button">
+                                        <div class="text-right pb-0">
+                                            <!-- <button type="submit" id="submit" name="submit" class="btn btn-icon btn-primary text-white my-4 <?php
+                                                                                                                                                    if ($result->num_rows > 1) {
+                                                                                                                                                        echo "disabled";
+                                                                                                                                                    }
+                                                                                                                                                    ?>" type="button">
                                         <span class="btn-inner--icon"><i class="fas fa-pen"></i></span>
                                         <span class="btn-inner--text">Edit Data</span>
-                                    </button>
-                            </form>
-                            <a data-toggle="modal" type="button" data-target="#reset<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-info text-white my-4 <?php
-                                                                                                                                                                if ($result->num_rows > 1) {
-                                                                                                                                                                    echo "disabled";
-                                                                                                                                                                }
-                                                                                                                                                                ?>" type="button">
-                                <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
-                                <span class="btn-inner--text">Reset Password</span>
-                            </a>
-                            <?php $status = $row['status'];
-                            if ($status > 0) :
-                            ?>
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4 <?php
-                                                                                                                                                                                    if ($result->num_rows > 1) {
-                                                                                                                                                                                        echo "disabled";
-                                                                                                                                                                                    }
-                                                                                                                                                                                    ?>" type="button">
-                                    <span class="btn-inner--icon"><i class="fas fa-lock"></i></span>
-                                    <span class="btn-inner--text">Nonaktifkan Akun</span>
-                                </a>
-                            <?php else : ?>
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&on=1" class="btn btn-icon btn-success text-white my-4 <?php
-                                                                                                                                                                                    if ($result->num_rows > 1) {
-                                                                                                                                                                                        echo "disabled";
-                                                                                                                                                                                    }
-                                                                                                                                                                                    ?>" type="button">
-                                    <span class="btn-inner--icon"><i class="fas fa-lock-open"></i></span>
-                                    <span class="btn-inner--text">Aktifkan Akun</span>
-                                </a>
-                            <?php endif; ?>
-                            <a data-toggle="modal" type="button" data-target="#hapusconfirm<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-danger text-white my-4" type="button">
-                                <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
-                                <span class="btn-inner--text">Hapus Akun</span>
-                            </a>
-                </div>
+                                    </button> -->
+                                    </form>
+                                    <a data-toggle="modal" type="button" data-target="#reset<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-info text-white my-4 <?php
+                                                                                                                                                                        if ($result->num_rows > 1) {
+                                                                                                                                                                            echo "disabled";
+                                                                                                                                                                        }
+                                                                                                                                                                        ?>" type="button">
+                                        <span class="btn-inner--icon"><i class="fas fa-key"></i></span>
+                                        <span class="btn-inner--text">Reset Password</span>
+                                    </a>
 
-                <!-- Batas verifikasi hapus akun -->
-                <div class="modal fade" id="hapusconfirm<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
-                    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                        <div class="modal-content bg-gradient-danger">
-                            <div class="modal-header">
-                                <h6 class="modal-title" id="modal-title-notification">Konfirmasi Hapus Akun</h6>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="py-3 text-center">
-                                    <i class="ni ni-bell-55 ni-3x"></i>
-                                    <h4 class="heading mt-4">Perhatian</h4>
-                                    <p>Menghapus akun berarti setuju bahwa akun akan dihapus dari database. Akun yang telah di hapus tidak dapat dipulihkan kembali. Yakin ingin menghapus akun ini?</p>
+                                    <?php $status = $row['status'];
+                                    if ($status > 0) :
+                                    ?>
+                                        <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&off=0" class="btn btn-icon btn-warning text-white my-4 <?php
+                                                                                                                                                                                            if ($result->num_rows > 1) {
+                                                                                                                                                                                                echo "disabled";
+                                                                                                                                                                                            }
+                                                                                                                                                                                            ?>" type="button">
+                                            <span class="btn-inner--icon"><i class="fas fa-lock"></i></span>
+                                            <span class="btn-inner--text">Nonaktifkan Akun</span>
+                                        </a>
+                                    <?php else : ?>
+                                        <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&on=1" class="btn btn-icon btn-success text-white my-4 <?php
+                                                                                                                                                                                            if ($result->num_rows > 1) {
+                                                                                                                                                                                                echo "disabled";
+                                                                                                                                                                                            }
+                                                                                                                                                                                            ?>" type="button">
+                                            <span class="btn-inner--icon"><i class="fas fa-lock-open"></i></span>
+                                            <span class="btn-inner--text">Aktifkan Akun</span>
+                                        </a>
+                                    <?php endif; ?>
+                                    <a data-toggle="modal" type="button" data-target="#hapusconfirm<?php echo $row['id_mhs'] ?>" class="btn btn-icon btn-danger text-white my-4" type="button">
+                                        <span class="btn-inner--icon"><i class="fas fa-trash"></i></span>
+                                        <span class="btn-inner--text">Hapus Akun</span>
+                                    </a>
+                        </div>
+
+
+
+
+                        <!-- Batas verifikasi hapus akun -->
+                        <div class="modal fade" id="hapusconfirm<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+                            <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+                                <div class="modal-content bg-gradient-danger">
+                                    <div class="modal-header">
+                                        <h6 class="modal-title" id="modal-title-notification">Konfirmasi Hapus Akun</h6>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="py-3 text-center">
+                                            <i class="ni ni-bell-55 ni-3x"></i>
+                                            <h4 class="heading mt-4">Perhatian</h4>
+                                            <p>Menghapus akun berarti setuju bahwa akun akan dihapus dari database. Akun yang telah di hapus tidak dapat dipulihkan kembali. Yakin ingin menghapus akun ini?</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
+                                        <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Tutup</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="modal-footer">
-                                <a href="cari_mahasiswa?carimhs=<?php echo $row['nim'] ?>&&id=<?php echo $row['id_mhs'] ?>&&del=delete" type="button" class="btn btn-white">Ok, Hapus Sekarang</a>
-                                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Tutup</button>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <!-- batas modal form validasi edit profil -->
-                <div class="col-md-4">
-                    <div class="modal fade" id="reset<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
-                        <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-body p-0">
-                                    <div class="card bg-secondary border-0 mb-0">
-                                        <form role="form" method="post">
-                                            <div class="card-body px-lg-5 py-lg-5">
-                                                <div class="text-center text-muted mb-4">
-                                                    <small>Masukkan password anda untuk mengubah data user : <b>
-                                                            <?php $nama_acc = $row['nama_mhs'];
-                                                            if ($nama_acc == "" || $nama_acc == "NULL") {
-                                                                echo htmlentities($row['nim']);
-                                                            } else {
-                                                                echo htmlentities($row['nama_mhs']);
-                                                            }
+                        <!-- batas modal form validasi edit profil -->
+                        <div class="col-md-4">
+                            <div class="modal fade" id="reset<?php echo $row['id_mhs'] ?>" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+                                <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body p-0">
+                                            <div class="card bg-secondary border-0 mb-0">
+                                                <form role="form" method="post">
+                                                    <div class="card-body px-lg-5 py-lg-5">
+                                                        <div class="text-center text-muted mb-4">
+                                                            <small>Masukkan password anda untuk mengubah data user : <b>
+                                                                    <?php $nama_acc = $row['nama_mhs'];
+                                                                    if ($nama_acc == "" || $nama_acc == "NULL") {
+                                                                        echo htmlentities($row['nim']);
+                                                                    } else {
+                                                                        echo htmlentities($row['nama_mhs']);
+                                                                    }
 
 
-                                                            ?>
-                                                        </b></small>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <div class="input-group input-group-merge input-group-alternative">
-                                                        <div class="input-group-prepend">
-                                                            <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                                                    ?>
+                                                                </b></small>
                                                         </div>
-                                                        <input type="hidden" name="id_user" value="<?php echo $row['id_mhs'] ?>">
-                                                        <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
-                                                    </div>
 
-                                                </div>
-                                                <div class="input-group input-group-merge">
-                                                    <div class="input-group-prepend text-left text-muted">
-                                                        <span><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi <code style="font-size: 1rem;">1234</code>. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user tersebut. </small></span>
-                                                    </div>
+                                                        <div class="form-group">
+                                                            <div class="input-group input-group-merge input-group-alternative">
+                                                                <div class="input-group-prepend">
+                                                                    <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                                                                </div>
+                                                                <input type="hidden" name="id_user" value="<?php echo $row['id_mhs'] ?>">
+                                                                <input type="text" name="tgl_lahir" class="form-control" value="<?php $tgl_lahir = $row['tgl_lahir'];
+                                                                                                                                echo date('dmY', strtotime($tgl_lahir)) ?>" id="tgl_lahir" placeholder="Nama Mahasiswa" readonly>
+                                                                <input class="form-control" name="password_valid" placeholder="Password Anda" type="password" title="Masukkan Password" oninvalid="this.setCustomValidity('Selahkan masukkan Password anda.')" oninput="setCustomValidity('')" required>
 
-                                                </div>
-                                                <div class="input-group input-group-merge">
-                                                    <div class="input-group-prepend text-left text-muted">
-                                                        <span><i class="fas fa-info-circle"></i> <small>Password anda di butuhkan sebagai verifikasi bahwa anda memiliki akses untuk mengubah data ini. </small></span>
-                                                    </div>
+                                                            </div>
 
-                                                </div>
+                                                        </div>
+                                                        <div class="input-group input-group-merge">
+                                                            <div class="input-group-prepend text-left text-muted">
+                                                                <span><i class="fas fa-info-circle"></i> <small>Reset Password Default User akan diubah menjadi tanggal lahir mahasiswa tersebut. Setelah user berhasil Login, User tersebut dapat mengubahnya pada pilihan Profil user nya. </small></span>
+                                                            </div>
 
-                                                <div class="text-center">
-                                                    <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
-                                                </div>
-                                        </form>
+                                                        </div>
+                                                        <div class="input-group input-group-merge">
+                                                            <div class="input-group-prepend text-left text-muted">
+                                                                <span><i class="fas fa-info-circle"></i> <small>Password anda di butuhkan sebagai verifikasi bahwa anda memiliki akses untuk mengubah data ini. </small></span>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="text-center">
+                                                            <button type="submit" name="resetpsw" class="btn btn-primary my-4">Reset Password</button>
+                                                        </div>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -631,11 +648,77 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     </div>
                 </div>
             </div>
+
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card bg-white">
+                        <div class="card-header bg-transparent">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h6 class="text-black text-uppercase ls-1 mb-1">Riwayat</h6>
+                                    <h5 class="h3 text-primary mb-0 text-uppercase">Bantuan Dana</h5>
+                                </div>
+                                <div class="col">
+                                    <ul class="nav nav-pills justify-content-end">
+                                        <li class="nav-item mr-2 mr-md-0">
+                                            <a href="?carimhs=<?php echo $_GET['carimhs']; ?>&id=" class="nav-link py-2 px-3 <?php echo ($_GET['id'] == "" ? "active" : "") ?>">
+                                                <span class="d-none d-md-block">Beasiswa Kebutuhan</span>
+                                                <span class="d-md-none"><i class="fas fa-graduation-cap"></i></span>
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="?carimhs=<?php echo $_GET['carimhs']; ?>&id=pinjaman-registrasi" class="nav-link py-2 px-3 <?php echo ($_GET['id'] == "pinjaman-registrasi" ? "active" : "") ?>">
+                                                <span class="d-none d-md-block">Pinjaman Registrasi</span>
+                                                <span class="d-md-none"><i class="fas fa-hand-holding-usd"></i></span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!-- Chart -->
+                            <div class="chart">
+                                <!-- Chart wrapper -->
+
+                                <?php
+                                    $header = $_GET['id'];
+                                    if ($header == 'pinjaman-registrasi') {
+                                ?>
+                                    <canvas id="riwayat-pinjaman-registrasi" class="chart-canvas"></canvas>
+                                <?php } else { ?>
+                                    <canvas id="riwayat-beasiswa-kebutuhan" class="chart-canvas"></canvas>
+                                <?php }  ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="col-xl-4">
+          <div class="card">
+            <div class="card-header bg-transparent">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h6 class="text-uppercase text-muted ls-1 mb-1">Performance</h6>
+                  <h5 class="h3 mb-0">Total orders</h5>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              Chart
+              <div class="chart">
+                <canvas id="chart-bars" class="chart-canvas"></canvas>
+              </div>
+            </div>
+          </div>
+        </div> -->
+            </div>
+
     <?php }
-                    } elseif ($result->num_rows > 1) {
-                        $hasil = "duplikat";
-                    } else {
-                        echo '<div class="card bg-dark text-white border-0">
+                            } elseif ($result->num_rows > 1) {
+                                $hasil = "duplikat";
+                            } else {
+                                echo '<div class="card bg-dark text-white border-0">
                             <img class="card-img" src="../assets/img/cari-mahasiswa-gagal.svg" alt="Mahasiswa Tidak Ditemukan">
                             <div class="card-img-overlay align-items-center">
                             <div>
@@ -648,7 +731,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                 <span class="input-group-text"><small class="font-weight-bold"><i class="fas fa-search"></i></small></span>
                                             </div>
                                             <input id="carimhs" name="carimhs" type="text" pattern=".{8,8}" class="form-control card-text" placeholder="Cari Mahasiswa menggunakan NIM" title="Harap memeriksa NIM yang anda masukkan. Pastikan NIM yang dimasukkan benar dan berjumlah 8 Digit Angka." oninvalid="this.setCustomValidity("Selahkan masukkan NIM untuk mencari mahasiswa")" oninput="setCustomValidity("")" required>
-    
+                                             <input type="hidden" name="id">
                                             <div class="input-group-prepend">
                                                 <input class="input-group-text" type="submit" value="Cari"></input>
                         
@@ -661,7 +744,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                         </div>
                             </div>
                             </div>';
-                    } ?>
+                            } ?>
         </div>
 
     </div>
@@ -698,15 +781,283 @@ if (strlen($_SESSION['admlogin']) == 0) {
             });
         }
     </script>
+    <script>
+        //
+        // Charts
+        //
+
+        'use strict';
+
+        //
+        // Sales chart
+        //
+
+        var SalesChart = (function() {
+
+            // Variables
+
+            var $chart = $('#riwayat-beasiswa-kebutuhan');
+
+
+            // Methods
+
+            function init($this) {
+                var salesChart = new Chart($this, {
+                    type: 'line',
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                title: function(tooltipItem, data) {
+                                    return data.labels[tooltipItem[0].index];
+                                },
+                                label: function(tooltipItem, data) {
+                                    var amount = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                    var total = eval(data.datasets[tooltipItem.datasetIndex].data.join("+"));
+                                    return 'Jumlah Beasiswa Kebutuhan: ' + 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                },
+                                //footer: function(tooltipItem, data) { return 'Total: 100 planos.'; }
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                gridLines: {
+                                    color: Charts.colors.gray[700],
+                                    zeroLineColor: Charts.colors.gray[700]
+                                },
+                                ticks: {
+                                    beginAtZero: false,
+                                    callback: function(value, index, values) {
+                                        if (parseInt(value) >= 1000) {
+                                            return 'Rp ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                        } else {
+                                            return 'Rp ' + value;
+                                        }
+                                    },
+
+                                    // callback: function(label, index, labels) {
+                                    //   return label / 1000000 + 'jt';
+                                    // }
+
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'JUMLAH BEASISWA KEBUTUHAN'
+                                }
+                            }]
+                        }
+                    },
+                    data: {
+                        labels: [<?php
+                                    $nim = $_GET['carimhs'];
+                                    $status = 'diterima';
+                                    $kd_bsw = '1';
+                                    $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun 
+                                    FROM pendaftaran
+                                    JOIN user_mhs
+                                    WHERE pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.nim = ? AND kd_bsw= ? and pendaftaran.status = ? GROUP BY tahun";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param("sss", $nim, $kd_bsw, $status);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+
+
+                                        $date = $row['tahun'];
+                                        $tahun_cut = substr($date, 0, -1);
+                                        $tahun = date('Y', strtotime($date));
+
+                                        $semester = $row['semester'];
+                                        if ($semester == 'Gasal') {
+                                            $semester = '1';
+                                        } else {
+                                            $semester = '2';
+                                        }
+
+                                        $display = "'" . $tahun_cut . "-" . $semester . "'" . ",,";
+                                        $display_cut = substr($display, 0, -1);
+                                    ?><?php echo substr($display, 0, -1);
+                                    } ?>],
+                        datasets: [{
+                            data: [<?php
+                                    $nim = $_GET['carimhs'];
+                                    $status = 'diterima';
+                                    $kd_bsw = '1';
+                                    $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun 
+                                    FROM pendaftaran
+                                    JOIN user_mhs
+                                    WHERE pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.nim = ? AND kd_bsw= ? and pendaftaran.status = ? GROUP BY tahun";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param("sss", $nim, $kd_bsw, $status);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+
+
+                                        $nominal = $row['nominal_disetujui'];
+                                        $display = "'" . $nominal . "'" . ",,";
+                                        $display_cut = substr($display, 0, -1);
+                                    ?><?php echo substr($display, 0, -1);
+                                    } ?> '1000000']
+                        }]
+                    }
+                });
+
+                // Save to jQuery object
+
+                $this.data('chart', salesChart);
+
+            };
+
+
+            // Events
+
+            if ($chart.length) {
+                init($chart);
+            }
+
+        })();
+    </script>
+    <script>
+        //
+        // Charts
+        //
+
+        'use strict';
+
+        //
+        // Sales chart
+        //
+
+        var SalesChart = (function() {
+
+            // Variables
+
+            var $charts = $('#riwayat-pinjaman-registrasi');
+
+
+            // Methods
+
+            function init($this) {
+                var salesChart = new Chart($this, {
+                    type: 'line',
+                    options: {
+                        tooltips: {
+                            callbacks: {
+                                title: function(tooltipItem, data) {
+                                    return data.labels[tooltipItem[0].index];
+                                },
+                                label: function(tooltipItem, data) {
+                                    var amount = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                                    var total = eval(data.datasets[tooltipItem.datasetIndex].data.join("+"));
+                                    return 'Jumlah Bantuan Dana: ' + 'Rp ' + amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                },
+                                //footer: function(tooltipItem, data) { return 'Total: 100 planos.'; }
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                gridLines: {
+                                    color: Charts.colors.gray[700],
+                                    zeroLineColor: Charts.colors.gray[700]
+                                },
+                                ticks: {
+                                    beginAtZero: false,
+                                    callback: function(value, index, values) {
+                                        if (parseInt(value) >= 1000) {
+                                            return 'Rp ' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                                        } else {
+                                            return 'Rp ' + value;
+                                        }
+                                    },
+
+                                    // callback: function(label, index, labels) {
+                                    //   return label / 1000000 + 'jt';
+                                    // }
+
+                                },
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'JUMLAH PINJAMAN REGISTRASI'
+                                }
+                            }]
+                        }
+                    },
+                    data: {
+                        labels: [<?php
+                                    $nim = $_GET['carimhs'];
+                                    $status = 'diterima';
+                                    $kd_bsw = '2';
+                                    $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun 
+                                    FROM pendaftaran
+                                    JOIN user_mhs
+                                    WHERE pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.nim = ? AND kd_bsw= ? and pendaftaran.status = ? GROUP BY tahun";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param("sss", $nim, $kd_bsw, $status);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+                                        $date = $row['tahun'];
+                                        $tahun_cut = substr($date, 0, -1);
+                                        $tahun = date('Y', strtotime($date));
+
+                                        $semester = $row['semester'];
+                                        if ($semester == 'Gasal') {
+                                            $semester = '1';
+                                        } else {
+                                            $semester = '2';
+                                        }
+
+                                        $display = "'" . $tahun_cut . "-" . $semester . "'" . ",,";
+                                        $display_cut = substr($display, 0, -1);
+                                    ?><?php echo substr($display, 0, -1);
+                                    } ?>],
+                        datasets: [{
+                            data: [<?php
+                                    $nim = $_GET['carimhs'];
+                                    $status = 'diterima';
+                                    $kd_bsw = '2';
+                                    $query = "SELECT tgl_daftar, thn_ajaran, semester, nominal_disetujui, tahun 
+                                    FROM pendaftaran
+                                    JOIN user_mhs
+                                    WHERE pendaftaran.id_mhs = user_mhs.id_mhs and user_mhs.nim = ? AND kd_bsw= ? and pendaftaran.status = ? GROUP BY tahun";
+                                    $stmt = $con->prepare($query);
+                                    $stmt->bind_param("sss", $nim, $kd_bsw, $status);
+                                    $stmt->execute();
+                                    $result = $stmt->get_result();
+                                    while ($row = $result->fetch_assoc()) {
+                                        $nominal = $row['nominal_disetujui'];
+                                        $display = "'" . $nominal . "'" . ",,";
+                                        $display_cut = substr($display, 0, -1);
+                                    ?><?php echo substr($display, 0, -1);
+                                    } ?> '10000000']
+                        }]
+                    }
+                });
+
+                // Save to jQuery object
+
+                $this.data('charts', salesChart);
+
+            };
+
+
+            // Events
+
+            if ($charts.length) {
+                init($charts);
+            }
+
+        })();
+    </script>
     <script type="text/javascript">
         document.getElementById("close_direct").onclick = function() {
-            location.href = "cari_mahasiswa?carimhs=<?php echo $carimahasiswa ?>";
+            location.href = "cari_mahasiswa?carimhs=<?php echo $carimahasiswa ?>&id=";
         };
     </script>
     <script>
         $('.select2').select2();
     </script>
-    <script src="js/fakultas-prodi.js?v=1"></script>
+    <!-- <script src="js/fakultas-prodi.js?v=1"></script> -->
 
     </div>
     </div>

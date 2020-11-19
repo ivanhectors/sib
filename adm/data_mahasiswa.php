@@ -223,9 +223,9 @@ if (strlen($_SESSION['admlogin']) == 0) {
 
                     $('#tabelMhs tbody').on('click', '.linkMhs', function() {
                         var data = table.row($(this).parents('tr')).data();
-                        window.location.href = "cari_mahasiswa?carimhs=" + data[1];
+                        window.location.href = "cari_mahasiswa?carimhs=" + data[1] + "&id=";
                     });
-
+ 
                 });
             </script>
             <script type="text/javascript">

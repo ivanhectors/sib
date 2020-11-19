@@ -104,7 +104,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col">
-                                            <h4 class="card-title text-uppercase text-muted mb-0">Export</h4>
+                                            <h4 class="card-title text-uppercase text-muted mb-0">Lihat</h4>
                                             <span class="h5 font-weight-bold mb-0"><a href="data_mahasiswa"> Data Mahasiswa <i class="fas fa-chevron-right"></i></a></span>
                                         </div>
                                         <div class="col-auto">
@@ -142,7 +142,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <span class="input-group-text"><small class="font-weight-bold"><i class="fas fa-search"></i></small></span>
                                         </div>
                                         <input id="carimhs" name="carimhs" type="text" pattern=".{8,8}" class="form-control card-text" placeholder="Cari Mahasiswa menggunakan NIM" title="Harap memeriksa NIM yang anda masukkan. Pastikan NIM yang dimasukkan benar dan berjumlah 8 Digit Angka." oninvalid="this.setCustomValidity('Selahkan masukkan NIM untuk mencari mahasiswa')" oninput="setCustomValidity('')" required>
-
+                                        <input type="hidden" name="id">
                                         <div class="input-group-prepend">
                                             <input class="input-group-text" type="submit" value="Cari"></input>
                     

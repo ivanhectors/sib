@@ -17,11 +17,11 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $password_valid =  $_POST["password_valid"];
     $username_valid = $_SESSION['mhslogin'];
     $email = $_POST['email'];
-    $nama_mhs = $_POST['nama_mhs'];
+    // $nama_mhs = $_POST['nama_mhs'];
     $no_telp = $_POST['no_telp'];
-    $gender = $_POST['gender'];
-    $date = $_POST['tgl_lahir'];
-    $tgl_lahir = (new DateTime($date))->format('Y-m-d');
+    // $gender = $_POST['gender'];
+    // $date = $_POST['tgl_lahir'];
+    // $tgl_lahir = (new DateTime($date))->format('Y-m-d');
 
     //$photo_mhs=$_POST['photo_mhs'];
 
@@ -40,7 +40,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
       while ($row = mysqli_fetch_array($mahasiswa)) {
         if (password_verify($password_valid, $row["password"])) {
           //return true;   
-          $sql = mysqli_query($con, "update user_mhs set nama_mhs='$nama_mhs',email='$email',no_telp='$no_telp',gender='$gender',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos',tgl_lahir='$tgl_lahir' where nim='" . $_SESSION['mhslogin'] . "'");
+          $sql = mysqli_query($con, "update user_mhs set email='$email',no_telp='$no_telp',alamat='$alamat',provinsi='$provinsi',kab_kota='$kab_kota',kecamatan='$kecamatan',kode_pos='$kode_pos' where nim='" . $_SESSION['mhslogin'] . "'");
           $_SESSION['msg'] = "1";
           //$successmsg="Data profil anda berhasil diubah.";
 
@@ -458,6 +458,9 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                         <div class="form-group">
                           <label class="form-control-label" for="nim">NIM</label>
                           <div class="input-group input-group-merge">
+                          <div class="input-group-prepend">
+                              <span class="input-group-text">@</span>
+                            </div>
                             <input type="text" id="nim" class="form-control" placeholder="NIM" value="<?php echo htmlentities($row['nim']); ?>" disabled>
                           </div>
                         </div>
@@ -483,7 +486,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" id="input-first-name" name="nama_mhs" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlentities($row['nama_mhs']); ?>">
+                            <input type="text" id="input-first-name" name="nama_mhs" class="form-control" placeholder="Nama Lengkap" value="<?php echo htmlentities($row['nama_mhs']); ?>" disabled>
                           </div>
 
                         </div>
@@ -509,7 +512,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                             </div>
-                            <input class="form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php $date = $row['tgl_lahir']; echo date('d-m-Y', strtotime($date)); ?>">
+                            <input class="form-control" data-provide="datepicker" data-date-format="dd-mm-yyyy" name="tgl_lahir" id="tgl_lahir" placeholder="Pilih Tanggal" type="text" value="<?php $date = $row['tgl_lahir']; echo date('d-m-Y', strtotime($date)); ?>" disabled>
                           </div>
 
                         </div>
@@ -521,7 +524,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                             <div class="input-group-prepend">
                               <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
                             </div>
-                            <select class="form-control" name="gender" placeholder="Pilih Gender" id="exampleFormControlSelect1">
+                            <select class="form-control" name="gender" placeholder="Pilih Gender" id="exampleFormControlSelect1" disabled>
                               <option value="<?php echo htmlentities($row['gender']); ?>"><?php
 
                                                                                           $gender = $row['gender'];
