@@ -18,8 +18,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
         $kd_bsw = $_POST["kd_bsw"];
         $nama_bsw = $_POST["nama_bsw"];
         $dtl_bsw = $_POST["dtl_bsw"];
-        $tgl_buka = $_POST["tgl_buka"];
-        $tgl_tutup = $_POST["tgl_tutup"];
+        $start_date = $_POST['tgl_buka'];
+        $end_date = $_POST["tgl_tutup"];
+        //$tgl_lahir = date('d-m-Y', strtotime($date));
+        $tgl_buka = (new DateTime($start_date))->format('Y-m-d');
+        $tgl_tutup = (new DateTime($end_date))->format('Y-m-d');
 
         //edit fakultas
         $sql = mysqli_query($con, "update beasiswa set kd_bsw='$kd_bsw', nama_bsw='$nama_bsw', dtl_bsw='$dtl_bsw', tgl_buka='$tgl_buka',tgl_tutup='$tgl_tutup' where id_bsw='$id_bsw'");
@@ -177,7 +180,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                             </div>
-                                            <input name="tgl_buka" class="form-control" id="tgl_buka" data-provide="datepicker" value="<?php echo $row['tgl_buka']; ?>" data-date-format="yyyy-mm-dd" placeholder="Pilih Tanggal Buka" type="text">
+                                            <input name="tgl_buka" class="form-control" id="tgl_buka" data-provide="datepicker" value="<?php $date = $row['tgl_buka']; echo date('d-m-Y', strtotime($date)); ?>" data-date-format="dd-mm-yyyy" placeholder="Pilih Tanggal Buka" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -188,7 +191,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text"><i class="fas fa-phone"></i></span>
                                             </div>
-                                            <input name="tgl_tutup" class="form-control" id="tgl_tutup" data-provide="datepicker" value="<?php echo $row['tgl_tutup']; ?>" data-date-format="yyyy-mm-dd" placeholder="Pilih Tanggal Tutup" type="text">
+                                            <input name="tgl_tutup" class="form-control" id="tgl_tutup" data-provide="datepicker" value="<?php $date = $row['tgl_tutup']; echo date('d-m-Y', strtotime($date)); ?>" data-date-format="dd-mm-yyyy" placeholder="Pilih Tanggal Tutup" type="text">
                                         </div>
                                     </div>
                                 </div>
@@ -255,6 +258,10 @@ if (strlen($_SESSION['admlogin']) == 0) {
             </script>
             <script src="js/fakultas-prodi.js"></script>
 
+            <script>
+                $.fn.datepicker.defaults.format = "yyyy/mm/dd";
+            </script>
+            
         </div>
     </div>
 

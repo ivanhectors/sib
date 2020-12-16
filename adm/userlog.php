@@ -86,22 +86,46 @@ if (strlen($_SESSION['admlogin']) == 0) {
               <table class="table table-flush" id="tabelUserlog">
                 <thead class="thead-light">
                   <tr>
-                    <th><center>No</th>
-                    <th><center>Username</th>
-                    <th><center>User IP</th>
-                    <th><center>Waktu Login</th>
-                    <th><center>Waktu Logout</th>
-                    <th><center>Status Login</th>
+                    <th>
+                      <center>No
+                    </th>
+                    <th>
+                      <center>Username
+                    </th>
+                    <th>
+                      <center>User IP
+                    </th>
+                    <th>
+                      <center>Waktu Login
+                    </th>
+                    <th>
+                      <center>Waktu Logout
+                    </th>
+                    <th>
+                      <center>Status Login
+                    </th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
-                  <th><center>No</th>
-                    <th><center>Username</th>
-                    <th><center>User IP</th>
-                    <th><center>Waktu Login</th>
-                    <th><center>Waktu Logout</th>
-                    <th><center>Status Login</th>
+                    <th>
+                      <center>No
+                    </th>
+                    <th>
+                      <center>Username
+                    </th>
+                    <th>
+                      <center>User IP
+                    </th>
+                    <th>
+                      <center>Waktu Login
+                    </th>
+                    <th>
+                      <center>Waktu Logout
+                    </th>
+                    <th>
+                      <center>Status Login
+                    </th>
                   </tr>
                 </tfoot>
                 <tbody>
@@ -155,17 +179,29 @@ if (strlen($_SESSION['admlogin']) == 0) {
               }
             },
 
-            "columnDefs": [{
-              "targets": -1,
-              "data": 5,
-              render: function(data, type, row) {
-                if (data == '1') {
-                  return '<center><p class="btn btn-success btn-sm linkMhs">Sukses</p></center>';
-                } else {
-                  return '<center><p class="btn btn-danger btn-sm linkMhs">Gagal</p></center>';
+            "columnDefs": [
+              {
+                "targets": -3,
+                "data": 3,
+
+                render: function(data, type, row) {
+                  moment.locale('');
+                  var data_tanggal = data;
+                  var ubah = moment(data_tanggal, "YYYY-MM-DD h:mm:ss").format('DD-MM-YYYY h:mm:ss');
+                  return ubah;
+                }
+              }, {
+                "targets": -1,
+                "data": 5,
+                render: function(data, type, row) {
+                  if (data == '1') {
+                    return '<center><p class="btn btn-success btn-sm linkMhs">Sukses</p></center>';
+                  } else {
+                    return '<center><p class="btn btn-danger btn-sm linkMhs">Gagal</p></center>';
+                  }
                 }
               }
-            }]
+            ]
           });
 
         });

@@ -4,11 +4,12 @@ session_start();
 error_reporting(0);
 
 if (isset($_POST["login"])) {
+  $status = '1';
   $username = mysqli_real_escape_string($con, $_POST["username"]);
   $password = mysqli_real_escape_string($con, $_POST["password"]);
-  $query = "SELECT * FROM user_admin WHERE username = '$username' and status = '1'";
-  $query2 = "SELECT * FROM user_mhs WHERE nim = '$username'";
-  $query3 = "SELECT * FROM user_acc WHERE username = '$username'";
+  $query = "SELECT * FROM user_admin WHERE username = '$username' and status = '$status'";
+  $query2 = "SELECT * FROM user_mhs WHERE nim = '$username' and status = '$status'";
+  $query3 = "SELECT * FROM user_acc WHERE username = '$username' ";
   $admin = mysqli_query($con, $query);
   $mhs = mysqli_query($con, $query2);
   $acc = mysqli_query($con, $query3);

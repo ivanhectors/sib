@@ -443,8 +443,18 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                                     <i class="ni ni-bell-55 ni-3x"></i>
                                                     <h4 class="heading mt-4">Ketentuan Diskualifikasi atau Menolak Pengajuan</h4>
                                                 </div>
+                                                <div class="form-group row">
+                                                    <div class="col-sm-6">
+                                                        <h6 class="heading-small text-white">Kode Pendaftaran :</h6>
+                                                        <input type="text" class="form-control kd_daftar" id="kd_daftar" Placeholder="Kode Daftar" onkeypress="return isNumber(event)" readonly />
+                                                    </div>
+                                                    <div class="col-sm-6">
+                                                        <h6 class="heading-small text-white">Nominal Pinjaman :</h6>
+                                                        <input type="text" class="form-control nominal_pengajuan" id="nominal_pengajuan" Placeholder="Kode Daftar" onkeypress="return isNumber(event)" readonly />
+                                                    </div>
+                                                </div>
                                                 <div class="text-left">
-                                                    <input type="text" name="kd_daftar" class="form-control kd_daftar" />
+                                                    <input type="hidden" name="kd_daftar" class="form-control kd_daftar" />
                                                     <p class="mb-0">Anda dapat mendiskualifikasi atau menolak pengajuan ini jika: </p>
                                                     <p class="mb-0"> 1. Anda merasa pengajuan ini terjadi kecurangan atau data yang tidak sah;</p>
                                                     <p class="mb-0"> 2. Dana Budget anda telah mencukupi untuk menerima pengajuan lain.</p>
