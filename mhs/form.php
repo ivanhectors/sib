@@ -75,6 +75,16 @@ if (strlen($_SESSION['mhslogin']) == 0) {
     $nim = $_SESSION['mhslogin'];
     $id_mhs = $_SESSION['id_mhs'];
 
+    // Mendapatkan total berapa kali mahasiswa pernah menerima bantuan dana
+    $status = 'diterima';
+    $query_get_total = "SELECT kd_daftar from pendaftaran where status = ? AND kd_bsw = ? AND id_mhs = ?";
+    $stmt_get_total = $con->prepare($query_get_total);
+    $stmt_get_total->bind_param("sii", $status, $kd_bsw, $id_mhs);
+    $stmt_get_total->execute();
+    $stmt_get_total->store_result();
+    $total_diterima = $stmt_get_total->num_rows;
+    // echo $total_diterima;
+
     if (isset($_FILES['syarat'])) {
         //karena ada multiple, jadi dilakukan pengecekan foreach
 
@@ -114,8 +124,8 @@ if (strlen($_SESSION['mhslogin']) == 0) {
         if ($result->num_rows > 0) {
             $_SESSION['error'] = 'Pengajuan' . " " . $kd_bsw_detail . " sudah kamu ajukan semester ini! Kamu dapat kembali melakukan pengajuan pada semester depan.";
         } else {
-            $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, id_mhs, kd_bsw, ipk, gaji_ortu, semester_ke ,no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, tahun, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $registrasi->bind_param('ssiiissssssi', $kd_daftar, $id_mhs, $kd_bsw, $ipk, $gaji_ortu, $semester_ke, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $tahun, $nominal);
+            $registrasi = $con->prepare("INSERT INTO pendaftaran (kd_daftar, id_mhs, kd_bsw, ipk, gaji_ortu, semester_ke , total_diterima ,no_telp_ortu, pekerjaan_ortu, semester, thn_ajaran, tahun, nominal_pengajuan) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $registrasi->bind_param('ssiiiissssssi', $kd_daftar, $id_mhs, $kd_bsw, $ipk, $gaji_ortu, $semester_ke, $total_diterima, $no_telp_ortu, $pekerjaan_ortu, $bulan_ini, $periode_tahun, $tahun, $nominal);
             /* execute prepared statement */
             $registrasi->execute();
             printf("%d Row inserted.\n", $registrasi->affected_rows);

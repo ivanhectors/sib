@@ -133,7 +133,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
                                     , beasiswa.nama_bsw AS nm_beasiswa
                                     FROM pendaftaran
                                     JOIN beasiswa ON (
-                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.id_mhs = ? order by pendaftaran.tgl_daftar DESC";
+                                    pendaftaran.kd_bsw = beasiswa.id_bsw ) WHERE pendaftaran.id_mhs = ? order by pendaftaran.thn_ajaran DESC";
                                     $stmt = $con->prepare($sql);
                                     $stmt->bind_param("i", $nim);
                                     $stmt->execute();
@@ -171,7 +171,7 @@ if (strlen($_SESSION['mhslogin']) == 0) {
 
                                             <td>
                                                 <?php $status = $row['status'];
-                                                if ($status == null) {
+                                                if ($status == null | $status == "acc-wakil-dekan") {
                                                     echo '<span class="badge badge-warning">Diproses</span>';
                                                 } elseif ($status == 'diterima') {
                                                     echo '<span class="badge badge-success">diterima</span>';

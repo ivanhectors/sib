@@ -402,9 +402,8 @@ if (strlen($_SESSION['admlogin']) == 0) {
             $cnt = 1;
             while ($row2 = mysqli_fetch_array($query10)) {
             ?>
-              <div class="col-lg-12">
+              <!-- <div class="col-lg-12">
                 <div class="card bg-gradient-white border-0">
-                  <!-- Card body -->
                   <div class="card-body">
                     <div class="row">
                       <div class="col">
@@ -445,7 +444,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
 
             <?php } ?>
 
