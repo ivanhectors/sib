@@ -124,3 +124,81 @@ Ref Tahap Seleksi
                                                 </div>
                                             </div>
                                         <?php } ?>
+
+
+Select kd_daftar, user_mhs.nim, gaji_ortu, kd_bsw, tgl_daftar,
+                                    CASE
+                                    WHEN gaji_ortu > 2000000 THEN '0'
+                                    WHEN gaji_ortu >= 1800000 THEN '1'
+                                    WHEN gaji_ortu >= 1650000 THEN '2'
+                                    WHEN gaji_ortu >= 1500000 THEN '3'
+                                    WHEN gaji_ortu >= 1300000 THEN '4'
+                                    WHEN gaji_ortu >= 1150000 THEN '5'
+                                    WHEN gaji_ortu >= 1000000 THEN '6'
+                                    WHEN gaji_ortu >= 800000 THEN '7'
+                                    WHEN gaji_ortu >= 650000 THEN '8'
+                                    WHEN gaji_ortu >= 500000 THEN '9'
+                                    WHEN gaji_ortu < 500000 THEN '10'
+                                    Else '0'
+                                    END AS poin_gaji_ortu,
+                                    ipk,
+                                    CASE
+                                    WHEN ipk < 2.25 THEN '0'
+                                    WHEN ipk <= 2.32 THEN '1'
+                                    WHEN ipk <= 2.4 THEN '2'
+                                    WHEN ipk <= 2.5 THEN '3'
+                                    WHEN ipk <= 2.58 THEN '4'
+                                    WHEN ipk <= 2.65 THEN '5'
+                                    WHEN ipk <= 2.75 THEN '6'
+                                    WHEN ipk <= 2.82 THEN '7'
+                                    WHEN ipk <= 2.99 THEN '8'
+                                    WHEN ipk <= 3.5 THEN '9'
+                                    WHEN ipk <= 4 THEN '10'
+                                    Else '0'
+                                    END AS poin_ipk,
+                                    semester_ke,
+                                    CASE
+                                    WHEN semester_ke >= 11 THEN '0'
+                                    WHEN semester_ke >= 10 THEN '1'
+                                    WHEN semester_ke >= 9 THEN '2'
+                                    WHEN semester_ke >= 8 THEN '3'
+                                    WHEN semester_ke >= 7 THEN '4'
+                                    WHEN semester_ke >= 6 THEN '5'
+                                    WHEN semester_ke >= 5 THEN '6'
+                                    WHEN semester_ke >= 4 THEN '7'
+                                    WHEN semester_ke >= 3 THEN '8'
+                                    WHEN semester_ke >= 2 THEN '9'
+                                    Else '0'
+                                    END AS poin_semester,
+                                    CASE
+                                    WHEN nominal_pengajuan > 10000000 THEN '0'
+                                    WHEN nominal_pengajuan >= 9000000 THEN '1'
+                                    WHEN nominal_pengajuan >= 8000000 THEN '2'
+                                    WHEN nominal_pengajuan >= 7000000 THEN '3'
+                                    WHEN nominal_pengajuan >= 6000000 THEN '4'
+                                    WHEN nominal_pengajuan >= 5000000 THEN '5'
+                                    WHEN nominal_pengajuan >= 4000000 THEN '6'
+                                    WHEN nominal_pengajuan >= 3000000 THEN '7'
+                                    WHEN nominal_pengajuan >= 2000000 THEN '8'
+                                    WHEN nominal_pengajuan >= 1000000 THEN '9'
+                                    WHEN nominal_pengajuan < 1000000 THEN '10'
+                                    Else '0'
+                                    END AS poin_nominal,
+                                    CASE
+                                    WHEN total_diterima > 8 THEN '1'
+                                    WHEN total_diterima >= 8 THEN '2'
+                                    WHEN total_diterima >= 7 THEN '3'
+                                    WHEN total_diterima >= 6 THEN '4'
+                                    WHEN total_diterima >= 5 THEN '5'
+                                    WHEN total_diterima >= 4 THEN '6'
+                                    WHEN total_diterima >= 3 THEN '7'
+                                    WHEN total_diterima >= 2 THEN '8'
+                                    WHEN total_diterima >= 1 THEN '9'
+                                    WHEN total_diterima < 1 THEN '10'
+                                    Else '0'
+                                    END AS poin_total_diterima,
+                                    coba_total = (SELECT pendaftaran.kd_daftar from pendaftaran where status = 'diterima' AND kd_bsw = '2'),
+                                    nominal_pengajuan, pendaftaran.status
+                                    from pendaftaran 
+                                    JOIN user_mhs
+                                    WHERE tahun = '20201' AND pendaftaran.status = 'acc-wakil-dekan' AND pendaftaran.id_mhs = user_mhs.id_mhs AND pendaftaran.kd_bsw = '2'

@@ -6,7 +6,7 @@ include("include/config.php");
 if (strlen($_SESSION['admlogin']) == 0) {
   header('location:../403');
 } else {
-  // error_reporting(0);
+  error_reporting(0);
   date_default_timezone_set('Asia/Jakarta'); // change according timezone
   $currentTime = date('d-m-Y h:i:s A', time());
   $parentpage = "dashboard";
@@ -23,11 +23,11 @@ if (strlen($_SESSION['admlogin']) == 0) {
   $year = date('Y');
   $semester_ini = date('n');
   if ($semester_ini <= 6) {
-    $semester_ini = '2';
+    $semester_ini = ($year - 1).'2';
   } else {
     $semester_ini = '1';
   }
-  $tahun = $year . $semester_ini;
+  $tahun = $semester_ini;
   $status = 'diterima';
   $kd_bsw_1 = '1';
   $kd_bsw_2 = '2';
@@ -229,6 +229,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
         </div>
       </div>
       <?php
+
       $status = '1';
       $id_info = '1';
       $sql = "SELECT * FROM informasi WHERE id_info =? and status=? LIMIT 1";

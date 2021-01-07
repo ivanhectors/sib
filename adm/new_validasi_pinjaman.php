@@ -23,7 +23,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
         $tahun = intval($year - 1) . "2";
     } else {
         $tahun = $year . "1";
-    }
+    } 
     $kd_bsw = '2';
     $status = 'diterima';
     $sql = "SELECT budget.nominal AS budget_beasiswa

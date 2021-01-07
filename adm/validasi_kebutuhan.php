@@ -191,7 +191,7 @@ if (strlen($_SESSION['admlogin']) == 0) {
                                         *<strong>P1</strong> = Poin Gaji Orangtua | <strong>P2</strong> = IPK Mahasiswa | <strong>P3</strong> = Poin Semester
                                     </p>
 
-                                    <p class="mb-0">Budget Pinjaman Semster Ini : <b><?php $bb_demo = htmlentities($budget_beasiswa['budget_beasiswa']);
+                                    <p class="mb-0">Budget Beasiswa Kebutuhan Semster Ini : <b><?php $bb_demo = htmlentities($budget_beasiswa['budget_beasiswa']);
                                                                                         $hasil = "Rp " . number_format($bb_demo, 0, ',', '.');
                                                                                         echo $hasil; ?></b> | Dana Keluar : <b><?php $dk_demo = htmlentities($dana_keluar['dana_keluar']);
                                                                                                                                 $hasil = "Rp " . number_format($dk_demo, 0, ',', '.');
