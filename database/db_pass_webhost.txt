@@ -1,4 +1,0 @@
-User_db : id14324363_sibukdw
-Nama_db : id14324363_sibukdw
-Host : localhost
-Password : NjJQk_+{Alj{R0#j
